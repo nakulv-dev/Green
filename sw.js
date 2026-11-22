@@ -1,4 +1,4 @@
-const CACHE_NAME = 'greenguardian-synova-v2';
+const CACHE_NAME = 'greenguardian-synova-v3';
 const CORE_ASSETS = ['./', './index.html', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', event => {
@@ -32,8 +32,8 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('push', event => {
   const data = event.data ? event.data.json() : {
-    title: '🚨 GreenGuardian Tree SOS',
-    body: 'A nearby sapling needs water! Tap to help (+100 pts).'
+    title: '🌱 GreenGuardian Live Contribution',
+    body: 'Someone just cared for a tree! Tap to view in Community Feed.'
   };
   event.waitUntil(
     self.registration.showNotification(data.title, {
@@ -41,7 +41,7 @@ self.addEventListener('push', event => {
       icon: './icon.svg',
       badge: './icon.svg',
       vibrate: [200, 100, 200],
-      tag: 'greenguardian-sos',
+      tag: 'greenguardian-live',
       renotify: true
     })
   );
@@ -52,7 +52,7 @@ self.addEventListener('notificationclick', event => {
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
       if (clientList.length > 0) return clientList[0].focus();
-      return self.clients.openWindow('./');
+      return self.clients.openWindow('./?tab=community');
     })
   );
 });
