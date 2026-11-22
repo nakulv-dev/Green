@@ -1,0 +1,24 @@
+{
+  "name": "GreenGuardian — Plant. Protect. Grow.",
+  "short_name": "GreenGuardian",
+  "description": "IoT Soil Moisture SOS & GPS-verified tree survival PWA by SYNOVA.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f8f5",
+  "theme_color": "#166534",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='44' fill='%23166534'/><path d='M96 32C64 32 40 56 40 88C40 130 96 168 96 168C96 168 152 130 152 88C152 56 128 32 96 32Z' fill='%2322c55e'/><path d='M96 118V72M96 88C96 74 110 64 124 64C124 78 112 88 96 88ZM96 98C96 86 84 76 70 76C70 88 82 98 96 98Z' stroke='white' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%23166534'/><path d='M256 84C170 84 106 148 106 234C106 346 256 448 256 448C256 448 406 346 406 234C406 148 342 84 256 84Z' fill='%2322c55e'/><path d='M256 314V192M256 234C256 196 294 170 330 170C330 208 298 234 256 234ZM256 260C256 228 224 202 186 202C186 234 218 260 256 260Z' stroke='white' stroke-width='22' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
