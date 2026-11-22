@@ -1,9 +1,9 @@
-mm{
-  "id": "./",
+{
+  "id": "./index.html",
   "name": "GreenGuardian — Plant. Protect. Grow.",
   "short_name": "GreenGuardian",
   "description": "Live GPS tree care, IoT soil moisture SOS & verified green points by SYNOVA.",
-  "start_url": "./",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f0fdf4",
@@ -11,16 +11,16 @@ mm{
   "orientation": "portrait",
   "icons": [
     {
-      "src": "./icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/628/628283.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }
