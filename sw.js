@@ -1,49 +1,58 @@
-// GreenGuardian Service Worker (sw.js) — SYNOVA
-self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+const CACHE_NAME = 'greenguardian-synova-v2';
+const CORE_ASSETS = ['./', './index.html', './manifest.json', './icon.svg'];
 
-self.addEventListener('push', (event) => {
-  let data = {
-    title: 'Tree SOS: Low Soil Moisture 18%',
-    body: 'Neem Sapling needs water! Tap to help (+100 pts).'
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(CORE_ASSETS)).catch(() => {})
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
+  event.respondWith(
+    fetch(event.request)
+      .then(res => {
+        const copy = res.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(() => {});
+        return res;
+      })
+      .catch(() => caches.match(event.request))
+  );
+});
+
+self.addEventListener('push', event => {
+  const data = event.data ? event.data.json() : {
+    title: '🚨 GreenGuardian Tree SOS',
+    body: 'A nearby sapling needs water! Tap to help (+100 pts).'
   };
-  try {
-    if (event.data) data = Object.assign(data, event.data.json());
-  } catch (e) {}
-
   event.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
+      icon: './icon.svg',
+      badge: './icon.svg',
       vibrate: [200, 100, 200],
-      requireInteraction: true,
       tag: 'greenguardian-sos',
-      data: { url: './index.html' },
-      actions: [
-        { action: 'help', title: 'I WILL HELP' },
-        { action: 'open', title: 'Open Map' }
-      ]
+      renotify: true
     })
   );
 });
 
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'sync-tree-sos') {
-    event.waitUntil(
-      self.registration.showNotification('GreenGuardian Sync Complete', {
-        body: 'Your verified tree care proof and Green Points are synced.'
-      })
-    );
-  }
-});
-
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', event => {
   event.notification.close();
   event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
-      for (const client of clients) {
-        if ('focus' in client) return client.focus();
-      }
-      if (self.clients.openWindow) return self.clients.openWindow('./index.html');
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+      if (clientList.length > 0) return clientList[0].focus();
+      return self.clients.openWindow('./');
     })
   );
 });
