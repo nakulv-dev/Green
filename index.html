@@ -19,7 +19,7 @@
   <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0fdf4; color: #0f172a; margin: 0; }
-    #map { height: 340px; width: 100%; border-radius: 1rem; z-index: 1; }
+    #map { height: 330px; width: 100%; border-radius: 1rem; z-index: 1; }
     .leaflet-container { font-family: inherit; }
     @keyframes pulseRing {
       0% { transform: scale(0.8); opacity: 0.85; }
@@ -37,12 +37,56 @@
 </head>
 <body class="pb-24 max-w-md mx-auto min-h-screen bg-gradient-to-b from-emerald-50 via-white to-emerald-50/60 shadow-xl relative">
 
+  <!-- GMAIL LOGIN OVERLAY -->
+  <div id="loginScreen" class="hidden fixed inset-0 z-50 bg-emerald-950/90 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-4">
+      <div class="text-center space-y-1">
+        <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-3xl flex items-center justify-center mx-auto shadow-sm">🌱</div>
+        <h2 class="font-extrabold text-lg text-emerald-950">Welcome to GreenGuardian</h2>
+        <p class="text-xs text-slate-500">Sign in with your Gmail so your tree care & SOS rescues are credited to you on the live community feed.</p>
+      </div>
+
+      <div class="space-y-2.5">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Your Name</label>
+          <input id="loginNameInput" type="text" placeholder="e.g., Nakul / Priya" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Gmail Address</label>
+          <div class="relative">
+            <input id="loginGmailInput" type="email" placeholder="yourname@gmail.com" class="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
+            <span class="absolute left-3 top-2.5 text-sm">✉️</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Your Identity</label>
+          <select id="loginIdentitySelect" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:border-emerald-600">
+            <option value="Students">🎓 Students</option>
+            <option value="Volunteers">🙋 Volunteers</option>
+            <option value="NGOs">🌍 NGOs</option>
+            <option value="Local Communities">🏘️ Local Communities</option>
+            <option value="Government">🏛️ Government</option>
+            <option value="Schools / Colleges">🏫 Schools / Colleges</option>
+          </select>
+        </div>
+      </div>
+
+      <button onclick="submitGmailLogin()" class="w-full py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2">
+        <span>G</span> Continue with Gmail
+      </button>
+
+      <p class="text-[10px] text-center text-slate-400">SYNOVA • Plant. Protect. Grow.</p>
+    </div>
+  </div>
+
   <!-- Top Header -->
-  <header class="sticky top-0 z-30 bg-emerald-900 text-white px-3.5 py-3 shadow-md flex items-center justify-between gap-2">
+  <header class="sticky top-0 z-30 bg-emerald-900 text-white px-3 py-2.5 shadow-md flex items-center justify-between gap-1.5">
     <div class="flex items-center gap-2 min-w-0">
-      <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-lg shrink-0">🌱</div>
+      <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-base shrink-0">🌱</div>
       <div class="min-w-0">
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1">
           <h1 class="font-bold text-sm tracking-tight leading-none truncate">GreenGuardian</h1>
           <span class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-emerald-700 text-emerald-100 shrink-0">SYNOVA</span>
         </div>
@@ -50,12 +94,15 @@
       </div>
     </div>
     <div class="flex items-center gap-1.5 shrink-0">
-      <button id="headerInstallBtn" onclick="handleInstallClick()" class="text-[11px] font-bold px-2.5 py-1.5 rounded-xl bg-amber-400 text-emerald-950 shadow active:scale-95 transition">
+      <button id="headerUserBtn" onclick="switchTab('identity')" class="text-[11px] font-bold px-2 py-1.5 rounded-xl bg-emerald-800 border border-emerald-600 text-emerald-100 flex items-center gap-1 max-w-[96px] truncate">
+        <span>👤</span><span id="headerUserLabel" class="truncate">Sign In</span>
+      </button>
+      <button id="headerInstallBtn" onclick="handleInstallClick()" class="text-[11px] font-bold px-2 py-1.5 rounded-xl bg-amber-400 text-emerald-950 shadow active:scale-95 transition">
         📲 Install
       </button>
-      <button onclick="openModal('notifModal')" class="relative p-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 transition" aria-label="Notifications">
+      <button onclick="openModal('notifModal')" class="relative p-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 transition" aria-label="Notifications">
         🔔
-        <span id="notifDot" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500"></span>
+        <span id="notifDot" class="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500"></span>
       </button>
     </div>
   </header>
@@ -75,11 +122,11 @@
   <main id="tab-home" class="p-4 space-y-4">
     <section class="rounded-2xl bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-700 text-white p-4 shadow-md">
       <div class="flex items-center justify-between mb-3">
-        <div>
-          <p class="text-[11px] uppercase tracking-wider text-emerald-200 font-semibold">Active Identity</p>
-          <p id="homeIdentity" class="text-sm font-bold flex items-center gap-1.5">🎓 Students</p>
+        <div class="min-w-0 pr-2">
+          <p id="homeIdentity" class="text-xs font-bold text-emerald-200">🎓 Students</p>
+          <p id="homeGmailBadge" class="text-xs font-medium text-white/90 truncate mt-0.5">guest@gmail.com</p>
         </div>
-        <div class="text-right">
+        <div class="text-right shrink-0">
           <p class="text-[11px] text-emerald-200">Verified Green Points</p>
           <p class="text-xl font-extrabold text-amber-300"><span id="homePoints">250</span> pts</p>
         </div>
@@ -100,29 +147,40 @@
       </div>
     </section>
 
+    <!-- 2x2 Action Grid -->
     <section class="grid grid-cols-2 gap-3">
       <button onclick="switchTab('map')" class="p-3.5 rounded-2xl bg-emerald-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🗺️</span>
         <p class="font-bold text-sm mt-1.5">Live Tree Map</p>
         <p class="text-[11px] text-emerald-100">GPS & nearby saplings</p>
       </button>
-      <button onclick="switchTab('plant')" class="p-3.5 rounded-2xl bg-sky-600 text-white text-left shadow-sm active:scale-95 transition">
-        <span class="text-2xl">🌿</span>
-        <p class="font-bold text-sm mt-1.5">Plant a Tree</p>
-        <p class="text-[11px] text-sky-100">+75 pts with photo proof</p>
+      <button onclick="switchTab('community')" class="p-3.5 rounded-2xl bg-indigo-600 text-white text-left shadow-sm active:scale-95 transition">
+        <span class="text-2xl">🌍</span>
+        <p class="font-bold text-sm mt-1.5">Community Feed</p>
+        <p class="text-[11px] text-indigo-100">See everyone's actions</p>
       </button>
       <button onclick="switchTab('sos')" class="p-3.5 rounded-2xl bg-rose-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🚨</span>
         <p class="font-bold text-sm mt-1.5">Tree SOS & IoT</p>
         <p class="text-[11px] text-rose-100">+100 pts rescue alert</p>
       </button>
-      <button onclick="switchTab('identity')" class="p-3.5 rounded-2xl bg-violet-600 text-white text-left shadow-sm active:scale-95 transition">
-        <span class="text-2xl">🏆</span>
-        <p class="font-bold text-sm mt-1.5">Green Points</p>
-        <p class="text-[11px] text-violet-100">Proofs & Leaderboard</p>
+      <button onclick="switchTab('plant')" class="p-3.5 rounded-2xl bg-sky-600 text-white text-left shadow-sm active:scale-95 transition">
+        <span class="text-2xl">🌿</span>
+        <p class="font-bold text-sm mt-1.5">Plant a Tree</p>
+        <p class="text-[11px] text-sky-100">+75 pts with photo proof</p>
       </button>
     </section>
 
+    <!-- Live Community Contributions Preview -->
+    <section class="bg-white rounded-2xl p-4 border border-indigo-100 shadow-sm space-y-2.5">
+      <div class="flex items-center justify-between">
+        <h2 class="font-bold text-sm text-slate-800">🌍 Live Community Contributions</h2>
+        <button onclick="switchTab('community')" class="text-xs font-bold text-indigo-600">View All →</button>
+      </div>
+      <div id="homeCommunityPreview" class="space-y-2.5"></div>
+    </section>
+
+    <!-- Today's Care Reminders -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm">
       <div class="flex items-center justify-between mb-3">
         <h2 class="font-bold text-sm text-slate-800">💧 Today's Care Reminders</h2>
@@ -168,14 +226,27 @@
     </div>
   </main>
 
-  <!-- TAB 3: PLANT A TREE -->
+  <!-- TAB 3: PUBLIC COMMUNITY CONTRIBUTIONS FEED -->
+  <main id="tab-community" class="hidden p-4 space-y-3">
+    <div class="bg-gradient-to-r from-indigo-800 to-emerald-800 text-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
+      <div>
+        <h2 class="font-bold text-base">🌍 Community Contributions</h2>
+        <p class="text-xs text-indigo-100 mt-0.5">Everyone's live planting, watering & SOS rescues</p>
+      </div>
+      <span id="communityCountBadge" class="text-xs font-extrabold bg-white/15 px-2.5 py-1 rounded-full">0 live</span>
+    </div>
+
+    <div id="communityFeedList" class="space-y-3"></div>
+  </main>
+
+  <!-- TAB 4: PLANT A TREE -->
   <main id="tab-plant" class="hidden p-4 space-y-4">
     <div class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <h2 class="font-bold text-base text-slate-800">🌱 Register Newly Planted Tree</h2>
         <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">+75 pts</span>
       </div>
-      <p class="text-xs text-slate-500">Logs your tree at your current GPS spot with a verified photo proof so volunteers can adopt and water it.</p>
+      <p class="text-xs text-slate-500">Logs your tree at your current GPS spot with a verified photo proof and notifies the community feed.</p>
 
       <div>
         <label class="block text-xs font-semibold text-slate-700 mb-1">Tree Species / Name</label>
@@ -196,12 +267,12 @@
       </div>
 
       <button onclick="startPlantProof()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow">
-        📸 Capture Photo Proof & Register Tree (+75 pts)
+        📸 Capture Photo Proof & Publish (+75 pts)
       </button>
     </div>
   </main>
 
-  <!-- TAB 4: CARE, TREE SOS & IOT SENSOR -->
+  <!-- TAB 5: CARE, TREE SOS & IOT SENSOR -->
   <main id="tab-sos" class="hidden p-4 space-y-4">
     <section class="bg-slate-900 text-white rounded-2xl p-4 shadow-md space-y-3">
       <div class="flex items-center justify-between">
@@ -248,24 +319,42 @@
     </section>
   </main>
 
-  <!-- TAB 5: IDENTITY, PROOFS & LEADERBOARD -->
+  <!-- TAB 6: GMAIL PROFILE, IDENTITY & LEADERBOARD -->
   <main id="tab-identity" class="hidden p-4 space-y-4">
+    <!-- Gmail Account Card -->
+    <section class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-11 h-11 rounded-2xl bg-emerald-700 text-white font-extrabold text-base flex items-center justify-center shrink-0" id="profileAvatar">G</div>
+        <div class="min-w-0">
+          <p id="profileCardName" class="font-bold text-sm text-slate-900 truncate">Guardian User</p>
+          <p id="profileCardGmail" class="text-xs text-emerald-700 font-medium truncate">user@gmail.com</p>
+          <p id="profileCardIdentity" class="text-[11px] text-slate-500 mt-0.5">🎓 Students</p>
+        </div>
+      </div>
+      <button onclick="openGmailSwitch()" class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">
+        Switch Gmail
+      </button>
+    </section>
+
+    <!-- Identity Selector -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
       <div>
         <h2 class="font-bold text-base text-slate-800">🪪 Your Identity</h2>
-        <p class="text-xs text-slate-500">Select your role—stamped on every verified photo proof & leaderboard entry.</p>
+        <p class="text-xs text-slate-500">Stamped along with your Gmail on every verified contribution.</p>
       </div>
       <div id="identityGrid" class="grid grid-cols-2 gap-2"></div>
     </section>
 
+    <!-- Leaderboard -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-2.5">
       <h3 class="font-bold text-sm text-slate-800">🏆 Green Champions Leaderboard</h3>
       <div id="leaderboardList" class="space-y-2 text-xs"></div>
     </section>
 
+    <!-- My Verified Photo Proofs Gallery -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-sm text-slate-800">📸 Geotagged Proof Log</h3>
+        <h3 class="font-bold text-sm text-slate-800">📸 My Geotagged Proof Log</h3>
         <span id="proofCountBadge" class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">0 verified</span>
       </div>
       <div id="proofGallery" class="space-y-3"></div>
@@ -277,21 +366,21 @@
   </main>
 
   <!-- Bottom Navigation -->
-  <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur border-t border-slate-200 px-2 py-1.5 flex justify-around z-30">
-    <button onclick="switchTab('home')" data-tab="home" class="nav-btn flex flex-col items-center py-1 px-2.5 rounded-xl text-emerald-700 font-bold text-[11px]">
+  <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur border-t border-slate-200 px-1.5 py-1.5 flex justify-around z-30">
+    <button onclick="switchTab('home')" data-tab="home" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-emerald-700 font-bold text-[11px]">
       <span class="text-lg">🏠</span>Home
     </button>
-    <button onclick="switchTab('map')" data-tab="map" class="nav-btn flex flex-col items-center py-1 px-2.5 rounded-xl text-slate-500 font-medium text-[11px]">
-      <span class="text-lg">🗺️</span>Live Map
+    <button onclick="switchTab('map')" data-tab="map" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]">
+      <span class="text-lg">🗺️</span>Map
     </button>
-    <button onclick="switchTab('plant')" data-tab="plant" class="nav-btn flex flex-col items-center py-1 px-2.5 rounded-xl text-slate-500 font-medium text-[11px]">
+    <button onclick="switchTab('community')" data-tab="community" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]">
+      <span class="text-lg">🌍</span>Community
+    </button>
+    <button onclick="switchTab('plant')" data-tab="plant" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]">
       <span class="text-lg">🌱</span>+ Plant
     </button>
-    <button onclick="switchTab('sos')" data-tab="sos" class="nav-btn flex flex-col items-center py-1 px-2.5 rounded-xl text-slate-500 font-medium text-[11px]">
+    <button onclick="switchTab('sos')" data-tab="sos" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]">
       <span class="text-lg">🚨</span>Care & SOS
-    </button>
-    <button onclick="switchTab('identity')" data-tab="identity" class="nav-btn flex flex-col items-center py-1 px-2.5 rounded-xl text-slate-500 font-medium text-[11px]">
-      <span class="text-lg">🪪</span>Identity
     </button>
   </nav>
 
@@ -310,7 +399,7 @@
         </div>
         <button onclick="closeModal('proofModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
-      <p id="proofDesc" class="text-xs text-slate-600">Take or upload a clear photo showing watering, mulching, or sapling care. Live GPS & timestamp will be stamped automatically.</p>
+      <p id="proofDesc" class="text-xs text-slate-600">Upload a photo showing your care. Your Gmail, Identity, GPS & timestamp will be stamped and shared with the community!</p>
       <label class="block w-full p-4 border-2 border-dashed border-emerald-300 rounded-2xl bg-emerald-50/60 text-center cursor-pointer hover:bg-emerald-50">
         <span class="text-2xl block mb-1">📷</span>
         <span class="text-xs font-bold text-emerald-800">Tap to Open Camera or Choose Photo</span>
@@ -318,10 +407,10 @@
       </label>
       <div id="proofPreviewWrap" class="hidden space-y-2">
         <img id="proofStampedImg" alt="Geotagged proof preview" class="w-full rounded-2xl border border-slate-200 shadow-sm" />
-        <p class="text-[11px] text-emerald-700 font-semibold text-center">✅ Geotag, Identity & Timestamp Verified</p>
+        <p class="text-[11px] text-emerald-700 font-semibold text-center">✅ Gmail, Geotag & Timestamp Verified</p>
       </div>
       <button id="submitProofBtn" disabled onclick="submitVerifiedProof()" class="w-full py-3 rounded-xl bg-emerald-600 disabled:bg-slate-300 text-white font-bold text-sm shadow">
-        Claim Verified Green Points
+        Publish to Community & Claim Points
       </button>
     </div>
   </div>
@@ -363,7 +452,7 @@
   <div id="notifModal" class="hidden fixed inset-0 z-40 bg-black/60 flex items-end sm:items-center justify-center p-3">
     <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-base text-slate-900">🔔 Live & Background Alerts</h3>
+        <h3 class="font-bold text-base text-slate-900">🔔 Live Activity & SOS Alerts</h3>
         <button onclick="closeModal('notifModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
       <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2">
@@ -381,8 +470,11 @@
         </div>
       </div>
       <div class="space-y-2">
-        <h4 class="font-bold text-xs text-slate-700 uppercase tracking-wider">Recent Live Alerts</h4>
-        <div id="notifHistoryList" class="space-y-2 max-h-56 overflow-y-auto"></div>
+        <div class="flex items-center justify-between">
+          <h4 class="font-bold text-xs text-slate-700 uppercase tracking-wider">Live Feed & Alerts (Tap to View)</h4>
+          <button onclick="closeModal('notifModal'); switchTab('community');" class="text-[11px] font-bold text-indigo-600">Open Feed →</button>
+        </div>
+        <div id="notifHistoryList" class="space-y-2 max-h-60 overflow-y-auto"></div>
       </div>
     </div>
   </div>
@@ -394,7 +486,7 @@
         <h3 class="font-bold text-base text-slate-900">📲 Install GreenGuardian App</h3>
         <button onclick="closeModal('installModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
-      <p class="text-xs text-slate-600">Install directly onto your mobile home screen (no Play Store wait, works full-screen with live SOS alerts):</p>
+      <p class="text-xs text-slate-600">Install directly onto your mobile home screen:</p>
       <div class="space-y-2 text-xs">
         <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
           <p class="font-bold text-emerald-900">🤖 Android (Chrome / Edge)</p>
@@ -412,8 +504,8 @@
   </div>
 
   <script>
-    const SYNC_TOPIC = 'gg-synova-2026-live';
-    const STORAGE_KEY = 'gg_synova_state_v1';
+    const SYNC_TOPIC = 'gg-synova-2026-community-v2';
+    const STORAGE_KEY = 'gg_synova_state_v2';
 
     const IDENTITIES = [
       { id: 'Students', icon: '🎓', desc: 'Plant & care on campus' },
@@ -432,16 +524,49 @@
       { id: 't5', name: 'Tamarind Tree #105', place: 'Community Park South', lat: 13.0850, lng: 80.2735, health: 'Healthy', moisture: 61, sos: false, adoptedBy: 'Local Communities', lastWatered: 'Today' }
     ];
 
+    const SEED_CONTRIBUTIONS = [
+      {
+        id: 'seed_c1',
+        userName: 'Kavya S.',
+        userGmail: 'kavya.green@gmail.com',
+        identity: 'Students',
+        badge: '💧 Watered & Mulched',
+        title: 'Watered Pongamia Sapling #103',
+        place: 'Chennai Campus Block A',
+        pts: 50,
+        time: '12 mins ago',
+        thumb: null,
+        applauds: 6,
+        applaudedByMe: false
+      },
+      {
+        id: 'seed_c2',
+        userName: 'Rohan M.',
+        userGmail: 'rohan.volunteer@gmail.com',
+        identity: 'Volunteers',
+        badge: '🚨 SOS Rescued',
+        title: 'Rescued Banyan Sapling #104 from Dry Soil',
+        place: 'Chennai Eco Park',
+        pts: 100,
+        time: '38 mins ago',
+        thumb: null,
+        applauds: 11,
+        applaudedByMe: false
+      }
+    ];
+
     let state = {
+      user: { name: '', gmail: '', loggedIn: false },
       userLoc: { lat: 13.0827, lng: 80.2707, accuracy: null, label: 'Chennai / Gingee', pinned: false },
       identity: 'Students',
       points: 250,
       moisture: 64,
       trees: [...DEFAULT_TREES],
+      contributions: [...SEED_CONTRIBUTIONS],
       proofs: [],
       notifications: [
-        { id: 'n1', title: '🚨 Tree SOS: Mango Young Tree #102', body: 'Wilting leaves & dry soil detected at Gingee. Volunteers needed!', time: 'Just now' },
-        { id: 'n2', title: '💧 Care Reminder: Neem Sapling #101', body: 'Soil moisture dropped to 22%. Water & upload photo proof for +50 pts.', time: '15m ago' }
+        { id: 'n1', title: '🚨 Tree SOS: Mango Young Tree #102', body: 'Wilting leaves & dry soil detected at Gingee. Volunteers needed!', time: 'Just now', targetTab: 'sos' },
+        { id: 'n2', title: '💧 Kavya S. (kavya.green@gmail.com)', body: 'Watered Pongamia Sapling #103 (+50 pts) — Tap to view in Community Feed', time: '12m ago', targetTab: 'community' }
       ],
       seenSyncIds: []
     };
@@ -451,6 +576,7 @@
     let tapPinMode = false;
     let pendingProof = null;
     let stampedDataUrl = null;
+    let stampedThumbUrl = null;
     let deferredInstallPrompt = null;
     let toastTimer = null;
 
@@ -465,13 +591,57 @@
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
     }
 
+    function maskGmail(email) {
+      if (!email || !email.includes('@')) return 'guardian@gmail.com';
+      const [userPart, domain] = email.split('@');
+      if (userPart.length <= 3) return `${userPart}***@${domain}`;
+      return `${userPart.slice(0, 4)}***@${domain}`;
+    }
+
+    // Gmail Login Flow
+    function checkLoginStatus() {
+      if (!state.user || !state.user.loggedIn || !state.user.gmail) {
+        document.getElementById('loginScreen').classList.remove('hidden');
+      } else {
+        document.getElementById('loginScreen').classList.add('hidden');
+      }
+    }
+
+    function openGmailSwitch() {
+      document.getElementById('loginNameInput').value = state.user.name || '';
+      document.getElementById('loginGmailInput').value = state.user.gmail || '';
+      document.getElementById('loginIdentitySelect').value = state.identity || 'Students';
+      document.getElementById('loginScreen').classList.remove('hidden');
+    }
+
+    function submitGmailLogin() {
+      const nameRaw = document.getElementById('loginNameInput').value.trim();
+      let gmailRaw = document.getElementById('loginGmailInput').value.trim().toLowerCase();
+      const chosenIdentity = document.getElementById('loginIdentitySelect').value;
+
+      if (!nameRaw) return showToast('Please enter your name');
+      if (!gmailRaw) return showToast('Please enter your Gmail address');
+      if (!gmailRaw.includes('@')) gmailRaw = `${gmailRaw}@gmail.com`;
+      if (!gmailRaw.endsWith('@gmail.com') && !gmailRaw.includes('@')) {
+        return showToast('Enter a valid @gmail.com address');
+      }
+
+      state.user = { name: nameRaw, gmail: gmailRaw, loggedIn: true };
+      state.identity = chosenIdentity;
+      saveState();
+      document.getElementById('loginScreen').classList.add('hidden');
+      renderAll();
+      enableOSNotifications(false);
+      showToast(`👋 Signed in as ${nameRaw} (${gmailRaw})`);
+    }
+
     function showToast(msg) {
       const box = document.getElementById('toastBox');
       const inner = document.getElementById('toastInner');
       inner.textContent = msg;
       box.classList.remove('opacity-0', 'translate-y-2');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => box.classList.add('opacity-0', 'translate-y-2'), 3200);
+      toastTimer = setTimeout(() => box.classList.add('opacity-0', 'translate-y-2'), 3400);
     }
 
     function getDistanceMeters(lat1, lon1, lat2, lon2) {
@@ -679,12 +849,12 @@
     }
 
     function switchTab(tab) {
-      ['home', 'map', 'plant', 'sos', 'identity'].forEach(t => {
+      ['home', 'map', 'community', 'plant', 'sos', 'identity'].forEach(t => {
         document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab);
       });
       document.querySelectorAll('.nav-btn').forEach(btn => {
         const active = btn.dataset.tab === tab;
-        btn.className = `nav-btn flex flex-col items-center py-1 px-2.5 rounded-xl text-[11px] ${active ? 'text-emerald-700 font-bold bg-emerald-50' : 'text-slate-500 font-medium'}`;
+        btn.className = `nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-[11px] ${active ? 'text-emerald-700 font-bold bg-emerald-50' : 'text-slate-500 font-medium'}`;
       });
       if (tab === 'map' && map) setTimeout(() => { map.invalidateSize(); renderMapMarkers(); }, 120);
     }
@@ -705,15 +875,36 @@
     function openProofModal(type, treeId, extra = {}) {
       const tree = treeId ? state.trees.find(t => t.id === treeId) : null;
       const pts = type === 'sos' ? 100 : type === 'plant' ? 75 : 50;
-      const title = type === 'sos' ? `Rescue Proof: ${tree ? tree.name : 'SOS Tree'}` : type === 'plant' ? `Planting Proof: ${extra.species}` : `Care & Watering Proof: ${tree ? tree.name : 'Sapling'}`;
-      pendingProof = { type, treeId, pts, title, extra };
+      const title = type === 'sos' ? `Rescued ${tree ? tree.name : 'SOS Tree'}` : type === 'plant' ? `Planted ${extra.species}` : `Watered & Cared for ${tree ? tree.name : 'Sapling'}`;
+      pendingProof = { type, treeId, pts, title, tree, extra };
       stampedDataUrl = null;
+      stampedThumbUrl = null;
       document.getElementById('proofBadge').textContent = `+${pts} Verified Green Points`;
       document.getElementById('proofTitle').textContent = title;
       document.getElementById('proofFileInput').value = '';
       document.getElementById('proofPreviewWrap').classList.add('hidden');
       document.getElementById('submitProofBtn').disabled = true;
       openModal('proofModal');
+    }
+
+    function renderStampedCanvas(img, maxW, quality) {
+      const canvas = document.createElement('canvas');
+      const scale = Math.min(1, maxW / img.width);
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const barH = Math.max(44, Math.round(canvas.height * 0.14));
+      ctx.fillStyle = 'rgba(6, 78, 59, 0.90)';
+      ctx.fillRect(0, canvas.height - barH, canvas.width, barH);
+      ctx.fillStyle = '#fde047';
+      ctx.font = `bold ${Math.max(10, Math.round(canvas.width * 0.022))}px sans-serif`;
+      const actor = state.user.name ? `${state.user.name} (${maskGmail(state.user.gmail)})` : state.identity;
+      ctx.fillText(`GreenGuardian • ${actor} | +${pendingProof.pts} pts`, 10, canvas.height - barH * 0.55);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `${Math.max(9, Math.round(canvas.width * 0.018))}px monospace`;
+      ctx.fillText(`GPS: ${state.userLoc.lat.toFixed(4)}, ${state.userLoc.lng.toFixed(4)} • ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`, 10, canvas.height - barH * 0.18);
+      return canvas.toDataURL('image/jpeg', quality);
     }
 
     function processProofImage(event) {
@@ -723,21 +914,8 @@
       reader.onload = e => {
         const img = new Image();
         img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const scale = Math.min(1, 720 / img.width);
-          canvas.width = img.width * scale;
-          canvas.height = img.height * scale;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = 'rgba(6, 78, 59, 0.88)';
-          ctx.fillRect(0, canvas.height - 66, canvas.width, 66);
-          ctx.fillStyle = '#fde047';
-          ctx.font = 'bold 13px sans-serif';
-          ctx.fillText(`GreenGuardian • SYNOVA | +${pendingProof.pts} pts (${state.identity})`, 12, canvas.height - 42);
-          ctx.fillStyle = '#ffffff';
-          ctx.font = '11px monospace';
-          ctx.fillText(`GPS: ${state.userLoc.lat.toFixed(5)}, ${state.userLoc.lng.toFixed(5)} • ${new Date().toLocaleString()}`, 12, canvas.height - 20);
-          stampedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          stampedDataUrl = renderStampedCanvas(img, 720, 0.80);
+          stampedThumbUrl = renderStampedCanvas(img, 320, 0.55);
           document.getElementById('proofStampedImg').src = stampedDataUrl;
           document.getElementById('proofPreviewWrap').classList.remove('hidden');
           document.getElementById('submitProofBtn').disabled = false;
@@ -749,15 +927,17 @@
 
     function submitVerifiedProof() {
       if (!pendingProof || !stampedDataUrl) return;
-      const { type, treeId, pts, title, extra } = pendingProof;
+      const { type, treeId, pts, title, tree, extra } = pendingProof;
       state.points += pts;
       let syncedTree = null;
+      let placeLabel = state.userLoc.label;
 
       if (type === 'plant') {
+        placeLabel = extra.place;
         const newTree = {
           id: 'tree_' + Date.now(), name: extra.species, place: extra.place,
           lat: state.userLoc.lat, lng: state.userLoc.lng, health: 'Healthy',
-          moisture: 75, sos: false, adoptedBy: state.identity, lastWatered: 'Just planted'
+          moisture: 75, sos: false, adoptedBy: state.user.name || state.identity, lastWatered: 'Just planted'
         };
         state.trees.unshift(newTree);
         syncedTree = newTree;
@@ -766,6 +946,7 @@
       } else if (treeId) {
         const idx = state.trees.findIndex(t => t.id === treeId);
         if (idx !== -1) {
+          placeLabel = state.trees[idx].place;
           state.trees[idx].sos = false;
           state.trees[idx].health = 'Healthy';
           state.trees[idx].moisture = 78;
@@ -774,6 +955,27 @@
         }
       }
 
+      const actorName = state.user.name || 'Guardian';
+      const actorGmail = state.user.gmail || 'guardian@gmail.com';
+      const badgeText = type === 'sos' ? '🚨 SOS Rescued' : type === 'plant' ? '🌱 New Tree Planted' : '💧 Watered & Cared';
+
+      const contribItem = {
+        id: 'contrib_' + Date.now(),
+        userName: actorName,
+        userGmail: actorGmail,
+        identity: state.identity,
+        badge: badgeText,
+        title,
+        place: placeLabel,
+        pts,
+        time: 'Just now',
+        thumb: stampedThumbUrl,
+        applauds: 1,
+        applaudedByMe: true
+      };
+
+      state.contributions.unshift(contribItem);
+
       const proofRecord = {
         id: 'proof_' + Date.now(), title, pts, identity: state.identity,
         coords: `${state.userLoc.lat.toFixed(4)}, ${state.userLoc.lng.toFixed(4)}`,
@@ -781,11 +983,33 @@
         img: stampedDataUrl
       };
       state.proofs.unshift(proofRecord);
+
       closeModal('proofModal');
       saveState();
       renderAll();
-      showToast(`🎉 +${pts} Green Points awarded! Proof verified & synced.`);
-      publishSyncEvent({ kind: 'proof_update', id: proofRecord.id, tree: syncedTree, notifTitle: `✅ ${title}`, notifBody: `Verified by ${state.identity} (+${pts} pts)` });
+      switchTab('community');
+      showToast(`🎉 +${pts} pts! Published to everyone's Community Feed.`);
+
+      const notifTitle = `${badgeText} by ${actorName}`;
+      const notifBody = `${title} at ${placeLabel} (+${pts} pts) — Tap to view photo proof`;
+      publishSyncEvent({
+        kind: 'contribution',
+        id: contribItem.id,
+        tree: syncedTree,
+        contribution: contribItem,
+        notifTitle,
+        notifBody
+      });
+    }
+
+    function applaudContribution(contribId) {
+      const item = state.contributions.find(c => c.id === contribId);
+      if (!item || item.applaudedByMe) return;
+      item.applauds = (item.applauds || 0) + 1;
+      item.applaudedByMe = true;
+      saveState();
+      renderAll();
+      showToast(`👏 Sent appreciation to ${item.userName}!`);
     }
 
     function handleMoistureChange(val) {
@@ -824,12 +1048,13 @@
       saveState();
       renderAll();
       const title = `🚨 IoT Sensor Tree SOS: ${target.name}`;
-      const body = `Soil moisture dropped to ${pct}% at ${target.place}. Tap to water & earn +100 pts!`;
-      pushNotification(title, body);
+      const body = `Soil moisture dropped to ${pct}% at ${target.place}. Tap to rescue & earn +100 pts!`;
+      pushNotification(title, body, 'sos');
       publishSyncEvent({ kind: 'sos_alert', id: 'sos_' + Date.now(), tree: target, notifTitle: title, notifBody: body });
     }
 
     function triggerManualSOS() {
+      const actorName = state.user.name || state.identity;
       const newSOS = {
         id: 'sos_tree_' + Date.now(), name: 'Dry Sapling Alert #' + Math.floor(100 + Math.random() * 899),
         place: state.userLoc.label, lat: state.userLoc.lat + 0.0008, lng: state.userLoc.lng + 0.0008,
@@ -838,20 +1063,47 @@
       state.trees.unshift(newSOS);
       saveState();
       renderAll();
-      const title = `🚨 Community Tree SOS: ${newSOS.name}`;
-      const body = `Reported by ${state.identity} near ${newSOS.place}.`;
-      pushNotification(title, body);
+      const title = `🚨 Tree SOS by ${actorName}`;
+      const body = `${newSOS.name} needs water near ${newSOS.place}.`;
+      pushNotification(title, body, 'sos');
       publishSyncEvent({ kind: 'sos_alert', id: newSOS.id, tree: newSOS, notifTitle: title, notifBody: body });
-      showToast('🚨 Live Tree SOS broadcasted to nearby guardians!');
+      showToast('🚨 Live Tree SOS broadcasted to all guardians!');
     }
 
     function adoptTree(treeId) {
       const tree = state.trees.find(t => t.id === treeId);
       if (!tree) return;
-      tree.adoptedBy = state.identity;
+      const actorName = state.user.name || state.identity;
+      const actorGmail = state.user.gmail || 'guardian@gmail.com';
+      tree.adoptedBy = `${actorName} (${state.identity})`;
+
+      const contribItem = {
+        id: 'adopt_' + Date.now(),
+        userName: actorName,
+        userGmail: actorGmail,
+        identity: state.identity,
+        badge: '🤝 Adopted Tree',
+        title: `Adopted ${tree.name} for Ongoing Care`,
+        place: tree.place,
+        pts: 25,
+        time: 'Just now',
+        thumb: null,
+        applauds: 1,
+        applaudedByMe: true
+      };
+      state.points += 25;
+      state.contributions.unshift(contribItem);
       saveState();
       renderAll();
-      showToast(`🤝 Adopted ${tree.name} under ${state.identity}!`);
+      showToast(`🤝 Adopted ${tree.name} (+25 pts)! Shared with community.`);
+      publishSyncEvent({
+        kind: 'contribution',
+        id: contribItem.id,
+        tree,
+        contribution: contribItem,
+        notifTitle: `🤝 ${actorName} adopted ${tree.name}`,
+        notifBody: `Taking ongoing care at ${tree.place} — Tap to view`
+      });
     }
 
     function updateNotifPermUI() {
@@ -869,45 +1121,47 @@
       updateNotifPermUI();
       if (perm === 'granted' && userTriggered) {
         showToast('🔔 OS & Background Alerts Enabled!');
-        sendNativeNotification('🌱 GreenGuardian Alerts Active', 'You will receive live Tree SOS & watering alerts even in background.');
+        sendNativeNotification('🌱 GreenGuardian Alerts Active', 'You will receive live community contribution & Tree SOS alerts.');
       } else if (userTriggered) {
         showToast('Please allow Notifications in browser settings');
       }
     }
 
-    function sendNativeNotification(title, body) {
+    function sendNativeNotification(title, body, targetTab = 'community') {
       if (!('Notification' in window) || Notification.permission !== 'granted') return;
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.ready.then(reg => reg.showNotification(title, { body, icon: './icon.svg', tag: 'gg-sos', renotify: true }));
+        navigator.serviceWorker.ready.then(reg => reg.showNotification(title, { body, icon: './icon.svg', tag: 'gg-live', renotify: true }));
       } else {
-        new Notification(title, { body, icon: './icon.svg' });
+        const n = new Notification(title, { body, icon: './icon.svg' });
+        n.onclick = () => { window.focus(); switchTab(targetTab); };
       }
     }
 
-    function pushNotification(title, body) {
-      state.notifications.unshift({ id: 'n_' + Date.now(), title, body, time: 'Just now' });
+    function pushNotification(title, body, targetTab = 'community') {
+      state.notifications.unshift({ id: 'n_' + Date.now(), title, body, time: 'Just now', targetTab });
       document.getElementById('notifDot').classList.remove('hidden');
       saveState();
       renderNotifications();
-      sendNativeNotification(title, body);
+      sendNativeNotification(title, body, targetTab);
     }
 
     function startBackgroundAlertTest() {
       enableOSNotifications(false);
       let sec = 8;
       const btn = document.getElementById('bgTestBtn');
-      showToast('⏱️ Minimize app now—SOS alert arriving in 8s!');
+      showToast('⏱️ Minimize app now—live alert arriving in 8s!');
       const timer = setInterval(() => {
         sec--;
         btn.textContent = `⏱️ Sending in ${sec}s...`;
         if (sec <= 0) {
           clearInterval(timer);
           btn.textContent = '⏱️ Test Closed-App Alert (8s)';
-          pushNotification('🚨 Live Tree SOS (Background Test)', 'Neem Sapling #101 soil moisture hit 16%! Open GreenGuardian to help (+100 pts).');
+          pushNotification('🚨 Live Tree SOS (Background Test)', 'Neem Sapling #101 needs water! Open to help or view community contributions.', 'sos');
         }
       }, 1000);
     }
 
+    // Multi-Phone Live Sync (Broadcasts contributions + photo thumbs + SOS to everyone)
     async function publishSyncEvent(payload) {
       try {
         state.seenSyncIds.push(payload.id);
@@ -917,7 +1171,7 @@
 
     async function pollCloudSync() {
       try {
-        const res = await fetch(`https://ntfy.sh/${SYNC_TOPIC}/json?poll=1&since=12h`);
+        const res = await fetch(`https://ntfy.sh/${SYNC_TOPIC}/json?poll=1&since=24h`);
         const text = await res.text();
         if (!text.trim()) return;
         let changed = false;
@@ -928,15 +1182,23 @@
             const data = JSON.parse(wrapper.message);
             if (!data.id || state.seenSyncIds.includes(data.id)) return;
             state.seenSyncIds.push(data.id);
+
             if (data.tree) {
               const idx = state.trees.findIndex(t => t.id === data.tree.id);
               if (idx !== -1) state.trees[idx] = data.tree;
               else state.trees.unshift(data.tree);
               changed = true;
             }
+            if (data.contribution) {
+              state.contributions.unshift({ ...data.contribution, applaudedByMe: false });
+              changed = true;
+            }
             if (data.notifTitle) {
-              state.notifications.unshift({ id: data.id, title: data.notifTitle, body: data.notifBody || '', time: 'Live Sync' });
-              sendNativeNotification(data.notifTitle, data.notifBody || '');
+              const targetTab = data.contribution ? 'community' : 'sos';
+              state.notifications.unshift({ id: data.id, title: data.notifTitle, body: data.notifBody || '', time: 'Live', targetTab });
+              document.getElementById('notifDot').classList.remove('hidden');
+              sendNativeNotification(data.notifTitle, data.notifBody || '', targetTab);
+              showToast(`🔔 ${data.notifTitle}`);
               changed = true;
             }
           } catch (err) {}
@@ -945,7 +1207,7 @@
       } catch (e) {}
     }
 
-    // Universal 1-Tap App Install & Share
+    // PWA Install & Share
     window.addEventListener('beforeinstallprompt', e => {
       e.preventDefault();
       deferredInstallPrompt = e;
@@ -969,7 +1231,7 @@
     async function shareAppLink() {
       const shareData = {
         title: 'GreenGuardian — Plant. Protect. Grow.',
-        text: 'Install GreenGuardian by SYNOVA to track trees, respond to Tree SOS & earn Green Points:',
+        text: 'Sign in with Gmail on GreenGuardian by SYNOVA to care for trees & see live community contributions:',
         url: window.location.href
       };
       if (navigator.share) {
@@ -977,16 +1239,62 @@
       }
       try {
         await navigator.clipboard.writeText(window.location.href);
-        showToast('🔗 App link copied! Paste in WhatsApp to share.');
+        showToast('🔗 App link copied! Share on WhatsApp.');
       } catch (e) {
         showToast('Copy URL from browser bar to share!');
       }
     }
 
+    function renderContributionCard(c, compact = false) {
+      const initial = (c.userName || 'G')[0].toUpperCase();
+      return `
+        <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-9 h-9 rounded-full bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center shrink-0">${initial}</div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <p class="font-bold text-xs text-slate-900 truncate">${c.userName}</p>
+                  <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 shrink-0">${c.identity}</span>
+                </div>
+                <p class="text-[10px] text-slate-500 truncate">✉️ ${maskGmail(c.userGmail)} • ${c.time}</p>
+              </div>
+            </div>
+            <span class="shrink-0 text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">+${c.pts} pts</span>
+          </div>
+
+          <div>
+            <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 mb-1">${c.badge}</span>
+            <p class="font-bold text-xs text-slate-800">${c.title}</p>
+            <p class="text-[11px] text-slate-500">📍 ${c.place}</p>
+          </div>
+
+          ${(!compact && c.thumb) ? `<img src="${c.thumb}" alt="Verified community proof" class="w-full max-h-52 object-cover rounded-xl border border-slate-200" />` : ''}
+
+          <div class="flex items-center justify-between pt-1 border-t border-slate-100">
+            <button onclick="applaudContribution('${c.id}')" class="text-xs font-bold px-2.5 py-1 rounded-lg ${c.applaudedByMe ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700 hover:bg-amber-50'}">
+              👏 Thank / Applaud (${c.applauds || 1})
+            </button>
+            ${compact && c.thumb ? `<button onclick="switchTab('community')" class="text-[11px] font-bold text-indigo-600">View Photo Proof →</button>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
     function renderAll() {
       const idObj = IDENTITIES.find(i => i.id === state.identity) || IDENTITIES[0];
-      document.getElementById('homeIdentity').textContent = `${idObj.icon} ${idObj.id}`;
+      const displayName = state.user.name || 'Sign In';
+      const displayGmail = state.user.gmail || 'Tap Sign In to link Gmail';
+
+      document.getElementById('headerUserLabel').textContent = displayName;
+      document.getElementById('homeIdentity').textContent = `${idObj.icon} ${idObj.id} • ${state.user.name || 'Guardian'}`;
+      document.getElementById('homeGmailBadge').textContent = `✉️ ${displayGmail}`;
       document.getElementById('homePoints').textContent = state.points;
+
+      document.getElementById('profileAvatar').textContent = (state.user.name || 'G')[0].toUpperCase();
+      document.getElementById('profileCardName').textContent = state.user.name || 'Guest Guardian';
+      document.getElementById('profileCardGmail').textContent = `✉️ ${displayGmail}`;
+      document.getElementById('profileCardIdentity').textContent = `${idObj.icon} ${idObj.id}`;
 
       const total = state.trees.length;
       const sosCount = state.trees.filter(t => t.sos).length;
@@ -994,6 +1302,12 @@
       document.getElementById('statHealthy').textContent = total - sosCount;
       document.getElementById('statSos').textContent = sosCount;
 
+      // Community Feed (Home Preview & Full Tab)
+      document.getElementById('communityCountBadge').textContent = `${state.contributions.length} live`;
+      document.getElementById('homeCommunityPreview').innerHTML = state.contributions.slice(0, 2).map(c => renderContributionCard(c, true)).join('');
+      document.getElementById('communityFeedList').innerHTML = state.contributions.map(c => renderContributionCard(c, false)).join('');
+
+      // Home Reminders
       document.getElementById('homeReminders').innerHTML = state.trees.slice(0, 3).map(t => {
         const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng));
         return `
@@ -1009,6 +1323,7 @@
         `;
       }).join('');
 
+      // Map Tree List
       const sortedTrees = [...state.trees].sort((a, b) => getDistanceMeters(state.userLoc.lat, state.userLoc.lng, a.lat, a.lng) - getDistanceMeters(state.userLoc.lat, state.userLoc.lng, b.lat, b.lng));
       document.getElementById('mapTreeList').innerHTML = sortedTrees.map(t => {
         const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng));
@@ -1028,6 +1343,7 @@
         `;
       }).join('');
 
+      // SOS List
       const sosTrees = sortedTrees.filter(t => t.sos);
       document.getElementById('sosList').innerHTML = sosTrees.length ? sosTrees.map(t => {
         const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng));
@@ -1047,6 +1363,7 @@
         `;
       }).join('') : '<p class="text-xs text-emerald-700 font-semibold">🎉 All tracked trees are healthy right now!</p>';
 
+      // Adopt List
       document.getElementById('adoptList').innerHTML = sortedTrees.map(t => `
         <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
           <div class="min-w-0">
@@ -1059,6 +1376,7 @@
         </div>
       `).join('');
 
+      // Identity Grid
       document.getElementById('identityGrid').innerHTML = IDENTITIES.map(item => {
         const active = item.id === state.identity;
         return `
@@ -1070,20 +1388,23 @@
         `;
       }).join('');
 
+      // Leaderboard
+      const myBoardName = state.user.name ? `${state.user.name} (${maskGmail(state.user.gmail)})` : `You (${state.identity})`;
       const board = [
-        { name: `You (${state.identity})`, pts: state.points, me: true },
+        { name: myBoardName, pts: state.points, me: true },
         { name: 'Saradha Matric HSS Eco Club', pts: 620, me: false },
-        { name: 'Chennai Green Volunteers', pts: 540, me: false },
-        { name: 'SYNOVA Core Team', pts: 480, me: false }
+        { name: 'Rohan M. (roha***@gmail.com)', pts: 540, me: false },
+        { name: 'Kavya S. (kavy***@gmail.com)', pts: 480, me: false }
       ].sort((a, b) => b.pts - a.pts);
 
       document.getElementById('leaderboardList').innerHTML = board.map((row, i) => `
-        <div class="p-2.5 rounded-xl flex items-center justify-between ${row.me ? 'bg-amber-50 border border-amber-300 font-bold' : 'bg-slate-50'}">
-          <span>#${i + 1} ${row.name}</span>
-          <span class="text-emerald-700 font-extrabold">${row.pts} pts</span>
+        <div class="p-2.5 rounded-xl flex items-center justify-between gap-2 ${row.me ? 'bg-amber-50 border border-amber-300 font-bold' : 'bg-slate-50'}">
+          <span class="truncate">#${i + 1} ${row.name}</span>
+          <span class="text-emerald-700 font-extrabold shrink-0">${row.pts} pts</span>
         </div>
       `).join('');
 
+      // My Proof Gallery
       document.getElementById('proofCountBadge').textContent = `${state.proofs.length} verified`;
       document.getElementById('proofGallery').innerHTML = state.proofs.length ? state.proofs.map(p => `
         <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-50">
@@ -1096,7 +1417,7 @@
             <span class="font-extrabold text-emerald-700">+${p.pts} pts</span>
           </div>
         </div>
-      `).join('') : '<p class="text-xs text-slate-500">No photo proofs yet. Water or rescue a tree and upload a photo to earn verified Green Points!</p>';
+      `).join('') : '<p class="text-xs text-slate-500">No photo proofs yet. Water or rescue a tree to earn verified Green Points!</p>';
 
       renderMapMarkers();
       renderNotifications();
@@ -1104,10 +1425,10 @@
 
     function renderNotifications() {
       document.getElementById('notifHistoryList').innerHTML = state.notifications.map(n => `
-        <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
-          <div class="flex justify-between font-bold text-slate-800">
-            <span>${n.title}</span>
-            <span class="text-[10px] text-slate-400">${n.time}</span>
+        <div onclick="closeModal('notifModal'); switchTab('${n.targetTab || 'community'}');" class="p-2.5 rounded-xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 text-xs cursor-pointer transition">
+          <div class="flex justify-between font-bold text-slate-800 gap-2">
+            <span class="truncate">${n.title}</span>
+            <span class="text-[10px] text-slate-400 shrink-0">${n.time}</span>
           </div>
           <p class="text-[11px] text-slate-600 mt-0.5">${n.body}</p>
         </div>
@@ -1119,11 +1440,15 @@
     }
 
     loadState();
+    checkLoginStatus();
     initMap();
     renderAll();
     initLocation();
     pollCloudSync();
-    setInterval(pollCloudSync, 7000);
+    setInterval(pollCloudSync, 6000);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('tab') === 'community') switchTab('community');
   </script>
 </body>
 </html>
