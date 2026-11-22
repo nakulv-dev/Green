@@ -10,8 +10,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="GreenGuardian" />
   <title>GreenGuardian — Plant. Protect. Grow. | SYNOVA</title>
-  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
-  <link rel="apple-touch-icon" href="./icon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+  <link rel="apple-touch-icon" href="./icon-512.png" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -45,13 +45,11 @@
         <h2 class="font-extrabold text-lg text-emerald-950">Welcome to GreenGuardian</h2>
         <p class="text-xs text-slate-500">Sign in with your Gmail so your tree care & SOS rescues are credited to you on the live community feed.</p>
       </div>
-
       <div class="space-y-2.5">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Your Name</label>
           <input id="loginNameInput" type="text" placeholder="e.g., Nakul / Priya" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
         </div>
-
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Gmail Address</label>
           <div class="relative">
@@ -59,7 +57,6 @@
             <span class="absolute left-3 top-2.5 text-sm">✉️</span>
           </div>
         </div>
-
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Your Identity</label>
           <select id="loginIdentitySelect" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:border-emerald-600">
@@ -72,11 +69,9 @@
           </select>
         </div>
       </div>
-
       <button onclick="submitGmailLogin()" class="w-full py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2">
         <span>G</span> Continue with Gmail
       </button>
-
       <p class="text-[10px] text-center text-slate-400">SYNOVA • Plant. Protect. Grow.</p>
     </div>
   </div>
@@ -147,7 +142,6 @@
       </div>
     </section>
 
-    <!-- 2x2 Action Grid -->
     <section class="grid grid-cols-2 gap-3">
       <button onclick="switchTab('map')" class="p-3.5 rounded-2xl bg-emerald-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🗺️</span>
@@ -171,7 +165,6 @@
       </button>
     </section>
 
-    <!-- Live Community Contributions Preview -->
     <section class="bg-white rounded-2xl p-4 border border-indigo-100 shadow-sm space-y-2.5">
       <div class="flex items-center justify-between">
         <h2 class="font-bold text-sm text-slate-800">🌍 Live Community Contributions</h2>
@@ -180,7 +173,6 @@
       <div id="homeCommunityPreview" class="space-y-2.5"></div>
     </section>
 
-    <!-- Today's Care Reminders -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm">
       <div class="flex items-center justify-between mb-3">
         <h2 class="font-bold text-sm text-slate-800">💧 Today's Care Reminders</h2>
@@ -199,27 +191,17 @@
         <button id="layerSatBtn" onclick="setMapLayer('sat')" class="px-2.5 py-1 rounded-lg text-slate-600">Satellite</button>
       </div>
     </div>
-
     <div class="grid grid-cols-3 gap-2 text-xs font-semibold">
-      <button onclick="requestLiveGPS(true)" class="py-2 px-2 rounded-xl bg-blue-600 text-white shadow-sm active:scale-95">
-        🛰️ My Live GPS
-      </button>
-      <button id="tapPinBtn" onclick="toggleTapPinMode()" class="py-2 px-2 rounded-xl bg-amber-500 text-white shadow-sm active:scale-95">
-        📌 Tap Map = Me
-      </button>
-      <button onclick="jumpToNearestSOS()" class="py-2 px-2 rounded-xl bg-rose-600 text-white shadow-sm active:scale-95">
-        🚨 Nearest SOS
-      </button>
+      <button onclick="requestLiveGPS(true)" class="py-2 px-2 rounded-xl bg-blue-600 text-white shadow-sm active:scale-95">🛰️ My Live GPS</button>
+      <button id="tapPinBtn" onclick="toggleTapPinMode()" class="py-2 px-2 rounded-xl bg-amber-500 text-white shadow-sm active:scale-95">📌 Tap Map = Me</button>
+      <button onclick="jumpToNearestSOS()" class="py-2 px-2 rounded-xl bg-rose-600 text-white shadow-sm active:scale-95">🚨 Nearest SOS</button>
     </div>
-
     <p id="tapPinHint" class="hidden text-xs bg-amber-50 border border-amber-300 text-amber-900 px-3 py-2 rounded-xl font-medium">
       👆 Touch anywhere on the map below to pin your exact current spot!
     </p>
-
     <div class="relative rounded-2xl overflow-hidden border-2 border-emerald-200 shadow-sm">
       <div id="map"></div>
     </div>
-
     <div class="bg-white rounded-2xl p-3.5 border border-emerald-100 shadow-sm">
       <h3 class="font-bold text-sm text-slate-800 mb-2.5">📍 Nearby Tracked Trees (Live Distance)</h3>
       <div id="mapTreeList" class="space-y-2.5"></div>
@@ -235,7 +217,6 @@
       </div>
       <span id="communityCountBadge" class="text-xs font-extrabold bg-white/15 px-2.5 py-1 rounded-full">0 live</span>
     </div>
-
     <div id="communityFeedList" class="space-y-3"></div>
   </main>
 
@@ -246,18 +227,14 @@
         <h2 class="font-bold text-base text-slate-800">🌱 Register Newly Planted Tree</h2>
         <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">+75 pts</span>
       </div>
-      <p class="text-xs text-slate-500">Logs your tree at your current GPS spot with a verified photo proof and notifies the community feed.</p>
-
       <div>
         <label class="block text-xs font-semibold text-slate-700 mb-1">Tree Species / Name</label>
         <input id="plantSpecies" type="text" placeholder="e.g., Neem Sapling, Pongamia, Banyan" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-500" />
       </div>
-
       <div>
         <label class="block text-xs font-semibold text-slate-700 mb-1">Landmark / Campus Name</label>
         <input id="plantPlace" type="text" placeholder="e.g., Saradha Matric HSS, Gingee / Chennai Campus" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-500" />
       </div>
-
       <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs flex items-center justify-between">
         <div>
           <p class="font-semibold text-emerald-900">Geotag Coordinates</p>
@@ -265,7 +242,6 @@
         </div>
         <button type="button" onclick="requestLiveGPS(true)" class="px-2.5 py-1.5 rounded-lg bg-emerald-700 text-white font-semibold">Refresh GPS</button>
       </div>
-
       <button onclick="startPlantProof()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow">
         📸 Capture Photo Proof & Publish (+75 pts)
       </button>
@@ -285,26 +261,14 @@
           <p id="moistureState" class="text-[11px] text-emerald-300">Optimal Moisture</p>
         </div>
       </div>
-
       <div>
         <input id="moistureSlider" type="range" min="5" max="100" value="64" oninput="handleMoistureChange(this.value)" class="w-full accent-emerald-400 cursor-pointer" />
-        <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-          <span>5% (Critical Dry -> Auto SOS)</span>
-          <span>25% Threshold</span>
-          <span>100% Wet</span>
-        </div>
       </div>
-
       <div class="grid grid-cols-2 gap-2 pt-1">
-        <button onclick="simulateDryDrop()" class="py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-bold">
-          🔥 Simulate Dry Soil (16%)
-        </button>
-        <button onclick="triggerManualSOS()" class="py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold">
-          🚨 Report Manual Tree SOS
-        </button>
+        <button onclick="simulateDryDrop()" class="py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-bold">🔥 Simulate Dry Soil (16%)</button>
+        <button onclick="triggerManualSOS()" class="py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold">🚨 Report Manual Tree SOS</button>
       </div>
     </section>
-
     <section class="bg-white rounded-2xl p-4 border border-rose-100 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-sm text-rose-700">🚨 Active Tree SOS Alerts</h3>
@@ -312,7 +276,6 @@
       </div>
       <div id="sosList" class="space-y-3"></div>
     </section>
-
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
       <h3 class="font-bold text-sm text-slate-800">🤝 Adopt & Care for Community Trees</h3>
       <div id="adoptList" class="space-y-2.5"></div>
@@ -321,7 +284,6 @@
 
   <!-- TAB 6: GMAIL PROFILE, IDENTITY & LEADERBOARD -->
   <main id="tab-identity" class="hidden p-4 space-y-4">
-    <!-- Gmail Account Card -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm flex items-center justify-between gap-3">
       <div class="flex items-center gap-3 min-w-0">
         <div class="w-11 h-11 rounded-2xl bg-emerald-700 text-white font-extrabold text-base flex items-center justify-center shrink-0" id="profileAvatar">G</div>
@@ -331,27 +293,16 @@
           <p id="profileCardIdentity" class="text-[11px] text-slate-500 mt-0.5">🎓 Students</p>
         </div>
       </div>
-      <button onclick="openGmailSwitch()" class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">
-        Switch Gmail
-      </button>
+      <button onclick="openGmailSwitch()" class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">Switch Gmail</button>
     </section>
-
-    <!-- Identity Selector -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
-      <div>
-        <h2 class="font-bold text-base text-slate-800">🪪 Your Identity</h2>
-        <p class="text-xs text-slate-500">Stamped along with your Gmail on every verified contribution.</p>
-      </div>
+      <h2 class="font-bold text-base text-slate-800">🪪 Your Identity</h2>
       <div id="identityGrid" class="grid grid-cols-2 gap-2"></div>
     </section>
-
-    <!-- Leaderboard -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-2.5">
       <h3 class="font-bold text-sm text-slate-800">🏆 Green Champions Leaderboard</h3>
       <div id="leaderboardList" class="space-y-2 text-xs"></div>
     </section>
-
-    <!-- My Verified Photo Proofs Gallery -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-sm text-slate-800">📸 My Geotagged Proof Log</h3>
@@ -359,32 +310,17 @@
       </div>
       <div id="proofGallery" class="space-y-3"></div>
     </section>
-
-    <div class="text-center text-[11px] text-slate-400 py-2">
-      Built by <strong class="text-slate-600">SYNOVA</strong> — Three Minds • One Vision
-    </div>
   </main>
 
   <!-- Bottom Navigation -->
   <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur border-t border-slate-200 px-1.5 py-1.5 flex justify-around z-30">
-    <button onclick="switchTab('home')" data-tab="home" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-emerald-700 font-bold text-[11px]">
-      <span class="text-lg">🏠</span>Home
-    </button>
-    <button onclick="switchTab('map')" data-tab="map" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]">
-      <span class="text-lg">🗺️</span>Map
-    </button>
-    <button onclick="switchTab('community')" data-tab="community" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]">
-      <span class="text-lg">🌍</span>Community
-    </button>
-    <button onclick="switchTab('plant')" data-tab="plant" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]">
-      <span class="text-lg">🌱</span>+ Plant
-    </button>
-    <button onclick="switchTab('sos')" data-tab="sos" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]">
-      <span class="text-lg">🚨</span>Care & SOS
-    </button>
+    <button onclick="switchTab('home')" data-tab="home" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-emerald-700 font-bold text-[11px]"><span class="text-lg">🏠</span>Home</button>
+    <button onclick="switchTab('map')" data-tab="map" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]"><span class="text-lg">🗺️</span>Map</button>
+    <button onclick="switchTab('community')" data-tab="community" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]"><span class="text-lg">🌍</span>Community</button>
+    <button onclick="switchTab('plant')" data-tab="plant" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]"><span class="text-lg">🌱</span>+ Plant</button>
+    <button onclick="switchTab('sos')" data-tab="sos" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-500 font-medium text-[11px]"><span class="text-lg">🚨</span>Care & SOS</button>
   </nav>
 
-  <!-- Non-Overlapping Toast -->
   <div id="toastBox" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 translate-y-2 max-w-[90vw]">
     <div id="toastInner" class="bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-lg border border-white/10 text-center"></div>
   </div>
@@ -399,7 +335,6 @@
         </div>
         <button onclick="closeModal('proofModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
-      <p id="proofDesc" class="text-xs text-slate-600">Upload a photo showing your care. Your Gmail, Identity, GPS & timestamp will be stamped and shared with the community!</p>
       <label class="block w-full p-4 border-2 border-dashed border-emerald-300 rounded-2xl bg-emerald-50/60 text-center cursor-pointer hover:bg-emerald-50">
         <span class="text-2xl block mb-1">📷</span>
         <span class="text-xs font-bold text-emerald-800">Tap to Open Camera or Choose Photo</span>
@@ -407,7 +342,6 @@
       </label>
       <div id="proofPreviewWrap" class="hidden space-y-2">
         <img id="proofStampedImg" alt="Geotagged proof preview" class="w-full rounded-2xl border border-slate-200 shadow-sm" />
-        <p class="text-[11px] text-emerald-700 font-semibold text-center">✅ Gmail, Geotag & Timestamp Verified</p>
       </div>
       <button id="submitProofBtn" disabled onclick="submitVerifiedProof()" class="w-full py-3 rounded-xl bg-emerald-600 disabled:bg-slate-300 text-white font-bold text-sm shadow">
         Publish to Community & Claim Points
@@ -415,40 +349,30 @@
     </div>
   </div>
 
-  <!-- MODAL 2: SET EXACT SPOT / LIVE LOCATION -->
+  <!-- MODAL 2: SET EXACT SPOT -->
   <div id="locModal" class="hidden fixed inset-0 z-40 bg-black/60 flex items-end sm:items-center justify-center p-3">
     <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-base text-slate-900">📍 Set Your Exact Live Location</h3>
         <button onclick="closeModal('locModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
-      <div id="locModalStatus" class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+      <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
         Current Spot: <strong id="locModalCurrent">Detecting...</strong>
       </div>
-      <button onclick="requestLiveGPS(true, true)" class="w-full py-2.5 rounded-xl bg-blue-600 text-white font-bold text-xs shadow">
-        🛰️ Detect Device Hardware GPS Now
-      </button>
-      <div class="space-y-1.5">
-        <label class="block text-xs font-semibold text-slate-700">Search School, Village, or Town</label>
-        <div class="flex gap-2">
-          <input id="placeSearchInput" type="text" placeholder="e.g., Saradha Matric HSS Gingee, Tiruvallur" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-xs" />
-          <button onclick="searchPlaceNominatim()" class="px-3 py-2 rounded-xl bg-emerald-700 text-white font-bold text-xs">Search</button>
-        </div>
+      <button onclick="requestLiveGPS(true, true)" class="w-full py-2.5 rounded-xl bg-blue-600 text-white font-bold text-xs shadow">🛰️ Detect Device Hardware GPS Now</button>
+      <div class="flex gap-2">
+        <input id="placeSearchInput" type="text" placeholder="Search school, village, or town" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-xs" />
+        <button onclick="searchPlaceNominatim()" class="px-3 py-2 rounded-xl bg-emerald-700 text-white font-bold text-xs">Search</button>
       </div>
-      <div class="space-y-1.5">
-        <label class="block text-xs font-semibold text-slate-700">Or Paste Google Maps Link / Coordinates</label>
-        <div class="flex gap-2">
-          <input id="coordsPasteInput" type="text" placeholder="12.2504, 79.4172 or Google Maps URL" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-xs" />
-          <button onclick="applyPastedCoords()" class="px-3 py-2 rounded-xl bg-slate-800 text-white font-bold text-xs">Apply</button>
-        </div>
+      <div class="flex gap-2">
+        <input id="coordsPasteInput" type="text" placeholder="12.2504, 79.4172 or Google Maps URL" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-xs" />
+        <button onclick="applyPastedCoords()" class="px-3 py-2 rounded-xl bg-slate-800 text-white font-bold text-xs">Apply</button>
       </div>
-      <button onclick="closeModal('locModal'); switchTab('map'); toggleTapPinMode(true);" class="w-full py-2.5 rounded-xl bg-amber-100 text-amber-900 font-bold text-xs border border-amber-300">
-        📌 Tap Directly on Map Instead
-      </button>
+      <button onclick="closeModal('locModal'); switchTab('map'); toggleTapPinMode(true);" class="w-full py-2.5 rounded-xl bg-amber-100 text-amber-900 font-bold text-xs border border-amber-300">📌 Tap Directly on Map Instead</button>
     </div>
   </div>
 
-  <!-- MODAL 3: LIVE & BACKGROUND NOTIFICATIONS -->
+  <!-- MODAL 3: NOTIFICATIONS -->
   <div id="notifModal" class="hidden fixed inset-0 z-40 bg-black/60 flex items-end sm:items-center justify-center p-3">
     <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between">
@@ -461,44 +385,44 @@
           <span id="notifPermBadge" class="font-bold text-emerald-700">Checking...</span>
         </div>
         <div class="grid grid-cols-2 gap-2">
-          <button onclick="enableOSNotifications(true)" class="py-2 px-2.5 rounded-xl bg-emerald-700 text-white font-bold text-xs">
-            🔔 Enable OS Alerts
-          </button>
-          <button id="bgTestBtn" onclick="startBackgroundAlertTest()" class="py-2 px-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs">
-            ⏱️ Test Closed-App Alert (8s)
-          </button>
+          <button onclick="enableOSNotifications(true)" class="py-2 px-2.5 rounded-xl bg-emerald-700 text-white font-bold text-xs">🔔 Enable OS Alerts</button>
+          <button id="bgTestBtn" onclick="startBackgroundAlertTest()" class="py-2 px-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs">⏱️ Test Closed-App Alert (8s)</button>
         </div>
       </div>
-      <div class="space-y-2">
-        <div class="flex items-center justify-between">
-          <h4 class="font-bold text-xs text-slate-700 uppercase tracking-wider">Live Feed & Alerts (Tap to View)</h4>
-          <button onclick="closeModal('notifModal'); switchTab('community');" class="text-[11px] font-bold text-indigo-600">Open Feed →</button>
-        </div>
-        <div id="notifHistoryList" class="space-y-2 max-h-60 overflow-y-auto"></div>
-      </div>
+      <div id="notifHistoryList" class="space-y-2 max-h-60 overflow-y-auto"></div>
     </div>
   </div>
 
-  <!-- MODAL 4: INSTALL & SHARE APP -->
+  <!-- MODAL 4: INSTALL APP & PNG ICON GENERATOR -->
   <div id="installModal" class="hidden fixed inset-0 z-40 bg-black/60 flex items-end sm:items-center justify-center p-3">
-    <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl">
+    <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-base text-slate-900">📲 Install GreenGuardian App</h3>
         <button onclick="closeModal('installModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
-      <p class="text-xs text-slate-600">Install directly onto your mobile home screen:</p>
-      <div class="space-y-2 text-xs">
-        <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
-          <p class="font-bold text-emerald-900">🤖 Android (Chrome / Edge)</p>
-          <p class="text-emerald-800 mt-0.5">Tap top-right <strong>⋮ (3 dots)</strong> → <strong>Install app</strong> (or <strong>Add to Home screen</strong>) → <strong>Install</strong>.</p>
-        </div>
-        <div class="p-3 rounded-2xl bg-sky-50 border border-sky-200">
-          <p class="font-bold text-sky-900">🍎 iPhone / iPad (Safari)</p>
-          <p class="text-sky-800 mt-0.5">Tap bottom <strong>Share (⬆️)</strong> icon → scroll down and tap <strong>Add to Home Screen</strong>.</p>
+
+      <div class="p-3 rounded-2xl bg-amber-50 border border-amber-200 space-y-2 text-xs">
+        <p class="font-bold text-amber-900">1-Time Repo Icon Setup (If Chrome shows "Cannot be installed"):</p>
+        <p class="text-amber-800">Tap both buttons below to download PNG icons, then upload them to your GitHub repo (`Add file → Upload files`):</p>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="downloadPngIcon(192)" class="py-2 px-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs">⬇️ icon-192.png</button>
+          <button onclick="downloadPngIcon(512)" class="py-2 px-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs">⬇️ icon-512.png</button>
         </div>
       </div>
+
+      <div class="space-y-2 text-xs">
+        <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
+          <p class="font-bold text-emerald-900">🤖 Android (Chrome)</p>
+          <p class="text-emerald-800 mt-0.5">Tap top-right <strong>⋮ (3 dots)</strong> → <strong>Add to Home screen</strong> → <strong>Install</strong>.</p>
+        </div>
+        <div class="p-3 rounded-2xl bg-sky-50 border border-sky-200">
+          <p class="font-bold text-sky-900">🍎 iPhone (Safari)</p>
+          <p class="text-sky-800 mt-0.5">Tap bottom <strong>Share (⬆️)</strong> → <strong>Add to Home Screen</strong>.</p>
+        </div>
+      </div>
+
       <button onclick="shareAppLink()" class="w-full py-3 rounded-xl bg-emerald-700 text-white font-bold text-xs shadow">
-        📤 Share App Install Link (WhatsApp / Copy)
+        📤 Share App Link
       </button>
     </div>
   </div>
@@ -525,34 +449,8 @@
     ];
 
     const SEED_CONTRIBUTIONS = [
-      {
-        id: 'seed_c1',
-        userName: 'Kavya S.',
-        userGmail: 'kavya.green@gmail.com',
-        identity: 'Students',
-        badge: '💧 Watered & Mulched',
-        title: 'Watered Pongamia Sapling #103',
-        place: 'Chennai Campus Block A',
-        pts: 50,
-        time: '12 mins ago',
-        thumb: null,
-        applauds: 6,
-        applaudedByMe: false
-      },
-      {
-        id: 'seed_c2',
-        userName: 'Rohan M.',
-        userGmail: 'rohan.volunteer@gmail.com',
-        identity: 'Volunteers',
-        badge: '🚨 SOS Rescued',
-        title: 'Rescued Banyan Sapling #104 from Dry Soil',
-        place: 'Chennai Eco Park',
-        pts: 100,
-        time: '38 mins ago',
-        thumb: null,
-        applauds: 11,
-        applaudedByMe: false
-      }
+      { id: 'seed_c1', userName: 'Kavya S.', userGmail: 'kavya.green@gmail.com', identity: 'Students', badge: '💧 Watered & Mulched', title: 'Watered Pongamia Sapling #103', place: 'Chennai Campus Block A', pts: 50, time: '12 mins ago', thumb: null, applauds: 6, applaudedByMe: false },
+      { id: 'seed_c2', userName: 'Rohan M.', userGmail: 'rohan.volunteer@gmail.com', identity: 'Volunteers', badge: '🚨 SOS Rescued', title: 'Rescued Banyan Sapling #104 from Dry Soil', place: 'Chennai Eco Park', pts: 100, time: '38 mins ago', thumb: null, applauds: 11, applaudedByMe: false }
     ];
 
     let state = {
@@ -566,7 +464,7 @@
       proofs: [],
       notifications: [
         { id: 'n1', title: '🚨 Tree SOS: Mango Young Tree #102', body: 'Wilting leaves & dry soil detected at Gingee. Volunteers needed!', time: 'Just now', targetTab: 'sos' },
-        { id: 'n2', title: '💧 Kavya S. (kavya.green@gmail.com)', body: 'Watered Pongamia Sapling #103 (+50 pts) — Tap to view in Community Feed', time: '12m ago', targetTab: 'community' }
+        { id: 'n2', title: '💧 Kavya S. (kavya.green@gmail.com)', body: 'Watered Pongamia Sapling #103 (+50 pts)', time: '12m ago', targetTab: 'community' }
       ],
       seenSyncIds: []
     };
@@ -579,6 +477,32 @@
     let stampedThumbUrl = null;
     let deferredInstallPrompt = null;
     let toastTimer = null;
+
+    function downloadPngIcon(size) {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#14532d';
+      ctx.fillRect(0, 0, size, size);
+      ctx.fillStyle = '#166534';
+      ctx.beginPath();
+      ctx.arc(size / 2, size / 2, size * 0.38, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.font = `${Math.round(size * 0.48)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🌱', size / 2, size / 2 + size * 0.03);
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `icon-${size}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast(`✅ Downloaded icon-${size}.png! Upload it to GitHub.`);
+      }, 'image/png');
+    }
 
     function loadState() {
       try {
@@ -594,17 +518,11 @@
     function maskGmail(email) {
       if (!email || !email.includes('@')) return 'guardian@gmail.com';
       const [userPart, domain] = email.split('@');
-      if (userPart.length <= 3) return `${userPart}***@${domain}`;
-      return `${userPart.slice(0, 4)}***@${domain}`;
+      return userPart.length <= 3 ? `${userPart}***@${domain}` : `${userPart.slice(0, 4)}***@${domain}`;
     }
 
-    // Gmail Login Flow
     function checkLoginStatus() {
-      if (!state.user || !state.user.loggedIn || !state.user.gmail) {
-        document.getElementById('loginScreen').classList.remove('hidden');
-      } else {
-        document.getElementById('loginScreen').classList.add('hidden');
-      }
+      document.getElementById('loginScreen').classList.toggle('hidden', !!(state.user && state.user.loggedIn && state.user.gmail));
     }
 
     function openGmailSwitch() {
@@ -618,35 +536,28 @@
       const nameRaw = document.getElementById('loginNameInput').value.trim();
       let gmailRaw = document.getElementById('loginGmailInput').value.trim().toLowerCase();
       const chosenIdentity = document.getElementById('loginIdentitySelect').value;
-
       if (!nameRaw) return showToast('Please enter your name');
       if (!gmailRaw) return showToast('Please enter your Gmail address');
       if (!gmailRaw.includes('@')) gmailRaw = `${gmailRaw}@gmail.com`;
-      if (!gmailRaw.endsWith('@gmail.com') && !gmailRaw.includes('@')) {
-        return showToast('Enter a valid @gmail.com address');
-      }
-
       state.user = { name: nameRaw, gmail: gmailRaw, loggedIn: true };
       state.identity = chosenIdentity;
       saveState();
       document.getElementById('loginScreen').classList.add('hidden');
       renderAll();
       enableOSNotifications(false);
-      showToast(`👋 Signed in as ${nameRaw} (${gmailRaw})`);
+      showToast(`👋 Signed in as ${nameRaw}`);
     }
 
     function showToast(msg) {
       const box = document.getElementById('toastBox');
-      const inner = document.getElementById('toastInner');
-      inner.textContent = msg;
+      document.getElementById('toastInner').textContent = msg;
       box.classList.remove('opacity-0', 'translate-y-2');
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => box.classList.add('opacity-0', 'translate-y-2'), 3400);
     }
 
     function getDistanceMeters(lat1, lon1, lat2, lon2) {
-      const R = 6371000;
-      const toRad = d => d * Math.PI / 180;
+      const R = 6371000, toRad = d => d * Math.PI / 180;
       const dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
       const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
       return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
@@ -657,15 +568,14 @@
     }
 
     function ensureLocalTreesAround(lat, lng, areaLabel) {
-      const hasNearby = state.trees.some(t => getDistanceMeters(lat, lng, t.lat, t.lng) < 15000);
-      if (hasNearby) return;
+      if (state.trees.some(t => getDistanceMeters(lat, lng, t.lat, t.lng) < 15000)) return;
       const place = areaLabel || 'Your Neighborhood';
-      const localBatch = [
+      state.trees = [
         { id: 'loc_' + Date.now() + '_1', name: 'Neem Sapling (Local #1)', place: `${place} North`, lat: lat + 0.0024, lng: lng + 0.0019, health: 'Needs Water', moisture: 21, sos: true, adoptedBy: 'Unassigned', lastWatered: '3 days ago' },
         { id: 'loc_' + Date.now() + '_2', name: 'Pongamia Sapling (Local #2)', place: `${place} School Gate`, lat: lat - 0.0018, lng: lng + 0.0026, health: 'Healthy', moisture: 66, sos: false, adoptedBy: 'Students', lastWatered: 'Today' },
-        { id: 'loc_' + Date.now() + '_3', name: 'Banyan Young Tree (Local #3)', place: `${place} Main Road`, lat: lat + 0.0015, lng: lng - 0.0028, health: 'Healthy', moisture: 71, sos: false, adoptedBy: 'Volunteers', lastWatered: 'Yesterday' }
+        { id: 'loc_' + Date.now() + '_3', name: 'Banyan Young Tree (Local #3)', place: `${place} Main Road`, lat: lat + 0.0015, lng: lng - 0.0028, health: 'Healthy', moisture: 71, sos: false, adoptedBy: 'Volunteers', lastWatered: 'Yesterday' },
+        ...state.trees
       ];
-      state.trees = [...localBatch, ...state.trees];
       saveState();
     }
 
@@ -684,14 +594,11 @@
       document.getElementById('gpsSummary').textContent = `${label}${accText}`;
       document.getElementById('locModalCurrent').textContent = `${label} (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
       document.getElementById('plantCoordsText').textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}${accText}`;
-
       if (map) {
         if (!userMarker) {
           const pulseIcon = L.divIcon({ className: '', html: '<div class="gps-pulse"></div>', iconSize: [18, 18], iconAnchor: [9, 9] });
           userMarker = L.marker([lat, lng], { icon: pulseIcon }).addTo(map);
-        } else {
-          userMarker.setLatLng([lat, lng]);
-        }
+        } else userMarker.setLatLng([lat, lng]);
         userMarker.bindPopup(`<strong>📍 You Are Here</strong><br>${label}`);
         if (accuracyCircle) map.removeLayer(accuracyCircle);
         accuracyCircle = L.circle([lat, lng], { radius: accuracy || 80, color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 0.12, weight: 1 }).addTo(map);
@@ -703,17 +610,11 @@
       if (state.userLoc.pinned) updateLocationUI(false);
       if ('geolocation' in navigator) {
         navigator.geolocation.watchPosition(
-          pos => {
-            if (!state.userLoc.pinned) {
-              updateUserLocation(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, 'Live Device GPS', false, true);
-            }
-          },
+          pos => { if (!state.userLoc.pinned) updateUserLocation(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, 'Live Device GPS', false, true); },
           () => { if (!state.userLoc.pinned) fetchIPFallback(); },
           { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
         );
-      } else if (!state.userLoc.pinned) {
-        fetchIPFallback();
-      }
+      } else if (!state.userLoc.pinned) fetchIPFallback();
     }
 
     async function fetchIPFallback() {
@@ -728,10 +629,7 @@
 
     function requestLiveGPS(userInitiated = false, closeLocModal = false) {
       state.userLoc.pinned = false;
-      if (!('geolocation' in navigator)) {
-        if (userInitiated) showToast('GPS not supported—use Search or Tap Map');
-        return;
-      }
+      if (!('geolocation' in navigator)) return userInitiated && showToast('GPS not supported—use Search or Tap Map');
       if (userInitiated) showToast('🛰️ Locking onto your live GPS...');
       navigator.geolocation.getCurrentPosition(
         pos => {
@@ -763,11 +661,7 @@
 
     function applyPastedCoords() {
       const raw = document.getElementById('coordsPasteInput').value.trim();
-      if (!raw) return showToast('Paste Google Maps link or lat, lng');
-      const match = raw.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) ||
-                    raw.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/) ||
-                    raw.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) ||
-                    raw.match(/(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+      const match = raw.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) || raw.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/) || raw.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || raw.match(/(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
       if (match) {
         const lat = parseFloat(match[1]), lng = parseFloat(match[2]);
         updateUserLocation(lat, lng, 30, `Pinned (${lat.toFixed(4)}, ${lng.toFixed(4)})`, true, true);
@@ -781,29 +675,22 @@
       map = L.map('map', { zoomControl: true }).setView([state.userLoc.lat, state.userLoc.lng], 14);
       streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
       satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '© Esri Satellite' });
-
       map.on('click', e => {
         if (!tapPinMode) return;
         updateUserLocation(e.latlng.lat, e.latlng.lng, 20, `Pinned Spot (${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)})`, true, false);
         toggleTapPinMode(false);
         showToast('📍 "You Are Here" moved to tapped spot!');
       });
-
       updateLocationUI(false);
       renderMapMarkers();
     }
 
     function setMapLayer(type) {
       if (!map) return;
-      if (type === 'sat') {
-        map.removeLayer(streetLayer); satLayer.addTo(map);
-        document.getElementById('layerSatBtn').className = 'px-2.5 py-1 rounded-lg bg-white text-emerald-800 shadow-sm';
-        document.getElementById('layerStreetBtn').className = 'px-2.5 py-1 rounded-lg text-slate-600';
-      } else {
-        map.removeLayer(satLayer); streetLayer.addTo(map);
-        document.getElementById('layerStreetBtn').className = 'px-2.5 py-1 rounded-lg bg-white text-emerald-800 shadow-sm';
-        document.getElementById('layerSatBtn').className = 'px-2.5 py-1 rounded-lg text-slate-600';
-      }
+      if (type === 'sat') { map.removeLayer(streetLayer); satLayer.addTo(map); }
+      else { map.removeLayer(satLayer); streetLayer.addTo(map); }
+      document.getElementById('layerSatBtn').className = type === 'sat' ? 'px-2.5 py-1 rounded-lg bg-white text-emerald-800 shadow-sm' : 'px-2.5 py-1 rounded-lg text-slate-600';
+      document.getElementById('layerStreetBtn').className = type === 'street' ? 'px-2.5 py-1 rounded-lg bg-white text-emerald-800 shadow-sm' : 'px-2.5 py-1 rounded-lg text-slate-600';
     }
 
     function toggleTapPinMode(forceVal) {
@@ -826,32 +713,20 @@
       treeMarkers = [];
       state.trees.forEach(tree => {
         const color = tree.sos ? '#e11d48' : '#16a34a';
-        const emoji = tree.sos ? '🚨' : '🌳';
         const icon = L.divIcon({
           className: '',
-          html: `<div style="background:${color};color:#fff;width:30px;height:30px;border-radius:9999px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.35);font-size:14px;">${emoji}</div>`,
+          html: `<div style="background:${color};color:#fff;width:30px;height:30px;border-radius:9999px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.35);font-size:14px;">${tree.sos ? '🚨' : '🌳'}</div>`,
           iconSize: [30, 30], iconAnchor: [15, 15]
         });
         const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, tree.lat, tree.lng));
         const marker = L.marker([tree.lat, tree.lng], { icon }).addTo(map);
-        marker.bindPopup(`
-          <div style="min-width:160px">
-            <strong>${tree.name}</strong><br/>
-            <span style="font-size:11px;color:#475569">${tree.place} (${dist})</span><br/>
-            <span style="font-size:11px;font-weight:700;color:${color}">${tree.health} • Moisture ${tree.moisture}%</span><br/>
-            <button onclick="openProofModal('${tree.sos ? 'sos' : 'care'}','${tree.id}')" style="margin-top:6px;width:100%;background:${color};color:#fff;border:none;padding:6px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer;">
-              📸 ${tree.sos ? 'I WILL HELP (+100 pts)' : 'Water & Proof (+50 pts)'}
-            </button>
-          </div>
-        `);
+        marker.bindPopup(`<div style="min-width:160px"><strong>${tree.name}</strong><br/><span style="font-size:11px;color:#475569">${tree.place} (${dist})</span><br/><span style="font-size:11px;font-weight:700;color:${color}">${tree.health} • Moisture ${tree.moisture}%</span><br/><button onclick="openProofModal('${tree.sos ? 'sos' : 'care'}','${tree.id}')" style="margin-top:6px;width:100%;background:${color};color:#fff;border:none;padding:6px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer;">📸 ${tree.sos ? 'I WILL HELP (+100 pts)' : 'Water & Proof (+50 pts)'}</button></div>`);
         treeMarkers.push(marker);
       });
     }
 
     function switchTab(tab) {
-      ['home', 'map', 'community', 'plant', 'sos', 'identity'].forEach(t => {
-        document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab);
-      });
+      ['home', 'map', 'community', 'plant', 'sos', 'identity'].forEach(t => document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab));
       document.querySelectorAll('.nav-btn').forEach(btn => {
         const active = btn.dataset.tab === tab;
         btn.className = `nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-[11px] ${active ? 'text-emerald-700 font-bold bg-emerald-50' : 'text-slate-500 font-medium'}`;
@@ -877,8 +752,7 @@
       const pts = type === 'sos' ? 100 : type === 'plant' ? 75 : 50;
       const title = type === 'sos' ? `Rescued ${tree ? tree.name : 'SOS Tree'}` : type === 'plant' ? `Planted ${extra.species}` : `Watered & Cared for ${tree ? tree.name : 'Sapling'}`;
       pendingProof = { type, treeId, pts, title, tree, extra };
-      stampedDataUrl = null;
-      stampedThumbUrl = null;
+      stampedDataUrl = null; stampedThumbUrl = null;
       document.getElementById('proofBadge').textContent = `+${pts} Verified Green Points`;
       document.getElementById('proofTitle').textContent = title;
       document.getElementById('proofFileInput').value = '';
@@ -890,8 +764,7 @@
     function renderStampedCanvas(img, maxW, quality) {
       const canvas = document.createElement('canvas');
       const scale = Math.min(1, maxW / img.width);
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
+      canvas.width = img.width * scale; canvas.height = img.height * scale;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       const barH = Math.max(44, Math.round(canvas.height * 0.14));
@@ -927,212 +800,99 @@
 
     function submitVerifiedProof() {
       if (!pendingProof || !stampedDataUrl) return;
-      const { type, treeId, pts, title, tree, extra } = pendingProof;
+      const { type, treeId, pts, title, extra } = pendingProof;
       state.points += pts;
-      let syncedTree = null;
-      let placeLabel = state.userLoc.label;
-
+      let syncedTree = null, placeLabel = state.userLoc.label;
       if (type === 'plant') {
         placeLabel = extra.place;
-        const newTree = {
-          id: 'tree_' + Date.now(), name: extra.species, place: extra.place,
-          lat: state.userLoc.lat, lng: state.userLoc.lng, health: 'Healthy',
-          moisture: 75, sos: false, adoptedBy: state.user.name || state.identity, lastWatered: 'Just planted'
-        };
-        state.trees.unshift(newTree);
-        syncedTree = newTree;
-        document.getElementById('plantSpecies').value = '';
-        document.getElementById('plantPlace').value = '';
+        const newTree = { id: 'tree_' + Date.now(), name: extra.species, place: extra.place, lat: state.userLoc.lat, lng: state.userLoc.lng, health: 'Healthy', moisture: 75, sos: false, adoptedBy: state.user.name || state.identity, lastWatered: 'Just planted' };
+        state.trees.unshift(newTree); syncedTree = newTree;
+        document.getElementById('plantSpecies').value = ''; document.getElementById('plantPlace').value = '';
       } else if (treeId) {
         const idx = state.trees.findIndex(t => t.id === treeId);
         if (idx !== -1) {
           placeLabel = state.trees[idx].place;
-          state.trees[idx].sos = false;
-          state.trees[idx].health = 'Healthy';
-          state.trees[idx].moisture = 78;
-          state.trees[idx].lastWatered = 'Just now (Verified)';
+          state.trees[idx].sos = false; state.trees[idx].health = 'Healthy'; state.trees[idx].moisture = 78; state.trees[idx].lastWatered = 'Just now (Verified)';
           syncedTree = state.trees[idx];
         }
       }
-
-      const actorName = state.user.name || 'Guardian';
-      const actorGmail = state.user.gmail || 'guardian@gmail.com';
+      const actorName = state.user.name || 'Guardian', actorGmail = state.user.gmail || 'guardian@gmail.com';
       const badgeText = type === 'sos' ? '🚨 SOS Rescued' : type === 'plant' ? '🌱 New Tree Planted' : '💧 Watered & Cared';
-
-      const contribItem = {
-        id: 'contrib_' + Date.now(),
-        userName: actorName,
-        userGmail: actorGmail,
-        identity: state.identity,
-        badge: badgeText,
-        title,
-        place: placeLabel,
-        pts,
-        time: 'Just now',
-        thumb: stampedThumbUrl,
-        applauds: 1,
-        applaudedByMe: true
-      };
-
+      const contribItem = { id: 'contrib_' + Date.now(), userName: actorName, userGmail: actorGmail, identity: state.identity, badge: badgeText, title, place: placeLabel, pts, time: 'Just now', thumb: stampedThumbUrl, applauds: 1, applaudedByMe: true };
       state.contributions.unshift(contribItem);
-
-      const proofRecord = {
-        id: 'proof_' + Date.now(), title, pts, identity: state.identity,
-        coords: `${state.userLoc.lat.toFixed(4)}, ${state.userLoc.lng.toFixed(4)}`,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        img: stampedDataUrl
-      };
-      state.proofs.unshift(proofRecord);
-
-      closeModal('proofModal');
-      saveState();
-      renderAll();
-      switchTab('community');
+      state.proofs.unshift({ id: 'proof_' + Date.now(), title, pts, identity: state.identity, coords: `${state.userLoc.lat.toFixed(4)}, ${state.userLoc.lng.toFixed(4)}`, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), img: stampedDataUrl });
+      closeModal('proofModal'); saveState(); renderAll(); switchTab('community');
       showToast(`🎉 +${pts} pts! Published to everyone's Community Feed.`);
-
-      const notifTitle = `${badgeText} by ${actorName}`;
-      const notifBody = `${title} at ${placeLabel} (+${pts} pts) — Tap to view photo proof`;
-      publishSyncEvent({
-        kind: 'contribution',
-        id: contribItem.id,
-        tree: syncedTree,
-        contribution: contribItem,
-        notifTitle,
-        notifBody
-      });
+      publishSyncEvent({ kind: 'contribution', id: contribItem.id, tree: syncedTree, contribution: contribItem, notifTitle: `${badgeText} by ${actorName}`, notifBody: `${title} at ${placeLabel} (+${pts} pts)` });
     }
 
     function applaudContribution(contribId) {
       const item = state.contributions.find(c => c.id === contribId);
       if (!item || item.applaudedByMe) return;
-      item.applauds = (item.applauds || 0) + 1;
-      item.applaudedByMe = true;
-      saveState();
-      renderAll();
-      showToast(`👏 Sent appreciation to ${item.userName}!`);
+      item.applauds = (item.applauds || 0) + 1; item.applaudedByMe = true;
+      saveState(); renderAll(); showToast(`👏 Sent appreciation to ${item.userName}!`);
     }
 
     function handleMoistureChange(val) {
-      const num = parseInt(val, 10);
-      state.moisture = num;
-      const valEl = document.getElementById('moistureValue');
-      const stEl = document.getElementById('moistureState');
+      const num = parseInt(val, 10); state.moisture = num;
+      const valEl = document.getElementById('moistureValue'), stEl = document.getElementById('moistureState');
       valEl.textContent = `${num}%`;
-      if (num < 25) {
-        valEl.className = 'text-2xl font-extrabold text-rose-400';
-        stEl.textContent = 'CRITICAL DRY — SOS Triggered!';
-        stEl.className = 'text-[11px] text-rose-300 font-bold';
-        triggerMoistureSOS(num);
-      } else if (num < 45) {
-        valEl.className = 'text-2xl font-extrabold text-amber-300';
-        stEl.textContent = 'Low Moisture — Needs Water';
-        stEl.className = 'text-[11px] text-amber-200';
-      } else {
-        valEl.className = 'text-2xl font-extrabold text-emerald-400';
-        stEl.textContent = 'Optimal Moisture';
-        stEl.className = 'text-[11px] text-emerald-300';
-      }
+      if (num < 25) { valEl.className = 'text-2xl font-extrabold text-rose-400'; stEl.textContent = 'CRITICAL DRY — SOS Triggered!'; triggerMoistureSOS(num); }
+      else { valEl.className = 'text-2xl font-extrabold text-emerald-400'; stEl.textContent = 'Optimal Moisture'; }
     }
 
-    function simulateDryDrop() {
-      document.getElementById('moistureSlider').value = 16;
-      handleMoistureChange(16);
-    }
+    function simulateDryDrop() { document.getElementById('moistureSlider').value = 16; handleMoistureChange(16); }
 
     function triggerMoistureSOS(pct) {
-      const target = state.trees[0];
-      if (!target) return;
-      target.sos = true;
-      target.health = `SOS: Dry Soil (${pct}%)`;
-      target.moisture = pct;
-      saveState();
-      renderAll();
-      const title = `🚨 IoT Sensor Tree SOS: ${target.name}`;
-      const body = `Soil moisture dropped to ${pct}% at ${target.place}. Tap to rescue & earn +100 pts!`;
+      const target = state.trees[0]; if (!target) return;
+      target.sos = true; target.health = `SOS: Dry Soil (${pct}%)`; target.moisture = pct;
+      saveState(); renderAll();
+      const title = `🚨 IoT Sensor Tree SOS: ${target.name}`, body = `Soil moisture dropped to ${pct}% at ${target.place}. Tap to rescue (+100 pts)!`;
       pushNotification(title, body, 'sos');
       publishSyncEvent({ kind: 'sos_alert', id: 'sos_' + Date.now(), tree: target, notifTitle: title, notifBody: body });
     }
 
     function triggerManualSOS() {
       const actorName = state.user.name || state.identity;
-      const newSOS = {
-        id: 'sos_tree_' + Date.now(), name: 'Dry Sapling Alert #' + Math.floor(100 + Math.random() * 899),
-        place: state.userLoc.label, lat: state.userLoc.lat + 0.0008, lng: state.userLoc.lng + 0.0008,
-        health: 'At Risk (Reported Dry)', moisture: 19, sos: true, adoptedBy: 'Unassigned', lastWatered: 'Unknown'
-      };
-      state.trees.unshift(newSOS);
-      saveState();
-      renderAll();
-      const title = `🚨 Tree SOS by ${actorName}`;
-      const body = `${newSOS.name} needs water near ${newSOS.place}.`;
+      const newSOS = { id: 'sos_tree_' + Date.now(), name: 'Dry Sapling Alert #' + Math.floor(100 + Math.random() * 899), place: state.userLoc.label, lat: state.userLoc.lat + 0.0008, lng: state.userLoc.lng + 0.0008, health: 'At Risk (Reported Dry)', moisture: 19, sos: true, adoptedBy: 'Unassigned', lastWatered: 'Unknown' };
+      state.trees.unshift(newSOS); saveState(); renderAll();
+      const title = `🚨 Tree SOS by ${actorName}`, body = `${newSOS.name} needs water near ${newSOS.place}.`;
       pushNotification(title, body, 'sos');
       publishSyncEvent({ kind: 'sos_alert', id: newSOS.id, tree: newSOS, notifTitle: title, notifBody: body });
       showToast('🚨 Live Tree SOS broadcasted to all guardians!');
     }
 
     function adoptTree(treeId) {
-      const tree = state.trees.find(t => t.id === treeId);
-      if (!tree) return;
-      const actorName = state.user.name || state.identity;
-      const actorGmail = state.user.gmail || 'guardian@gmail.com';
+      const tree = state.trees.find(t => t.id === treeId); if (!tree) return;
+      const actorName = state.user.name || state.identity, actorGmail = state.user.gmail || 'guardian@gmail.com';
       tree.adoptedBy = `${actorName} (${state.identity})`;
-
-      const contribItem = {
-        id: 'adopt_' + Date.now(),
-        userName: actorName,
-        userGmail: actorGmail,
-        identity: state.identity,
-        badge: '🤝 Adopted Tree',
-        title: `Adopted ${tree.name} for Ongoing Care`,
-        place: tree.place,
-        pts: 25,
-        time: 'Just now',
-        thumb: null,
-        applauds: 1,
-        applaudedByMe: true
-      };
-      state.points += 25;
-      state.contributions.unshift(contribItem);
-      saveState();
-      renderAll();
-      showToast(`🤝 Adopted ${tree.name} (+25 pts)! Shared with community.`);
-      publishSyncEvent({
-        kind: 'contribution',
-        id: contribItem.id,
-        tree,
-        contribution: contribItem,
-        notifTitle: `🤝 ${actorName} adopted ${tree.name}`,
-        notifBody: `Taking ongoing care at ${tree.place} — Tap to view`
-      });
+      const contribItem = { id: 'adopt_' + Date.now(), userName: actorName, userGmail: actorGmail, identity: state.identity, badge: '🤝 Adopted Tree', title: `Adopted ${tree.name} for Ongoing Care`, place: tree.place, pts: 25, time: 'Just now', thumb: null, applauds: 1, applaudedByMe: true };
+      state.points += 25; state.contributions.unshift(contribItem); saveState(); renderAll();
+      showToast(`🤝 Adopted ${tree.name} (+25 pts)!`);
+      publishSyncEvent({ kind: 'contribution', id: contribItem.id, tree, contribution: contribItem, notifTitle: `🤝 ${actorName} adopted ${tree.name}`, notifBody: `Taking care at ${tree.place}` });
     }
 
     function updateNotifPermUI() {
       const badge = document.getElementById('notifPermBadge');
-      if (!('Notification' in window)) { badge.textContent = 'Unsupported'; return; }
-      badge.textContent = Notification.permission === 'granted' ? 'Active (Enabled)' : Notification.permission;
+      badge.textContent = !('Notification' in window) ? 'Unsupported' : Notification.permission === 'granted' ? 'Active (Enabled)' : Notification.permission;
     }
 
     async function enableOSNotifications(userTriggered = false) {
-      if (!('Notification' in window)) {
-        if (userTriggered) showToast('OS Notifications not supported on this browser');
-        return;
-      }
+      if (!('Notification' in window)) return;
       const perm = await Notification.requestPermission();
       updateNotifPermUI();
       if (perm === 'granted' && userTriggered) {
-        showToast('🔔 OS & Background Alerts Enabled!');
-        sendNativeNotification('🌱 GreenGuardian Alerts Active', 'You will receive live community contribution & Tree SOS alerts.');
-      } else if (userTriggered) {
-        showToast('Please allow Notifications in browser settings');
+        showToast('🔔 OS Alerts Enabled!');
+        sendNativeNotification('🌱 GreenGuardian Alerts Active', 'You will receive live community & Tree SOS alerts.');
       }
     }
 
     function sendNativeNotification(title, body, targetTab = 'community') {
       if (!('Notification' in window) || Notification.permission !== 'granted') return;
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.ready.then(reg => reg.showNotification(title, { body, icon: './icon.svg', tag: 'gg-live', renotify: true }));
+        navigator.serviceWorker.ready.then(reg => reg.showNotification(title, { body, icon: './icon-192.png', tag: 'gg-live', renotify: true }));
       } else {
-        const n = new Notification(title, { body, icon: './icon.svg' });
+        const n = new Notification(title, { body, icon: './icon-192.png' });
         n.onclick = () => { window.focus(); switchTab(targetTab); };
       }
     }
@@ -1140,59 +900,43 @@
     function pushNotification(title, body, targetTab = 'community') {
       state.notifications.unshift({ id: 'n_' + Date.now(), title, body, time: 'Just now', targetTab });
       document.getElementById('notifDot').classList.remove('hidden');
-      saveState();
-      renderNotifications();
-      sendNativeNotification(title, body, targetTab);
+      saveState(); renderNotifications(); sendNativeNotification(title, body, targetTab);
     }
 
     function startBackgroundAlertTest() {
       enableOSNotifications(false);
-      let sec = 8;
-      const btn = document.getElementById('bgTestBtn');
+      let sec = 8; const btn = document.getElementById('bgTestBtn');
       showToast('⏱️ Minimize app now—live alert arriving in 8s!');
       const timer = setInterval(() => {
-        sec--;
-        btn.textContent = `⏱️ Sending in ${sec}s...`;
+        sec--; btn.textContent = `⏱️ Sending in ${sec}s...`;
         if (sec <= 0) {
-          clearInterval(timer);
-          btn.textContent = '⏱️ Test Closed-App Alert (8s)';
-          pushNotification('🚨 Live Tree SOS (Background Test)', 'Neem Sapling #101 needs water! Open to help or view community contributions.', 'sos');
+          clearInterval(timer); btn.textContent = '⏱️ Test Closed-App Alert (8s)';
+          pushNotification('🚨 Live Tree SOS (Background Test)', 'Neem Sapling #101 needs water! Open to help.', 'sos');
         }
       }, 1000);
     }
 
-    // Multi-Phone Live Sync (Broadcasts contributions + photo thumbs + SOS to everyone)
     async function publishSyncEvent(payload) {
-      try {
-        state.seenSyncIds.push(payload.id);
-        await fetch(`https://ntfy.sh/${SYNC_TOPIC}`, { method: 'POST', body: JSON.stringify(payload) });
-      } catch (e) {}
+      try { state.seenSyncIds.push(payload.id); await fetch(`https://ntfy.sh/${SYNC_TOPIC}`, { method: 'POST', body: JSON.stringify(payload) }); } catch (e) {}
     }
 
     async function pollCloudSync() {
       try {
         const res = await fetch(`https://ntfy.sh/${SYNC_TOPIC}/json?poll=1&since=24h`);
-        const text = await res.text();
-        if (!text.trim()) return;
+        const text = await res.text(); if (!text.trim()) return;
         let changed = false;
         text.trim().split('\n').forEach(line => {
           try {
-            const wrapper = JSON.parse(line);
-            if (!wrapper.message) return;
+            const wrapper = JSON.parse(line); if (!wrapper.message) return;
             const data = JSON.parse(wrapper.message);
             if (!data.id || state.seenSyncIds.includes(data.id)) return;
             state.seenSyncIds.push(data.id);
-
             if (data.tree) {
               const idx = state.trees.findIndex(t => t.id === data.tree.id);
-              if (idx !== -1) state.trees[idx] = data.tree;
-              else state.trees.unshift(data.tree);
+              if (idx !== -1) state.trees[idx] = data.tree; else state.trees.unshift(data.tree);
               changed = true;
             }
-            if (data.contribution) {
-              state.contributions.unshift({ ...data.contribution, applaudedByMe: false });
-              changed = true;
-            }
+            if (data.contribution) { state.contributions.unshift({ ...data.contribution, applaudedByMe: false }); changed = true; }
             if (data.notifTitle) {
               const targetTab = data.contribution ? 'community' : 'sos';
               state.notifications.unshift({ id: data.id, title: data.notifTitle, body: data.notifBody || '', time: 'Live', targetTab });
@@ -1207,248 +951,65 @@
       } catch (e) {}
     }
 
-    // PWA Install & Share
-    window.addEventListener('beforeinstallprompt', e => {
-      e.preventDefault();
-      deferredInstallPrompt = e;
-    });
-
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-      document.getElementById('headerInstallBtn').textContent = '📤 Share';
-    }
+    window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstallPrompt = e; });
 
     async function handleInstallClick() {
       if (deferredInstallPrompt) {
         deferredInstallPrompt.prompt();
-        const choice = await deferredInstallPrompt.userChoice;
-        if (choice.outcome === 'accepted') showToast('🎉 Installing GreenGuardian on Home Screen!');
+        await deferredInstallPrompt.userChoice;
         deferredInstallPrompt = null;
-      } else {
-        openModal('installModal');
-      }
+      } else openModal('installModal');
     }
 
     async function shareAppLink() {
-      const shareData = {
-        title: 'GreenGuardian — Plant. Protect. Grow.',
-        text: 'Sign in with Gmail on GreenGuardian by SYNOVA to care for trees & see live community contributions:',
-        url: window.location.href
-      };
-      if (navigator.share) {
-        try { await navigator.share(shareData); return; } catch (e) {}
-      }
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        showToast('🔗 App link copied! Share on WhatsApp.');
-      } catch (e) {
-        showToast('Copy URL from browser bar to share!');
-      }
+      if (navigator.share) { try { await navigator.share({ title: 'GreenGuardian', url: window.location.href }); return; } catch (e) {} }
+      try { await navigator.clipboard.writeText(window.location.href); showToast('🔗 App link copied!'); } catch (e) {}
     }
 
     function renderContributionCard(c, compact = false) {
       const initial = (c.userName || 'G')[0].toUpperCase();
-      return `
-        <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2.5">
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2.5 min-w-0">
-              <div class="w-9 h-9 rounded-full bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center shrink-0">${initial}</div>
-              <div class="min-w-0">
-                <div class="flex items-center gap-1.5">
-                  <p class="font-bold text-xs text-slate-900 truncate">${c.userName}</p>
-                  <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 shrink-0">${c.identity}</span>
-                </div>
-                <p class="text-[10px] text-slate-500 truncate">✉️ ${maskGmail(c.userGmail)} • ${c.time}</p>
-              </div>
-            </div>
-            <span class="shrink-0 text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">+${c.pts} pts</span>
-          </div>
-
-          <div>
-            <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 mb-1">${c.badge}</span>
-            <p class="font-bold text-xs text-slate-800">${c.title}</p>
-            <p class="text-[11px] text-slate-500">📍 ${c.place}</p>
-          </div>
-
-          ${(!compact && c.thumb) ? `<img src="${c.thumb}" alt="Verified community proof" class="w-full max-h-52 object-cover rounded-xl border border-slate-200" />` : ''}
-
-          <div class="flex items-center justify-between pt-1 border-t border-slate-100">
-            <button onclick="applaudContribution('${c.id}')" class="text-xs font-bold px-2.5 py-1 rounded-lg ${c.applaudedByMe ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700 hover:bg-amber-50'}">
-              👏 Thank / Applaud (${c.applauds || 1})
-            </button>
-            ${compact && c.thumb ? `<button onclick="switchTab('community')" class="text-[11px] font-bold text-indigo-600">View Photo Proof →</button>` : ''}
-          </div>
-        </div>
-      `;
+      return `<div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2.5"><div class="flex items-center justify-between gap-2"><div class="flex items-center gap-2.5 min-w-0"><div class="w-9 h-9 rounded-full bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center shrink-0">${initial}</div><div class="min-w-0"><div class="flex items-center gap-1.5"><p class="font-bold text-xs text-slate-900 truncate">${c.userName}</p><span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 shrink-0">${c.identity}</span></div><p class="text-[10px] text-slate-500 truncate">✉️ ${maskGmail(c.userGmail)} • ${c.time}</p></div></div><span class="shrink-0 text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">+${c.pts} pts</span></div><div><span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 mb-1">${c.badge}</span><p class="font-bold text-xs text-slate-800">${c.title}</p><p class="text-[11px] text-slate-500">📍 ${c.place}</p></div>${(!compact && c.thumb) ? `<img src="${c.thumb}" alt="Proof" class="w-full max-h-52 object-cover rounded-xl border border-slate-200" />` : ''}<div class="flex items-center justify-between pt-1 border-t border-slate-100"><button onclick="applaudContribution('${c.id}')" class="text-xs font-bold px-2.5 py-1 rounded-lg ${c.applaudedByMe ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">👏 Thank (${c.applauds || 1})</button>${compact && c.thumb ? `<button onclick="switchTab('community')" class="text-[11px] font-bold text-indigo-600">View Photo →</button>` : ''}</div></div>`;
     }
 
     function renderAll() {
       const idObj = IDENTITIES.find(i => i.id === state.identity) || IDENTITIES[0];
-      const displayName = state.user.name || 'Sign In';
-      const displayGmail = state.user.gmail || 'Tap Sign In to link Gmail';
-
-      document.getElementById('headerUserLabel').textContent = displayName;
+      document.getElementById('headerUserLabel').textContent = state.user.name || 'Sign In';
       document.getElementById('homeIdentity').textContent = `${idObj.icon} ${idObj.id} • ${state.user.name || 'Guardian'}`;
-      document.getElementById('homeGmailBadge').textContent = `✉️ ${displayGmail}`;
+      document.getElementById('homeGmailBadge').textContent = `✉️ ${state.user.gmail || 'Tap Sign In'}`;
       document.getElementById('homePoints').textContent = state.points;
-
       document.getElementById('profileAvatar').textContent = (state.user.name || 'G')[0].toUpperCase();
       document.getElementById('profileCardName').textContent = state.user.name || 'Guest Guardian';
-      document.getElementById('profileCardGmail').textContent = `✉️ ${displayGmail}`;
+      document.getElementById('profileCardGmail').textContent = `✉️ ${state.user.gmail || 'Not signed in'}`;
       document.getElementById('profileCardIdentity').textContent = `${idObj.icon} ${idObj.id}`;
-
-      const total = state.trees.length;
-      const sosCount = state.trees.filter(t => t.sos).length;
+      const total = state.trees.length, sosCount = state.trees.filter(t => t.sos).length;
       document.getElementById('statTotal').textContent = total;
       document.getElementById('statHealthy').textContent = total - sosCount;
       document.getElementById('statSos').textContent = sosCount;
-
-      // Community Feed (Home Preview & Full Tab)
       document.getElementById('communityCountBadge').textContent = `${state.contributions.length} live`;
       document.getElementById('homeCommunityPreview').innerHTML = state.contributions.slice(0, 2).map(c => renderContributionCard(c, true)).join('');
       document.getElementById('communityFeedList').innerHTML = state.contributions.map(c => renderContributionCard(c, false)).join('');
-
-      // Home Reminders
-      document.getElementById('homeReminders').innerHTML = state.trees.slice(0, 3).map(t => {
-        const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng));
-        return `
-          <div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-between gap-2">
-            <div class="min-w-0">
-              <p class="font-bold text-xs text-slate-800 truncate">${t.name}</p>
-              <p class="text-[11px] text-slate-500 truncate">${t.place} • ${dist}</p>
-            </div>
-            <button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl ${t.sos ? 'bg-rose-600' : 'bg-emerald-600'} text-white font-bold text-xs">
-              📸 ${t.sos ? 'Rescue +100' : 'Water +50'}
-            </button>
-          </div>
-        `;
-      }).join('');
-
-      // Map Tree List
+      document.getElementById('homeReminders').innerHTML = state.trees.slice(0, 3).map(t => `<div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500 truncate">${t.place} • ${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</p></div><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl ${t.sos ? 'bg-rose-600' : 'bg-emerald-600'} text-white font-bold text-xs">📸 ${t.sos ? 'Rescue +100' : 'Water +50'}</button></div>`).join('');
       const sortedTrees = [...state.trees].sort((a, b) => getDistanceMeters(state.userLoc.lat, state.userLoc.lng, a.lat, a.lng) - getDistanceMeters(state.userLoc.lat, state.userLoc.lng, b.lat, b.lng));
-      document.getElementById('mapTreeList').innerHTML = sortedTrees.map(t => {
-        const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng));
-        return `
-          <div class="p-3 rounded-xl border ${t.sos ? 'border-rose-200 bg-rose-50/50' : 'border-slate-100 bg-slate-50'} flex items-center justify-between gap-2">
-            <div class="min-w-0" onclick="if(map) map.setView([${t.lat},${t.lng}],16)">
-              <div class="flex items-center gap-1.5">
-                <span class="text-xs font-bold text-slate-800 truncate">${t.name}</span>
-                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${t.sos ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${t.health}</span>
-              </div>
-              <p class="text-[11px] text-slate-500 truncate mt-0.5">${t.place} • <strong>${dist}</strong></p>
-            </div>
-            <button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-2.5 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-[11px]">
-              📸 Proof
-            </button>
-          </div>
-        `;
-      }).join('');
-
-      // SOS List
+      document.getElementById('mapTreeList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl border ${t.sos ? 'border-rose-200 bg-rose-50/50' : 'border-slate-100 bg-slate-50'} flex items-center justify-between gap-2"><div class="min-w-0" onclick="if(map) map.setView([${t.lat},${t.lng}],16)"><span class="text-xs font-bold text-slate-800 truncate">${t.name}</span><p class="text-[11px] text-slate-500 truncate">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-2.5 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-[11px]">📸 Proof</button></div>`).join('');
       const sosTrees = sortedTrees.filter(t => t.sos);
-      document.getElementById('sosList').innerHTML = sosTrees.length ? sosTrees.map(t => {
-        const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng));
-        return `
-          <div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 space-y-2">
-            <div class="flex items-start justify-between">
-              <div>
-                <p class="font-bold text-sm text-rose-900">${t.name}</p>
-                <p class="text-xs text-rose-700">${t.place} • <strong>${dist}</strong></p>
-              </div>
-              <span class="text-xs font-extrabold bg-rose-600 text-white px-2 py-0.5 rounded-lg">Moisture ${t.moisture}%</span>
-            </div>
-            <button onclick="openProofModal('sos','${t.id}')" class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow">
-              📸 I WILL HELP — Upload Proof (+100 pts)
-            </button>
-          </div>
-        `;
-      }).join('') : '<p class="text-xs text-emerald-700 font-semibold">🎉 All tracked trees are healthy right now!</p>';
-
-      // Adopt List
-      document.getElementById('adoptList').innerHTML = sortedTrees.map(t => `
-        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
-          <div class="min-w-0">
-            <p class="font-bold text-xs text-slate-800 truncate">${t.name}</p>
-            <p class="text-[11px] text-slate-500">Guardian: <strong>${t.adoptedBy}</strong></p>
-          </div>
-          <button onclick="adoptTree('${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl bg-sky-600 text-white font-bold text-xs">
-            🤝 Adopt
-          </button>
-        </div>
-      `).join('');
-
-      // Identity Grid
-      document.getElementById('identityGrid').innerHTML = IDENTITIES.map(item => {
-        const active = item.id === state.identity;
-        return `
-          <button onclick="state.identity='${item.id}'; saveState(); renderAll(); showToast('Identity set: ${item.id}');" class="p-3 rounded-2xl border text-left transition ${active ? 'bg-emerald-700 text-white border-emerald-700 shadow' : 'bg-slate-50 text-slate-800 border-slate-200'}">
-            <span class="text-xl">${item.icon}</span>
-            <p class="font-bold text-xs mt-1">${item.id}</p>
-            <p class="text-[10px] ${active ? 'text-emerald-100' : 'text-slate-500'}">${item.desc}</p>
-          </button>
-        `;
-      }).join('');
-
-      // Leaderboard
+      document.getElementById('sosList').innerHTML = sosTrees.length ? sosTrees.map(t => `<div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 space-y-2"><div class="flex items-start justify-between"><div><p class="font-bold text-sm text-rose-900">${t.name}</p><p class="text-xs text-rose-700">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><span class="text-xs font-extrabold bg-rose-600 text-white px-2 py-0.5 rounded-lg">Moisture ${t.moisture}%</span></div><button onclick="openProofModal('sos','${t.id}')" class="w-full py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs shadow">📸 I WILL HELP — Upload Proof (+100 pts)</button></div>`).join('') : '<p class="text-xs text-emerald-700 font-semibold">🎉 All tracked trees are healthy right now!</p>';
+      document.getElementById('adoptList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500">Guardian: <strong>${t.adoptedBy}</strong></p></div><button onclick="adoptTree('${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl bg-sky-600 text-white font-bold text-xs">🤝 Adopt</button></div>`).join('');
+      document.getElementById('identityGrid').innerHTML = IDENTITIES.map(item => `<button onclick="state.identity='${item.id}'; saveState(); renderAll(); showToast('Identity set: ${item.id}');" class="p-3 rounded-2xl border text-left transition ${item.id === state.identity ? 'bg-emerald-700 text-white border-emerald-700 shadow' : 'bg-slate-50 text-slate-800 border-slate-200'}"><span class="text-xl">${item.icon}</span><p class="font-bold text-xs mt-1">${item.id}</p></button>`).join('');
       const myBoardName = state.user.name ? `${state.user.name} (${maskGmail(state.user.gmail)})` : `You (${state.identity})`;
-      const board = [
-        { name: myBoardName, pts: state.points, me: true },
-        { name: 'Saradha Matric HSS Eco Club', pts: 620, me: false },
-        { name: 'Rohan M. (roha***@gmail.com)', pts: 540, me: false },
-        { name: 'Kavya S. (kavy***@gmail.com)', pts: 480, me: false }
-      ].sort((a, b) => b.pts - a.pts);
-
-      document.getElementById('leaderboardList').innerHTML = board.map((row, i) => `
-        <div class="p-2.5 rounded-xl flex items-center justify-between gap-2 ${row.me ? 'bg-amber-50 border border-amber-300 font-bold' : 'bg-slate-50'}">
-          <span class="truncate">#${i + 1} ${row.name}</span>
-          <span class="text-emerald-700 font-extrabold shrink-0">${row.pts} pts</span>
-        </div>
-      `).join('');
-
-      // My Proof Gallery
+      const board = [{ name: myBoardName, pts: state.points, me: true }, { name: 'Saradha Matric HSS Eco Club', pts: 620, me: false }, { name: 'Rohan M. (roha***@gmail.com)', pts: 540, me: false }, { name: 'Kavya S. (kavy***@gmail.com)', pts: 480, me: false }].sort((a, b) => b.pts - a.pts);
+      document.getElementById('leaderboardList').innerHTML = board.map((row, i) => `<div class="p-2.5 rounded-xl flex items-center justify-between gap-2 ${row.me ? 'bg-amber-50 border border-amber-300 font-bold' : 'bg-slate-50'}"><span class="truncate">#${i + 1} ${row.name}</span><span class="text-emerald-700 font-extrabold shrink-0">${row.pts} pts</span></div>`).join('');
       document.getElementById('proofCountBadge').textContent = `${state.proofs.length} verified`;
-      document.getElementById('proofGallery').innerHTML = state.proofs.length ? state.proofs.map(p => `
-        <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-50">
-          <img src="${p.img}" alt="${p.title}" class="w-full max-h-52 object-cover" />
-          <div class="p-2.5 flex items-center justify-between text-xs">
-            <div>
-              <p class="font-bold text-slate-800">${p.title}</p>
-              <p class="text-[10px] text-slate-500">${p.identity} • GPS ${p.coords} • ${p.time}</p>
-            </div>
-            <span class="font-extrabold text-emerald-700">+${p.pts} pts</span>
-          </div>
-        </div>
-      `).join('') : '<p class="text-xs text-slate-500">No photo proofs yet. Water or rescue a tree to earn verified Green Points!</p>';
-
-      renderMapMarkers();
-      renderNotifications();
+      document.getElementById('proofGallery').innerHTML = state.proofs.length ? state.proofs.map(p => `<div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-50"><img src="${p.img}" alt="${p.title}" class="w-full max-h-52 object-cover" /><div class="p-2.5 flex items-center justify-between text-xs"><div><p class="font-bold text-slate-800">${p.title}</p><p class="text-[10px] text-slate-500">${p.identity} • GPS ${p.coords} • ${p.time}</p></div><span class="font-extrabold text-emerald-700">+${p.pts} pts</span></div></div>`).join('') : '<p class="text-xs text-slate-500">No photo proofs yet.</p>';
+      renderMapMarkers(); renderNotifications();
     }
 
     function renderNotifications() {
-      document.getElementById('notifHistoryList').innerHTML = state.notifications.map(n => `
-        <div onclick="closeModal('notifModal'); switchTab('${n.targetTab || 'community'}');" class="p-2.5 rounded-xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 text-xs cursor-pointer transition">
-          <div class="flex justify-between font-bold text-slate-800 gap-2">
-            <span class="truncate">${n.title}</span>
-            <span class="text-[10px] text-slate-400 shrink-0">${n.time}</span>
-          </div>
-          <p class="text-[11px] text-slate-600 mt-0.5">${n.body}</p>
-        </div>
-      `).join('');
+      document.getElementById('notifHistoryList').innerHTML = state.notifications.map(n => `<div onclick="closeModal('notifModal'); switchTab('${n.targetTab || 'community'}');" class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs cursor-pointer"><div class="flex justify-between font-bold text-slate-800 gap-2"><span class="truncate">${n.title}</span><span class="text-[10px] text-slate-400 shrink-0">${n.time}</span></div><p class="text-[11px] text-slate-600 mt-0.5">${n.body}</p></div>`).join('');
     }
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
-    }
-
-    loadState();
-    checkLoginStatus();
-    initMap();
-    renderAll();
-    initLocation();
-    pollCloudSync();
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
+    loadState(); checkLoginStatus(); initMap(); renderAll(); initLocation(); pollCloudSync();
     setInterval(pollCloudSync, 6000);
-
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('tab') === 'community') switchTab('community');
   </script>
 </body>
 </html>
