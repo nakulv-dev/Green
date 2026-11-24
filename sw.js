@@ -1,5 +1,11 @@
-const CACHE_NAME = 'greenguardian-synova-v4';
-const CORE_ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
+const CACHE_NAME = 'greenguardian-synova-v5';
+const CORE_ASSETS = [
+  '/Green/',
+  '/Green/index.html',
+  '/Green/manifest.json',
+  '/Green/icon-192.png',
+  '/Green/icon-512.png'
+];
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -38,8 +44,8 @@ self.addEventListener('push', event => {
   event.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
-      icon: './icon-192.png',
-      badge: './icon-192.png',
+      icon: '/Green/icon-192.png',
+      badge: '/Green/icon-192.png',
       vibrate: [200, 100, 200],
       tag: 'greenguardian-live',
       renotify: true
@@ -52,7 +58,7 @@ self.addEventListener('notificationclick', event => {
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
       if (clientList.length > 0) return clientList[0].focus();
-      return self.clients.openWindow('./index.html?tab=community');
+      return self.clients.openWindow('/Green/index.html?tab=community');
     })
   );
 });
