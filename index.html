@@ -931,12 +931,40 @@
             const data = JSON.parse(wrapper.message);
             if (!data.id || state.seenSyncIds.includes(data.id)) return;
             state.seenSyncIds.push(data.id);
+
+            // Live IoT Hardware Telemetry Update
+            if (typeof data.moisture === 'number') {
+              state.moisture = data.moisture;
+              const slider = document.getElementById('moistureSlider');
+              const valEl = document.getElementById('moistureValue');
+              const stEl = document.getElementById('moistureState');
+              if (slider) slider.value = data.moisture;
+              if (valEl) {
+                valEl.textContent = `${data.moisture}%`;
+                valEl.className = data.moisture < 25
+                  ? 'text-2xl font-extrabold text-rose-400'
+                  : 'text-2xl font-extrabold text-emerald-400';
+              }
+              if (stEl) {
+                stEl.textContent = data.moisture < 25
+                  ? 'LIVE HARDWARE: CRITICAL DRY!'
+                  : 'LIVE HARDWARE: Connected';
+              }
+              if (state.trees[0]) {
+                state.trees[0].moisture = data.moisture;
+              }
+              changed = true;
+            }
+
             if (data.tree) {
               const idx = state.trees.findIndex(t => t.id === data.tree.id);
               if (idx !== -1) state.trees[idx] = data.tree; else state.trees.unshift(data.tree);
               changed = true;
             }
-            if (data.contribution) { state.contributions.unshift({ ...data.contribution, applaudedByMe: false }); changed = true; }
+            if (data.contribution) {
+              state.contributions.unshift({ ...data.contribution, applaudedByMe: false });
+              changed = true;
+            }
             if (data.notifTitle) {
               const targetTab = data.contribution ? 'community' : 'sos';
               state.notifications.unshift({ id: data.id, title: data.notifTitle, body: data.notifBody || '', time: 'Live', targetTab });
