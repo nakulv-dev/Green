@@ -43,7 +43,7 @@
       <div class="text-center space-y-1">
         <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-3xl flex items-center justify-center mx-auto shadow-sm">🌱</div>
         <h2 class="font-extrabold text-lg text-emerald-950">Welcome to GreenGuardian</h2>
-        <p class="text-xs text-slate-500">Sign in with your Gmail so your tree care & SOS rescues are credited to you on the live community feed.</p>
+        <p class="text-xs text-slate-500">Sign in with your Gmail so your tree care, community posts & SOS rescues are credited to you.</p>
       </div>
       <div class="space-y-2.5">
         <div>
@@ -151,7 +151,7 @@
       <button onclick="switchTab('community')" class="p-3.5 rounded-2xl bg-indigo-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🌍</span>
         <p class="font-bold text-sm mt-1.5">Community Feed</p>
-        <p class="text-[11px] text-indigo-100">Post, like & comment live</p>
+        <p class="text-[11px] text-indigo-100">Post, like, comment & edit</p>
       </button>
       <button onclick="switchTab('sos')" class="p-3.5 rounded-2xl bg-rose-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🚨</span>
@@ -213,7 +213,7 @@
     <div class="bg-gradient-to-r from-indigo-800 to-emerald-800 text-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
       <div>
         <h2 class="font-bold text-base">🌍 GreenGuardian Community</h2>
-        <p class="text-xs text-indigo-100 mt-0.5">Share updates, photos, tips & discuss live</p>
+        <p class="text-xs text-indigo-100 mt-0.5">Post updates, photos, edit/delete & discuss live</p>
       </div>
       <span id="communityCountBadge" class="text-xs font-extrabold bg-white/15 px-2.5 py-1 rounded-full">0 live</span>
     </div>
@@ -249,11 +249,18 @@
       </div>
     </div>
 
-    <!-- Feed Filter Pills -->
-    <div class="flex gap-1.5 overflow-x-auto pb-0.5 text-[11px] font-bold">
-      <button onclick="setFeedFilter('all')" id="filter-all" class="px-3 py-1 rounded-full bg-emerald-700 text-white shrink-0">All Posts</button>
-      <button onclick="setFeedFilter('photos')" id="filter-photos" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">📷 With Photos</button>
-      <button onclick="setFeedFilter('sos')" id="filter-sos" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">🚨 SOS & Help</button>
+    <!-- Search Bar + Feed Filter Pills -->
+    <div class="space-y-2">
+      <div class="relative">
+        <input id="feedSearchInput" type="text" oninput="renderAll()" placeholder="🔍 Search posts, users, locations..." class="w-full pl-3.5 pr-8 py-2 rounded-xl bg-white border border-slate-200 text-xs focus:outline-none focus:border-emerald-600" />
+        <button onclick="document.getElementById('feedSearchInput').value=''; renderAll();" class="absolute right-2.5 top-1.5 text-slate-400 text-xs font-bold">✕</button>
+      </div>
+      <div class="flex gap-1.5 overflow-x-auto pb-0.5 text-[11px] font-bold">
+        <button onclick="setFeedFilter('all')" id="filter-all" class="px-3 py-1 rounded-full bg-emerald-700 text-white shrink-0">All Posts</button>
+        <button onclick="setFeedFilter('mine')" id="filter-mine" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">👤 My Posts</button>
+        <button onclick="setFeedFilter('photos')" id="filter-photos" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">📷 With Photos</button>
+        <button onclick="setFeedFilter('sos')" id="filter-sos" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">🚨 SOS & Help</button>
+      </div>
     </div>
 
     <!-- Live Feed Stream -->
@@ -322,33 +329,64 @@
     </section>
   </main>
 
-  <!-- TAB 6: GMAIL PROFILE, IDENTITY & LEADERBOARD -->
+  <!-- TAB 6: GMAIL PROFILE, EDIT PROFILE, ACCOUNT DELETE & LEADERBOARD -->
   <main id="tab-identity" class="hidden p-4 space-y-4">
-    <section class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm flex items-center justify-between gap-3">
-      <div class="flex items-center gap-3 min-w-0">
-        <div class="w-11 h-11 rounded-2xl bg-emerald-700 text-white font-extrabold text-base flex items-center justify-center shrink-0" id="profileAvatar">G</div>
-        <div class="min-w-0">
-          <p id="profileCardName" class="font-bold text-sm text-slate-900 truncate">Guardian User</p>
-          <p id="profileCardGmail" class="text-xs text-emerald-700 font-medium truncate">user@gmail.com</p>
-          <p id="profileCardIdentity" class="text-[11px] text-slate-500 mt-0.5">🎓 Students</p>
+    <!-- User Profile Card with Edit & Switch -->
+    <section class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm space-y-3">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-700 text-white font-extrabold text-lg flex items-center justify-center shrink-0" id="profileAvatar">G</div>
+          <div class="min-w-0">
+            <p id="profileCardName" class="font-bold text-sm text-slate-900 truncate">Guardian User</p>
+            <p id="profileCardGmail" class="text-xs text-emerald-700 font-medium truncate">user@gmail.com</p>
+            <p id="profileCardIdentity" class="text-[11px] text-slate-500 mt-0.5">🎓 Students</p>
+          </div>
+        </div>
+        <button onclick="openEditProfileModal()" class="shrink-0 px-3 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm">✏️ Edit Profile</button>
+      </div>
+      <p id="profileCardBio" class="text-xs text-slate-600 bg-slate-50 px-3 py-2 rounded-xl border border-slate-100">🌱 Planting & protecting green cover in my community.</p>
+      <div class="grid grid-cols-3 gap-2 text-center pt-1">
+        <div class="bg-emerald-50 rounded-xl p-2">
+          <p id="profileStatPts" class="font-extrabold text-sm text-emerald-800">250</p>
+          <p class="text-[10px] text-emerald-700">Green Points</p>
+        </div>
+        <div class="bg-indigo-50 rounded-xl p-2">
+          <p id="profileStatPosts" class="font-extrabold text-sm text-indigo-800">0</p>
+          <p class="text-[10px] text-indigo-700">My Posts</p>
+        </div>
+        <div class="bg-amber-50 rounded-xl p-2">
+          <p id="profileStatProofs" class="font-extrabold text-sm text-amber-800">0</p>
+          <p class="text-[10px] text-amber-700">Verified Proofs</p>
         </div>
       </div>
-      <button onclick="openGmailSwitch()" class="shrink-0 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">Switch Gmail</button>
     </section>
+
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
-      <h2 class="font-bold text-base text-slate-800">🪪 Your Identity</h2>
+      <h2 class="font-bold text-base text-slate-800">🪪 Your Identity Role</h2>
       <div id="identityGrid" class="grid grid-cols-2 gap-2"></div>
     </section>
+
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-2.5">
       <h3 class="font-bold text-sm text-slate-800">🏆 Green Champions Leaderboard</h3>
       <div id="leaderboardList" class="space-y-2 text-xs"></div>
     </section>
+
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-sm text-slate-800">📸 My Geotagged Proof Log</h3>
         <span id="proofCountBadge" class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">0 verified</span>
       </div>
       <div id="proofGallery" class="space-y-3"></div>
+    </section>
+
+    <!-- Account Management & Danger Zone -->
+    <section class="bg-white rounded-2xl p-4 border border-rose-200 shadow-sm space-y-2.5">
+      <h3 class="font-bold text-sm text-rose-800">⚙️ Account & Data Settings</h3>
+      <p class="text-[11px] text-slate-500">Switch your Gmail account or permanently delete your profile, posts, and local app data.</p>
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button onclick="openGmailSwitch()" class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs">🔄 Switch / Sign Out</button>
+        <button onclick="openModal('deleteAccountModal')" class="py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm">🗑️ Delete Account</button>
+      </div>
     </section>
   </main>
 
@@ -440,16 +478,14 @@
         <h3 class="font-bold text-base text-slate-900">📲 Install GreenGuardian App</h3>
         <button onclick="closeModal('installModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
-
       <div class="p-3 rounded-2xl bg-amber-50 border border-amber-200 space-y-2 text-xs">
-        <p class="font-bold text-amber-900">1-Time Repo Icon Setup (If Chrome shows "Cannot be installed"):</p>
-        <p class="text-amber-800">Tap both buttons below to download PNG icons, then upload them to your GitHub repo (`Add file → Upload files`):</p>
+        <p class="font-bold text-amber-900">1-Time Repo Icon Setup:</p>
+        <p class="text-amber-800">Download PNG icons and upload them to your GitHub repo:</p>
         <div class="grid grid-cols-2 gap-2">
           <button onclick="downloadPngIcon(192)" class="py-2 px-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs">⬇️ icon-192.png</button>
           <button onclick="downloadPngIcon(512)" class="py-2 px-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs">⬇️ icon-512.png</button>
         </div>
       </div>
-
       <div class="space-y-2 text-xs">
         <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
           <p class="font-bold text-emerald-900">🤖 Android (Chrome)</p>
@@ -460,10 +496,92 @@
           <p class="text-sky-800 mt-0.5">Tap bottom <strong>Share (⬆️)</strong> → <strong>Add to Home Screen</strong>.</p>
         </div>
       </div>
-
       <button onclick="shareAppLink()" class="w-full py-3 rounded-xl bg-emerald-700 text-white font-bold text-xs shadow">
         📤 Share App Link
       </button>
+    </div>
+  </div>
+
+  <!-- MODAL 5: EDIT PROFILE MODAL -->
+  <div id="editProfileModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-end sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base text-slate-900">✏️ Edit Your Profile</h3>
+        <button onclick="closeModal('editProfileModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+      </div>
+      <div class="space-y-2.5 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Display Name</label>
+          <input id="editNameInput" type="text" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Gmail Address</label>
+          <input id="editGmailInput" type="email" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Identity Role</label>
+          <select id="editIdentitySelect" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:border-emerald-600">
+            <option value="Students">🎓 Students</option>
+            <option value="Volunteers">🙋 Volunteers</option>
+            <option value="NGOs">🌍 NGOs</option>
+            <option value="Local Communities">🏘️ Local Communities</option>
+            <option value="Government">🏛️ Government</option>
+            <option value="Schools / Colleges">🏫 Schools / Colleges</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Short Bio / Tagline</label>
+          <input id="editBioInput" type="text" maxlength="90" placeholder="e.g., IoT & Urban Forestry Builder" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
+        </div>
+      </div>
+      <button onclick="saveEditedProfile()" class="w-full py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow">
+        ✅ Save Profile Changes
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL 6: EDIT POST MODAL -->
+  <div id="editPostModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-end sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base text-slate-900">✏️ Edit Community Post</h3>
+        <button onclick="closeModal('editPostModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+      </div>
+      <div class="space-y-2.5 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Category Tag</label>
+          <select id="editPostTagSelect" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+            <option value="🌿 Plant Update">🌿 Plant Update</option>
+            <option value="💧 Care Tip">💧 Care Tip</option>
+            <option value="🚨 Need Help">🚨 Need Help</option>
+            <option value="🌱 New Tree Planted">🌱 New Tree Planted</option>
+            <option value="💧 Watered & Cared">💧 Watered & Cared</option>
+            <option value="🚨 SOS Rescued">🚨 SOS Rescued</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Post Message</label>
+          <textarea id="editPostBodyInput" rows="3" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-emerald-600"></textarea>
+        </div>
+      </div>
+      <button onclick="saveEditedPost()" class="w-full py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow">
+        💾 Update Post Live
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL 7: DELETE ACCOUNT CONFIRMATION -->
+  <div id="deleteAccountModal" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-5 space-y-3 shadow-2xl text-center">
+      <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 text-2xl flex items-center justify-center mx-auto">⚠️</div>
+      <h3 class="font-extrabold text-base text-slate-900">Delete Account Permanently?</h3>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        This will permanently remove your profile, Gmail link, Green Points, photo proofs, and all posts you created from this device and the live feed.
+      </p>
+      <div class="grid grid-cols-2 gap-2 pt-2">
+        <button onclick="closeModal('deleteAccountModal')" class="py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">Cancel</button>
+        <button onclick="confirmDeleteAccount()" class="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow">Yes, Delete All</button>
+      </div>
     </div>
   </div>
 
@@ -503,7 +621,7 @@
         thumb: null,
         applauds: 6,
         applaudedByMe: false,
-        comments: [{ user: 'Rohan M.', text: 'Great mulching tip for summer!' }]
+        comments: [{ id: 'sc1', user: 'Rohan M.', userGmail: 'rohan.volunteer@gmail.com', text: 'Great mulching tip for summer!' }]
       },
       {
         id: 'seed_c2',
@@ -524,7 +642,7 @@
     ];
 
     let state = {
-      user: { name: '', gmail: '', loggedIn: false },
+      user: { name: '', gmail: '', bio: '🌱 Planting & protecting green cover in my community.', loggedIn: false },
       userLoc: { lat: 13.0827, lng: 80.2707, accuracy: null, label: 'Chennai / Gingee', pinned: false },
       identity: 'Students',
       points: 250,
@@ -536,7 +654,8 @@
         { id: 'n1', title: '🚨 Tree SOS: Mango Young Tree #102', body: 'Wilting leaves & dry soil detected at Gingee. Volunteers needed!', time: 'Just now', targetTab: 'sos' },
         { id: 'n2', title: '💧 Kavya S. (kavya.green@gmail.com)', body: 'Watered Pongamia Sapling #103 (+50 pts)', time: '12m ago', targetTab: 'community' }
       ],
-      seenSyncIds: []
+      seenSyncIds: [],
+      deletedPostIds: []
     };
 
     let map, streetLayer, satLayer, userMarker, accuracyCircle;
@@ -546,6 +665,7 @@
     let stampedDataUrl = null;
     let stampedThumbUrl = null;
     let fbPendingPhoto = null;
+    let editingPostId = null;
     let currentFeedFilter = 'all';
     let openCommentBoxes = {};
     let deferredInstallPrompt = null;
@@ -580,7 +700,15 @@
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) state = { ...state, ...JSON.parse(raw) };
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state = {
+            ...state,
+            ...parsed,
+            user: { ...state.user, ...(parsed.user || {}) },
+            deletedPostIds: parsed.deletedPostIds || []
+          };
+        }
       } catch (e) {}
     }
 
@@ -618,13 +746,71 @@
       if (!nameRaw) return showToast('Please enter your name');
       if (!gmailRaw) return showToast('Please enter your Gmail address');
       if (!gmailRaw.includes('@')) gmailRaw = `${gmailRaw}@gmail.com`;
-      state.user = { name: nameRaw, gmail: gmailRaw, loggedIn: true };
+      state.user = { ...state.user, name: nameRaw, gmail: gmailRaw, loggedIn: true };
       state.identity = chosenIdentity;
       saveState();
       document.getElementById('loginScreen').classList.add('hidden');
       renderAll();
       enableOSNotifications(false);
       showToast(`👋 Signed in as ${nameRaw}`);
+    }
+
+    // --- PROFILE EDIT & ACCOUNT DELETE ---
+    function openEditProfileModal() {
+      document.getElementById('editNameInput').value = state.user.name || '';
+      document.getElementById('editGmailInput').value = state.user.gmail || '';
+      document.getElementById('editIdentitySelect').value = state.identity || 'Students';
+      document.getElementById('editBioInput').value = state.user.bio || '';
+      openModal('editProfileModal');
+    }
+
+    function saveEditedProfile() {
+      const newName = document.getElementById('editNameInput').value.trim();
+      let newGmail = document.getElementById('editGmailInput').value.trim().toLowerCase();
+      const newIdentity = document.getElementById('editIdentitySelect').value;
+      const newBio = document.getElementById('editBioInput').value.trim() || '🌱 Planting & protecting green cover in my community.';
+
+      if (!newName) return showToast('Name cannot be empty');
+      if (!newGmail) return showToast('Gmail cannot be empty');
+      if (!newGmail.includes('@')) newGmail = `${newGmail}@gmail.com`;
+
+      const oldGmail = state.user.gmail;
+      state.user = { name: newName, gmail: newGmail, bio: newBio, loggedIn: true };
+      state.identity = newIdentity;
+
+      // Update user's existing posts with new name/identity
+      state.contributions.forEach(c => {
+        if (c.userGmail === oldGmail) {
+          c.userName = newName;
+          c.userGmail = newGmail;
+          c.identity = newIdentity;
+        }
+      });
+
+      saveState();
+      closeModal('editProfileModal');
+      renderAll();
+      showToast('✅ Profile updated successfully!');
+    }
+
+    function confirmDeleteAccount() {
+      const myGmail = state.user.gmail;
+      // Broadcast deletion for all posts belonging to this account
+      const myPosts = state.contributions.filter(c => c.userGmail === myGmail);
+      myPosts.forEach(p => {
+        state.deletedPostIds.push(p.id);
+        publishSyncEvent({ kind: 'fb_delete', id: 'del_' + Date.now() + '_' + p.id, targetPostId: p.id });
+      });
+
+      localStorage.removeItem(STORAGE_KEY);
+      state.user = { name: '', gmail: '', bio: '🌱 Planting & protecting green cover in my community.', loggedIn: false };
+      state.points = 0;
+      state.proofs = [];
+      state.contributions = state.contributions.filter(c => c.userGmail !== myGmail);
+      closeModal('deleteAccountModal');
+      renderAll();
+      checkLoginStatus();
+      showToast('🗑️ Account & posts deleted.');
     }
 
     function showToast(msg) {
@@ -819,7 +1005,7 @@
     }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    // --- FACEBOOK-STYLE COMMUNITY POSTING, PHOTO, FILTER & COMMENTS ---
+    // --- FACEBOOK-STYLE COMMUNITY POSTING, EDIT, DELETE, SHARE, PHOTO, FILTER & COMMENTS ---
     function handleFbPhotoSelect(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -890,9 +1076,71 @@
       });
     }
 
+    function openEditPostModal(postId) {
+      const post = state.contributions.find(c => c.id === postId);
+      if (!post) return;
+      editingPostId = postId;
+      document.getElementById('editPostTagSelect').value = post.badge || '🌿 Plant Update';
+      document.getElementById('editPostBodyInput').value = post.body || post.title || '';
+      openModal('editPostModal');
+    }
+
+    function saveEditedPost() {
+      if (!editingPostId) return;
+      const post = state.contributions.find(c => c.id === editingPostId);
+      if (!post) return;
+      const newTag = document.getElementById('editPostTagSelect').value;
+      const newBody = document.getElementById('editPostBodyInput').value.trim();
+      if (!newBody && !post.thumb) return showToast('Post content cannot be empty');
+
+      post.badge = newTag;
+      post.body = newBody;
+      post.edited = true;
+      saveState();
+      closeModal('editPostModal');
+      renderAll();
+      showToast('✏️ Post updated!');
+
+      publishSyncEvent({
+        kind: 'fb_edit',
+        id: 'edit_' + Date.now(),
+        targetPostId: post.id,
+        badge: newTag,
+        body: newBody
+      });
+    }
+
+    function deleteCommunityPost(postId) {
+      const post = state.contributions.find(c => c.id === postId);
+      if (!post) return;
+      if (!confirm('Delete this post from the community feed?')) return;
+
+      state.contributions = state.contributions.filter(c => c.id !== postId);
+      state.deletedPostIds.push(postId);
+      saveState();
+      renderAll();
+      showToast('🗑️ Post deleted!');
+
+      publishSyncEvent({
+        kind: 'fb_delete',
+        id: 'del_' + Date.now(),
+        targetPostId: postId
+      });
+    }
+
+    async function shareCommunityPost(postId) {
+      const post = state.contributions.find(c => c.id === postId);
+      if (!post) return;
+      const shareText = `🌱 ${post.userName} on GreenGuardian:\n"${post.body || post.title}" (${post.place})\nJoin here: ${window.location.href}`;
+      if (navigator.share) {
+        try { await navigator.share({ title: 'GreenGuardian Community', text: shareText }); return; } catch (e) {}
+      }
+      try { await navigator.clipboard.writeText(shareText); showToast('📋 Post copied to clipboard!'); } catch (e) {}
+    }
+
     function setFeedFilter(filterName) {
       currentFeedFilter = filterName;
-      ['all', 'photos', 'sos'].forEach(f => {
+      ['all', 'mine', 'photos', 'sos'].forEach(f => {
         const btn = document.getElementById(`filter-${f}`);
         if (btn) {
           btn.className = f === filterName
@@ -920,6 +1168,7 @@
       const commentObj = {
         id: 'cmt_' + Date.now(),
         user: state.user.name || state.identity || 'Guardian',
+        userGmail: state.user.gmail || '',
         text
       };
 
@@ -934,6 +1183,21 @@
         id: commentObj.id,
         targetPostId: contribId,
         comment: commentObj
+      });
+    }
+
+    function deleteFbComment(contribId, commentId) {
+      const item = state.contributions.find(c => c.id === contribId);
+      if (!item || !item.comments) return;
+      item.comments = item.comments.filter(cm => cm.id !== commentId);
+      saveState();
+      renderAll();
+      showToast('🗑️ Comment removed');
+      publishSyncEvent({
+        kind: 'fb_comment_delete',
+        id: 'cmtdel_' + Date.now(),
+        targetPostId: contribId,
+        commentId
       });
     }
 
@@ -1159,9 +1423,24 @@
               if (idx !== -1) state.trees[idx] = data.tree; else state.trees.unshift(data.tree);
               changed = true;
             }
-            if (data.contribution && !state.contributions.some(c => c.id === data.contribution.id)) {
+            if (data.contribution && !state.deletedPostIds.includes(data.contribution.id) && !state.contributions.some(c => c.id === data.contribution.id)) {
               state.contributions.unshift({ ...data.contribution, applaudedByMe: false, comments: data.contribution.comments || [] });
               changed = true;
+            }
+            if (data.kind === 'fb_edit' && data.targetPostId) {
+              const post = state.contributions.find(c => c.id === data.targetPostId);
+              if (post) {
+                post.badge = data.badge || post.badge;
+                post.body = data.body;
+                post.edited = true;
+                changed = true;
+              }
+            }
+            if (data.kind === 'fb_delete' && data.targetPostId) {
+              state.deletedPostIds.push(data.targetPostId);
+              const beforeLen = state.contributions.length;
+              state.contributions = state.contributions.filter(c => c.id !== data.targetPostId);
+              if (state.contributions.length !== beforeLen) changed = true;
             }
             if (data.kind === 'fb_like' && data.targetPostId) {
               const post = state.contributions.find(c => c.id === data.targetPostId);
@@ -1178,6 +1457,13 @@
                   post.comments.push(data.comment);
                   changed = true;
                 }
+              }
+            }
+            if (data.kind === 'fb_comment_delete' && data.targetPostId && data.commentId) {
+              const post = state.contributions.find(c => c.id === data.targetPostId);
+              if (post && post.comments) {
+                post.comments = post.comments.filter(cm => cm.id !== data.commentId);
+                changed = true;
               }
             }
             if (data.notifTitle) {
@@ -1213,11 +1499,17 @@
       const initial = (c.userName || 'G')[0].toUpperCase();
       const comments = c.comments || [];
       const isCommentsOpen = !!openCommentBoxes[c.id];
-      const commentsHtml = comments.map(cm => `
-        <div class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-[11px] text-slate-800">
-          <span class="font-bold text-emerald-900">${escapeHtml(cm.user)}:</span> ${escapeHtml(cm.text)}
-        </div>
-      `).join('');
+      const isOwner = state.user.gmail && c.userGmail && state.user.gmail.toLowerCase() === c.userGmail.toLowerCase();
+
+      const commentsHtml = comments.map(cm => {
+        const canDelComment = isOwner || (state.user.gmail && cm.userGmail && state.user.gmail.toLowerCase() === state.user.gmail.toLowerCase());
+        return `
+          <div class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-[11px] text-slate-800 flex items-center justify-between gap-2">
+            <div><span class="font-bold text-emerald-900">${escapeHtml(cm.user)}:</span> ${escapeHtml(cm.text)}</div>
+            ${canDelComment ? `<button onclick="deleteFbComment('${c.id}', '${cm.id}')" class="text-[10px] text-rose-600 font-bold shrink-0">✕</button>` : ''}
+          </div>
+        `;
+      }).join('');
 
       return `
         <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2.5">
@@ -1229,10 +1521,16 @@
                   <p class="font-bold text-xs text-slate-900 truncate">${escapeHtml(c.userName)}</p>
                   <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 shrink-0">${escapeHtml(c.identity)}</span>
                 </div>
-                <p class="text-[10px] text-slate-500 truncate">✉️ ${maskGmail(c.userGmail)} • ${escapeHtml(c.time)}</p>
+                <p class="text-[10px] text-slate-500 truncate">✉️ ${maskGmail(c.userGmail)} • ${escapeHtml(c.time)} ${c.edited ? '(edited)' : ''}</p>
               </div>
             </div>
-            <span class="shrink-0 text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">+${c.pts} pts</span>
+            <div class="flex items-center gap-1 shrink-0">
+              <span class="text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">+${c.pts} pts</span>
+              ${(!compact && isOwner) ? `
+                <button onclick="openEditPostModal('${c.id}')" title="Edit Post" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px]">✏️</button>
+                <button onclick="deleteCommunityPost('${c.id}')" title="Delete Post" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 text-[11px]">🗑️</button>
+              ` : ''}
+            </div>
           </div>
 
           <div class="space-y-1">
@@ -1244,14 +1542,15 @@
 
           ${(!compact && c.thumb) ? `<img src="${c.thumb}" alt="Post media" class="w-full max-h-56 object-cover rounded-xl border border-slate-200" />` : ''}
 
-          <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
-            <button onclick="applaudContribution('${c.id}')" class="flex-1 text-xs font-bold py-1.5 px-2.5 rounded-xl transition ${c.applaudedByMe ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
+          <div class="flex items-center gap-1.5 pt-2 border-t border-slate-100">
+            <button onclick="applaudContribution('${c.id}')" class="flex-1 text-xs font-bold py-1.5 px-2 rounded-xl transition ${c.applaudedByMe ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
               👍 Like (${c.applauds || 1})
             </button>
             ${compact
-              ? `<button onclick="switchTab('community')" class="flex-1 text-xs font-bold py-1.5 px-2.5 rounded-xl bg-indigo-50 text-indigo-700">💬 Comment (${comments.length})</button>`
-              : `<button onclick="toggleCommentBox('${c.id}')" class="flex-1 text-xs font-bold py-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">💬 Comment (${comments.length})</button>`
+              ? `<button onclick="switchTab('community')" class="flex-1 text-xs font-bold py-1.5 px-2 rounded-xl bg-indigo-50 text-indigo-700">💬 Comment (${comments.length})</button>`
+              : `<button onclick="toggleCommentBox('${c.id}')" class="flex-1 text-xs font-bold py-1.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">💬 Comment (${comments.length})</button>`
             }
+            ${!compact ? `<button onclick="shareCommunityPost('${c.id}')" class="text-xs font-bold py-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">📤</button>` : ''}
           </div>
 
           ${(!compact && isCommentsOpen) ? `
@@ -1280,6 +1579,13 @@
       document.getElementById('profileCardName').textContent = state.user.name || 'Guest Guardian';
       document.getElementById('profileCardGmail').textContent = `✉️ ${state.user.gmail || 'Not signed in'}`;
       document.getElementById('profileCardIdentity').textContent = `${idObj.icon} ${idObj.id}`;
+      document.getElementById('profileCardBio').textContent = state.user.bio || '🌱 Planting & protecting green cover in my community.';
+
+      const myPostsCount = state.contributions.filter(c => state.user.gmail && c.userGmail === state.user.gmail).length;
+      document.getElementById('profileStatPts').textContent = state.points;
+      document.getElementById('profileStatPosts').textContent = myPostsCount;
+      document.getElementById('profileStatProofs').textContent = state.proofs.length;
+
       const total = state.trees.length, sosCount = state.trees.filter(t => t.sos).length;
       document.getElementById('statTotal').textContent = total;
       document.getElementById('statHealthy').textContent = total - sosCount;
@@ -1287,14 +1593,20 @@
       document.getElementById('communityCountBadge').textContent = `${state.contributions.length} live`;
       document.getElementById('homeCommunityPreview').innerHTML = state.contributions.slice(0, 2).map(c => renderContributionCard(c, true)).join('');
 
+      const query = (document.getElementById('feedSearchInput')?.value || '').trim().toLowerCase();
       const filteredContribs = state.contributions.filter(c => {
-        if (currentFeedFilter === 'photos') return !!c.thumb;
-        if (currentFeedFilter === 'sos') return (c.badge || '').includes('SOS') || (c.badge || '').includes('Help');
+        if (currentFeedFilter === 'mine' && (!state.user.gmail || c.userGmail !== state.user.gmail)) return false;
+        if (currentFeedFilter === 'photos' && !c.thumb) return false;
+        if (currentFeedFilter === 'sos' && !((c.badge || '').includes('SOS') || (c.badge || '').includes('Help'))) return false;
+        if (query) {
+          const blob = `${c.userName} ${c.title} ${c.body} ${c.place} ${c.badge}`.toLowerCase();
+          if (!blob.includes(query)) return false;
+        }
         return true;
       });
       document.getElementById('communityFeedList').innerHTML = filteredContribs.length
         ? filteredContribs.map(c => renderContributionCard(c, false)).join('')
-        : '<p class="text-xs text-center text-slate-500 py-6">No posts in this filter yet.</p>';
+        : '<p class="text-xs text-center text-slate-500 py-6">No matching posts found.</p>';
 
       document.getElementById('homeReminders').innerHTML = state.trees.slice(0, 3).map(t => `<div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500 truncate">${t.place} • ${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</p></div><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl ${t.sos ? 'bg-rose-600' : 'bg-emerald-600'} text-white font-bold text-xs">📸 ${t.sos ? 'Rescue +100' : 'Water +50'}</button></div>`).join('');
       const sortedTrees = [...state.trees].sort((a, b) => getDistanceMeters(state.userLoc.lat, state.userLoc.lng, a.lat, a.lng) - getDistanceMeters(state.userLoc.lat, state.userLoc.lng, b.lat, b.lng));
