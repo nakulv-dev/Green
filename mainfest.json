@@ -1,26 +1,42 @@
 {
-  "id": "/Green/",
-  "name": "GreenGuardian — Plant. Protect. Grow.",
-  "short_name": "GreenGuardian",
-  "description": "Live GPS tree care, IoT soil moisture SOS & verified green points by SYNOVA.",
-  "start_url": "/Green/index.html",
-  "scope": "/Green/",
-  "display": "standalone",
   "background_color": "#f0fdf4",
-  "theme_color": "#14532d",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "GreenGuardian",
   "orientation": "portrait",
+  "scope": "/Green/",
+  "short_name": "GreenGuardian",
+  "start_url": "/Green/",
+  "theme_color": "#14532d",
   "icons": [
     {
-      "src": "/Green/icon-192.png",
-      "sizes": "192x192",
+      "src": "https://nakulv-dev.github.io/Green/icon-192.png",
       "type": "image/png",
-      "purpose": "any"
+      "sizes": "192x192",
+      "isSquare": true,
+      "isPng": true,
+      "isWebp": false,
+      "isJpg": false,
+      "width": 192,
+      "is512x512": false,
+      "is256x256": false,
+      "is192x192": true
     },
     {
-      "src": "/Green/icon-512.png",
-      "sizes": "512x512",
+      "src": "https://nakulv-dev.github.io/Green/icon-512.png",
       "type": "image/png",
-      "purpose": "any"
+      "sizes": "512x512",
+      "isSquare": true,
+      "isPng": true,
+      "isWebp": false,
+      "isJpg": false,
+      "width": 512,
+      "is512x512": true,
+      "is256x256": false,
+      "is192x192": false
     }
-  ]
+  ],
+  "id": "/Green/",
+  "description": "Plant, protect, and track trees with geofenced live camera proof.",
+  "lang": "en"
 }
