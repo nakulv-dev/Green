@@ -151,7 +151,7 @@
       <button onclick="switchTab('community')" class="p-3.5 rounded-2xl bg-indigo-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🌍</span>
         <p class="font-bold text-sm mt-1.5">Community Feed</p>
-        <p class="text-[11px] text-indigo-100">See everyone's actions</p>
+        <p class="text-[11px] text-indigo-100">Post, like & comment live</p>
       </button>
       <button onclick="switchTab('sos')" class="p-3.5 rounded-2xl bg-rose-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🚨</span>
@@ -167,8 +167,8 @@
 
     <section class="bg-white rounded-2xl p-4 border border-indigo-100 shadow-sm space-y-2.5">
       <div class="flex items-center justify-between">
-        <h2 class="font-bold text-sm text-slate-800">🌍 Live Community Contributions</h2>
-        <button onclick="switchTab('community')" class="text-xs font-bold text-indigo-600">View All →</button>
+        <h2 class="font-bold text-sm text-slate-800">🌍 Live Community Feed</h2>
+        <button onclick="switchTab('community')" class="text-xs font-bold text-indigo-600">Open Feed / Post →</button>
       </div>
       <div id="homeCommunityPreview" class="space-y-2.5"></div>
     </section>
@@ -208,15 +208,55 @@
     </div>
   </main>
 
-  <!-- TAB 3: PUBLIC COMMUNITY CONTRIBUTIONS FEED -->
+  <!-- TAB 3: FACEBOOK-STYLE COMMUNITY FEED -->
   <main id="tab-community" class="hidden p-4 space-y-3">
     <div class="bg-gradient-to-r from-indigo-800 to-emerald-800 text-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
       <div>
-        <h2 class="font-bold text-base">🌍 Community Contributions</h2>
-        <p class="text-xs text-indigo-100 mt-0.5">Everyone's live planting, watering & SOS rescues</p>
+        <h2 class="font-bold text-base">🌍 GreenGuardian Community</h2>
+        <p class="text-xs text-indigo-100 mt-0.5">Share updates, photos, tips & discuss live</p>
       </div>
       <span id="communityCountBadge" class="text-xs font-extrabold bg-white/15 px-2.5 py-1 rounded-full">0 live</span>
     </div>
+
+    <!-- Facebook-Style Create Post Composer -->
+    <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm space-y-2.5">
+      <div class="flex items-start gap-2.5">
+        <div id="composerAvatar" class="w-9 h-9 rounded-full bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">G</div>
+        <textarea id="fbPostText" rows="2" placeholder="What's growing in your garden? Share a tip, update, or ask for help..." class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:border-emerald-600 focus:bg-white resize-none"></textarea>
+      </div>
+
+      <!-- Optional Photo Preview -->
+      <div id="fbPhotoPreviewBox" class="hidden relative">
+        <img id="fbPhotoPreviewImg" alt="Post photo preview" class="w-full max-h-48 object-cover rounded-xl border border-slate-200" />
+        <button type="button" onclick="clearFbPhoto()" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 text-white text-xs font-bold">✕</button>
+      </div>
+
+      <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+        <div class="flex items-center gap-1.5">
+          <label class="px-2.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[11px] cursor-pointer flex items-center gap-1">
+            <span>📷</span> Photo
+            <input id="fbPostPhotoInput" type="file" accept="image/*" onchange="handleFbPhotoSelect(event)" class="hidden" />
+          </label>
+          <select id="fbPostTag" class="px-2 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-[11px] focus:outline-none">
+            <option value="🌿 Plant Update">🌿 Update</option>
+            <option value="💧 Care Tip">💧 Care Tip</option>
+            <option value="🚨 Need Help">🚨 Help</option>
+          </select>
+        </div>
+        <button type="button" onclick="publishFbPost()" class="px-4 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm active:scale-95 transition">
+          Post
+        </button>
+      </div>
+    </div>
+
+    <!-- Feed Filter Pills -->
+    <div class="flex gap-1.5 overflow-x-auto pb-0.5 text-[11px] font-bold">
+      <button onclick="setFeedFilter('all')" id="filter-all" class="px-3 py-1 rounded-full bg-emerald-700 text-white shrink-0">All Posts</button>
+      <button onclick="setFeedFilter('photos')" id="filter-photos" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">📷 With Photos</button>
+      <button onclick="setFeedFilter('sos')" id="filter-sos" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">🚨 SOS & Help</button>
+    </div>
+
+    <!-- Live Feed Stream -->
     <div id="communityFeedList" class="space-y-3"></div>
   </main>
 
@@ -449,8 +489,38 @@
     ];
 
     const SEED_CONTRIBUTIONS = [
-      { id: 'seed_c1', userName: 'Kavya S.', userGmail: 'kavya.green@gmail.com', identity: 'Students', badge: '💧 Watered & Mulched', title: 'Watered Pongamia Sapling #103', place: 'Chennai Campus Block A', pts: 50, time: '12 mins ago', thumb: null, applauds: 6, applaudedByMe: false },
-      { id: 'seed_c2', userName: 'Rohan M.', userGmail: 'rohan.volunteer@gmail.com', identity: 'Volunteers', badge: '🚨 SOS Rescued', title: 'Rescued Banyan Sapling #104 from Dry Soil', place: 'Chennai Eco Park', pts: 100, time: '38 mins ago', thumb: null, applauds: 11, applaudedByMe: false }
+      {
+        id: 'seed_c1',
+        userName: 'Kavya S.',
+        userGmail: 'kavya.green@gmail.com',
+        identity: 'Students',
+        badge: '💧 Watered & Mulched',
+        title: 'Watered Pongamia Sapling #103',
+        body: 'Added dry leaf mulch around the root ring to retain soil moisture during afternoon heat.',
+        place: 'Chennai Campus Block A',
+        pts: 50,
+        time: '12 mins ago',
+        thumb: null,
+        applauds: 6,
+        applaudedByMe: false,
+        comments: [{ user: 'Rohan M.', text: 'Great mulching tip for summer!' }]
+      },
+      {
+        id: 'seed_c2',
+        userName: 'Rohan M.',
+        userGmail: 'rohan.volunteer@gmail.com',
+        identity: 'Volunteers',
+        badge: '🚨 SOS Rescued',
+        title: 'Rescued Banyan Sapling #104 from Dry Soil',
+        body: 'Responded to low moisture alert and watered 5 liters. Leaves looking fresh again!',
+        place: 'Chennai Eco Park',
+        pts: 100,
+        time: '38 mins ago',
+        thumb: null,
+        applauds: 11,
+        applaudedByMe: false,
+        comments: []
+      }
     ];
 
     let state = {
@@ -475,6 +545,9 @@
     let pendingProof = null;
     let stampedDataUrl = null;
     let stampedThumbUrl = null;
+    let fbPendingPhoto = null;
+    let currentFeedFilter = 'all';
+    let openCommentBoxes = {};
     let deferredInstallPrompt = null;
     let toastTimer = null;
 
@@ -513,6 +586,12 @@
 
     function saveState() {
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
     }
 
     function maskGmail(email) {
@@ -740,6 +819,124 @@
     }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
+    // --- FACEBOOK-STYLE COMMUNITY POSTING, PHOTO, FILTER & COMMENTS ---
+    function handleFbPhotoSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const scale = Math.min(1, 360 / img.width);
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          fbPendingPhoto = canvas.toDataURL('image/jpeg', 0.6);
+          document.getElementById('fbPhotoPreviewImg').src = fbPendingPhoto;
+          document.getElementById('fbPhotoPreviewBox').classList.remove('hidden');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearFbPhoto() {
+      fbPendingPhoto = null;
+      document.getElementById('fbPostPhotoInput').value = '';
+      document.getElementById('fbPhotoPreviewBox').classList.add('hidden');
+    }
+
+    function publishFbPost() {
+      const textEl = document.getElementById('fbPostText');
+      const tagEl = document.getElementById('fbPostTag');
+      const bodyText = textEl.value.trim();
+      if (!bodyText && !fbPendingPhoto) return showToast('Write something or attach a photo first!');
+
+      const actorName = state.user.name || 'Guardian';
+      const actorGmail = state.user.gmail || 'guardian@gmail.com';
+      const chosenTag = tagEl.value;
+      const postObj = {
+        id: 'fbpost_' + Date.now(),
+        userName: actorName,
+        userGmail: actorGmail,
+        identity: state.identity,
+        badge: chosenTag,
+        title: chosenTag === '🚨 Need Help' ? 'Community Help Request' : chosenTag === '💧 Care Tip' ? 'Plant Care Tip Shared' : 'Community Garden Update',
+        body: bodyText,
+        place: state.userLoc.label,
+        pts: 15,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        thumb: fbPendingPhoto,
+        applauds: 1,
+        applaudedByMe: true,
+        comments: []
+      };
+
+      state.points += 15;
+      state.contributions.unshift(postObj);
+      textEl.value = '';
+      clearFbPhoto();
+      saveState();
+      renderAll();
+      showToast('🌍 Posted to Community Feed (+15 pts)!');
+
+      publishSyncEvent({
+        kind: 'contribution',
+        id: postObj.id,
+        contribution: postObj,
+        notifTitle: `${chosenTag} by ${actorName}`,
+        notifBody: bodyText ? bodyText.slice(0, 80) : `Shared a photo from ${state.userLoc.label}`
+      });
+    }
+
+    function setFeedFilter(filterName) {
+      currentFeedFilter = filterName;
+      ['all', 'photos', 'sos'].forEach(f => {
+        const btn = document.getElementById(`filter-${f}`);
+        if (btn) {
+          btn.className = f === filterName
+            ? 'px-3 py-1 rounded-full bg-emerald-700 text-white shrink-0'
+            : 'px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0';
+        }
+      });
+      renderAll();
+    }
+
+    function toggleCommentBox(contribId) {
+      openCommentBoxes[contribId] = !openCommentBoxes[contribId];
+      renderAll();
+    }
+
+    function submitFbComment(contribId) {
+      const input = document.getElementById(`cinput-${contribId}`);
+      if (!input) return;
+      const text = input.value.trim();
+      if (!text) return showToast('Type a reply first!');
+
+      const item = state.contributions.find(c => c.id === contribId);
+      if (!item) return;
+
+      const commentObj = {
+        id: 'cmt_' + Date.now(),
+        user: state.user.name || state.identity || 'Guardian',
+        text
+      };
+
+      item.comments = item.comments || [];
+      item.comments.push(commentObj);
+      openCommentBoxes[contribId] = true;
+      saveState();
+      renderAll();
+
+      publishSyncEvent({
+        kind: 'fb_comment',
+        id: commentObj.id,
+        targetPostId: contribId,
+        comment: commentObj
+      });
+    }
+
     function startPlantProof() {
       const species = document.getElementById('plantSpecies').value.trim();
       const place = document.getElementById('plantPlace').value.trim() || state.userLoc.label;
@@ -818,7 +1015,7 @@
       }
       const actorName = state.user.name || 'Guardian', actorGmail = state.user.gmail || 'guardian@gmail.com';
       const badgeText = type === 'sos' ? '🚨 SOS Rescued' : type === 'plant' ? '🌱 New Tree Planted' : '💧 Watered & Cared';
-      const contribItem = { id: 'contrib_' + Date.now(), userName: actorName, userGmail: actorGmail, identity: state.identity, badge: badgeText, title, place: placeLabel, pts, time: 'Just now', thumb: stampedThumbUrl, applauds: 1, applaudedByMe: true };
+      const contribItem = { id: 'contrib_' + Date.now(), userName: actorName, userGmail: actorGmail, identity: state.identity, badge: badgeText, title, body: '', place: placeLabel, pts, time: 'Just now', thumb: stampedThumbUrl, applauds: 1, applaudedByMe: true, comments: [] };
       state.contributions.unshift(contribItem);
       state.proofs.unshift({ id: 'proof_' + Date.now(), title, pts, identity: state.identity, coords: `${state.userLoc.lat.toFixed(4)}, ${state.userLoc.lng.toFixed(4)}`, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), img: stampedDataUrl });
       closeModal('proofModal'); saveState(); renderAll(); switchTab('community');
@@ -831,6 +1028,7 @@
       if (!item || item.applaudedByMe) return;
       item.applauds = (item.applauds || 0) + 1; item.applaudedByMe = true;
       saveState(); renderAll(); showToast(`👏 Sent appreciation to ${item.userName}!`);
+      publishSyncEvent({ kind: 'fb_like', id: 'like_' + Date.now(), targetPostId: contribId, applauds: item.applauds });
     }
 
     function handleMoistureChange(val) {
@@ -866,7 +1064,7 @@
       const tree = state.trees.find(t => t.id === treeId); if (!tree) return;
       const actorName = state.user.name || state.identity, actorGmail = state.user.gmail || 'guardian@gmail.com';
       tree.adoptedBy = `${actorName} (${state.identity})`;
-      const contribItem = { id: 'adopt_' + Date.now(), userName: actorName, userGmail: actorGmail, identity: state.identity, badge: '🤝 Adopted Tree', title: `Adopted ${tree.name} for Ongoing Care`, place: tree.place, pts: 25, time: 'Just now', thumb: null, applauds: 1, applaudedByMe: true };
+      const contribItem = { id: 'adopt_' + Date.now(), userName: actorName, userGmail: actorGmail, identity: state.identity, badge: '🤝 Adopted Tree', title: `Adopted ${tree.name} for Ongoing Care`, body: '', place: tree.place, pts: 25, time: 'Just now', thumb: null, applauds: 1, applaudedByMe: true, comments: [] };
       state.points += 25; state.contributions.unshift(contribItem); saveState(); renderAll();
       showToast(`🤝 Adopted ${tree.name} (+25 pts)!`);
       publishSyncEvent({ kind: 'contribution', id: contribItem.id, tree, contribution: contribItem, notifTitle: `🤝 ${actorName} adopted ${tree.name}`, notifBody: `Taking care at ${tree.place}` });
@@ -961,9 +1159,26 @@
               if (idx !== -1) state.trees[idx] = data.tree; else state.trees.unshift(data.tree);
               changed = true;
             }
-            if (data.contribution) {
-              state.contributions.unshift({ ...data.contribution, applaudedByMe: false });
+            if (data.contribution && !state.contributions.some(c => c.id === data.contribution.id)) {
+              state.contributions.unshift({ ...data.contribution, applaudedByMe: false, comments: data.contribution.comments || [] });
               changed = true;
+            }
+            if (data.kind === 'fb_like' && data.targetPostId) {
+              const post = state.contributions.find(c => c.id === data.targetPostId);
+              if (post && typeof data.applauds === 'number') {
+                post.applauds = Math.max(post.applauds || 0, data.applauds);
+                changed = true;
+              }
+            }
+            if (data.kind === 'fb_comment' && data.targetPostId && data.comment) {
+              const post = state.contributions.find(c => c.id === data.targetPostId);
+              if (post) {
+                post.comments = post.comments || [];
+                if (!post.comments.some(cm => cm.id === data.comment.id)) {
+                  post.comments.push(data.comment);
+                  changed = true;
+                }
+              }
             }
             if (data.notifTitle) {
               const targetTab = data.contribution ? 'community' : 'sos';
@@ -996,16 +1211,72 @@
 
     function renderContributionCard(c, compact = false) {
       const initial = (c.userName || 'G')[0].toUpperCase();
-      return `<div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2.5"><div class="flex items-center justify-between gap-2"><div class="flex items-center gap-2.5 min-w-0"><div class="w-9 h-9 rounded-full bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center shrink-0">${initial}</div><div class="min-w-0"><div class="flex items-center gap-1.5"><p class="font-bold text-xs text-slate-900 truncate">${c.userName}</p><span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 shrink-0">${c.identity}</span></div><p class="text-[10px] text-slate-500 truncate">✉️ ${maskGmail(c.userGmail)} • ${c.time}</p></div></div><span class="shrink-0 text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">+${c.pts} pts</span></div><div><span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 mb-1">${c.badge}</span><p class="font-bold text-xs text-slate-800">${c.title}</p><p class="text-[11px] text-slate-500">📍 ${c.place}</p></div>${(!compact && c.thumb) ? `<img src="${c.thumb}" alt="Proof" class="w-full max-h-52 object-cover rounded-xl border border-slate-200" />` : ''}<div class="flex items-center justify-between pt-1 border-t border-slate-100"><button onclick="applaudContribution('${c.id}')" class="text-xs font-bold px-2.5 py-1 rounded-lg ${c.applaudedByMe ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">👏 Thank (${c.applauds || 1})</button>${compact && c.thumb ? `<button onclick="switchTab('community')" class="text-[11px] font-bold text-indigo-600">View Photo →</button>` : ''}</div></div>`;
+      const comments = c.comments || [];
+      const isCommentsOpen = !!openCommentBoxes[c.id];
+      const commentsHtml = comments.map(cm => `
+        <div class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-[11px] text-slate-800">
+          <span class="font-bold text-emerald-900">${escapeHtml(cm.user)}:</span> ${escapeHtml(cm.text)}
+        </div>
+      `).join('');
+
+      return `
+        <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-9 h-9 rounded-full bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center shrink-0">${initial}</div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <p class="font-bold text-xs text-slate-900 truncate">${escapeHtml(c.userName)}</p>
+                  <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 shrink-0">${escapeHtml(c.identity)}</span>
+                </div>
+                <p class="text-[10px] text-slate-500 truncate">✉️ ${maskGmail(c.userGmail)} • ${escapeHtml(c.time)}</p>
+              </div>
+            </div>
+            <span class="shrink-0 text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">+${c.pts} pts</span>
+          </div>
+
+          <div class="space-y-1">
+            <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700">${escapeHtml(c.badge)}</span>
+            <p class="font-bold text-xs text-slate-800">${escapeHtml(c.title)}</p>
+            ${c.body ? `<p class="text-xs text-slate-700 leading-relaxed whitespace-pre-wrap">${escapeHtml(c.body)}</p>` : ''}
+            <p class="text-[11px] text-slate-500">📍 ${escapeHtml(c.place)}</p>
+          </div>
+
+          ${(!compact && c.thumb) ? `<img src="${c.thumb}" alt="Post media" class="w-full max-h-56 object-cover rounded-xl border border-slate-200" />` : ''}
+
+          <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
+            <button onclick="applaudContribution('${c.id}')" class="flex-1 text-xs font-bold py-1.5 px-2.5 rounded-xl transition ${c.applaudedByMe ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
+              👍 Like (${c.applauds || 1})
+            </button>
+            ${compact
+              ? `<button onclick="switchTab('community')" class="flex-1 text-xs font-bold py-1.5 px-2.5 rounded-xl bg-indigo-50 text-indigo-700">💬 Comment (${comments.length})</button>`
+              : `<button onclick="toggleCommentBox('${c.id}')" class="flex-1 text-xs font-bold py-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">💬 Comment (${comments.length})</button>`
+            }
+          </div>
+
+          ${(!compact && isCommentsOpen) ? `
+            <div class="pt-2 border-t border-slate-100 space-y-2">
+              <div class="space-y-1.5">${commentsHtml || '<p class="text-[11px] text-slate-400">No comments yet. Start the discussion!</p>'}</div>
+              <div class="flex gap-1.5">
+                <input id="cinput-${c.id}" type="text" placeholder="Write a comment..." class="flex-1 px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-emerald-600" onkeydown="if(event.key==='Enter') submitFbComment('${c.id}')" />
+                <button onclick="submitFbComment('${c.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-xs">Send</button>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `;
     }
 
     function renderAll() {
       const idObj = IDENTITIES.find(i => i.id === state.identity) || IDENTITIES[0];
+      const userInitial = (state.user.name || 'G')[0].toUpperCase();
       document.getElementById('headerUserLabel').textContent = state.user.name || 'Sign In';
       document.getElementById('homeIdentity').textContent = `${idObj.icon} ${idObj.id} • ${state.user.name || 'Guardian'}`;
       document.getElementById('homeGmailBadge').textContent = `✉️ ${state.user.gmail || 'Tap Sign In'}`;
       document.getElementById('homePoints').textContent = state.points;
-      document.getElementById('profileAvatar').textContent = (state.user.name || 'G')[0].toUpperCase();
+      document.getElementById('profileAvatar').textContent = userInitial;
+      const compAvatar = document.getElementById('composerAvatar');
+      if (compAvatar) compAvatar.textContent = userInitial;
       document.getElementById('profileCardName').textContent = state.user.name || 'Guest Guardian';
       document.getElementById('profileCardGmail').textContent = `✉️ ${state.user.gmail || 'Not signed in'}`;
       document.getElementById('profileCardIdentity').textContent = `${idObj.icon} ${idObj.id}`;
@@ -1015,7 +1286,16 @@
       document.getElementById('statSos').textContent = sosCount;
       document.getElementById('communityCountBadge').textContent = `${state.contributions.length} live`;
       document.getElementById('homeCommunityPreview').innerHTML = state.contributions.slice(0, 2).map(c => renderContributionCard(c, true)).join('');
-      document.getElementById('communityFeedList').innerHTML = state.contributions.map(c => renderContributionCard(c, false)).join('');
+
+      const filteredContribs = state.contributions.filter(c => {
+        if (currentFeedFilter === 'photos') return !!c.thumb;
+        if (currentFeedFilter === 'sos') return (c.badge || '').includes('SOS') || (c.badge || '').includes('Help');
+        return true;
+      });
+      document.getElementById('communityFeedList').innerHTML = filteredContribs.length
+        ? filteredContribs.map(c => renderContributionCard(c, false)).join('')
+        : '<p class="text-xs text-center text-slate-500 py-6">No posts in this filter yet.</p>';
+
       document.getElementById('homeReminders').innerHTML = state.trees.slice(0, 3).map(t => `<div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500 truncate">${t.place} • ${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</p></div><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl ${t.sos ? 'bg-rose-600' : 'bg-emerald-600'} text-white font-bold text-xs">📸 ${t.sos ? 'Rescue +100' : 'Water +50'}</button></div>`).join('');
       const sortedTrees = [...state.trees].sort((a, b) => getDistanceMeters(state.userLoc.lat, state.userLoc.lng, a.lat, a.lng) - getDistanceMeters(state.userLoc.lat, state.userLoc.lng, b.lat, b.lng));
       document.getElementById('mapTreeList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl border ${t.sos ? 'border-rose-200 bg-rose-50/50' : 'border-slate-100 bg-slate-50'} flex items-center justify-between gap-2"><div class="min-w-0" onclick="if(map) map.setView([${t.lat},${t.lng}],16)"><span class="text-xs font-bold text-slate-800 truncate">${t.name}</span><p class="text-[11px] text-slate-500 truncate">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-2.5 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-[11px]">📸 Proof</button></div>`).join('');
