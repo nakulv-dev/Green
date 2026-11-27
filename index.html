@@ -37,35 +37,45 @@
 </head>
 <body class="pb-24 max-w-md mx-auto min-h-screen bg-gradient-to-b from-emerald-50 via-white to-emerald-50/60 shadow-xl relative">
 
-  <!-- GMAIL LOGIN OVERLAY -->
+  <!-- GMAIL & TEAM LOGIN OVERLAY -->
   <div id="loginScreen" class="hidden fixed inset-0 z-50 bg-emerald-950/90 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-3.5 max-h-[92vh] overflow-y-auto">
       <div class="text-center space-y-1">
-        <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-3xl flex items-center justify-center mx-auto shadow-sm">🌱</div>
+        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-2xl flex items-center justify-center mx-auto shadow-sm">🌱</div>
         <h2 class="font-extrabold text-lg text-emerald-950">Welcome to GreenGuardian</h2>
-        <p class="text-xs text-slate-500">Sign in with your Gmail so your live camera proofs, tree care & 5,000-pt E-Certificate are credited to you.</p>
+        <p class="text-xs text-slate-500">Sign in with Gmail & pick your Campus/Ward squad for Team Battles.</p>
       </div>
       <div class="space-y-2.5">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Your Name</label>
-          <input id="loginNameInput" type="text" placeholder="e.g., Nakul / Priya" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
+          <input id="loginNameInput" type="text" placeholder="e.g., Nakul / Priya" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Gmail Address</label>
           <div class="relative">
-            <input id="loginGmailInput" type="email" placeholder="yourname@gmail.com" class="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
-            <span class="absolute left-3 top-2.5 text-sm">✉️</span>
+            <input id="loginGmailInput" type="email" placeholder="yourname@gmail.com" class="w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
+            <span class="absolute left-3 top-2 text-sm">✉️</span>
           </div>
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Your Identity</label>
-          <select id="loginIdentitySelect" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:border-emerald-600">
+          <select id="loginIdentitySelect" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:border-emerald-600">
             <option value="Students">🎓 Students</option>
             <option value="Volunteers">🙋 Volunteers</option>
             <option value="NGOs">🌍 NGOs</option>
             <option value="Local Communities">🏘️ Local Communities</option>
             <option value="Government">🏛️ Government</option>
             <option value="Schools / Colleges">🏫 Schools / Colleges</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">⚔️ Campus / Ward / Team Squad</label>
+          <select id="loginTeamSelect" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:border-emerald-600">
+            <option value="Chennai Institute of Technology">🏫 Chennai Institute of Technology</option>
+            <option value="Saradha Matric HSS Eco Club">🏫 Saradha Matric HSS Eco Club</option>
+            <option value="Kunrattur Green Ward">🏘️ Kunrattur Green Ward</option>
+            <option value="Gingee Youth Brigade">🌿 Gingee Youth Brigade</option>
+            <option value="SYNOVA Green Force">⚡ SYNOVA Green Force</option>
           </select>
         </div>
       </div>
@@ -119,7 +129,7 @@
       <div class="flex items-center justify-between">
         <div class="min-w-0 pr-2">
           <p id="homeIdentity" class="text-xs font-bold text-emerald-200">🎓 Students</p>
-          <p id="homeGmailBadge" class="text-xs font-medium text-white/90 truncate mt-0.5">guest@gmail.com</p>
+          <p id="homeTeamBadge" class="text-[11px] font-semibold text-amber-200 truncate mt-0.5">⚔️ Chennai Institute of Technology</p>
         </div>
         <div class="text-right shrink-0">
           <p class="text-[11px] text-emerald-200">Verified Green Points</p>
@@ -162,8 +172,8 @@
     <section class="grid grid-cols-2 gap-3">
       <button onclick="switchTab('map')" class="p-3.5 rounded-2xl bg-emerald-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🗺️</span>
-        <p class="font-bold text-sm mt-1.5">Live Tree Map</p>
-        <p class="text-[11px] text-emerald-100">GPS, QR Tags & nearby</p>
+        <p class="font-bold text-sm mt-1.5">Live Tree & Hub Map</p>
+        <p class="text-[11px] text-emerald-100">Trees, Nurseries & Compost</p>
       </button>
       <button onclick="switchTab('community')" class="p-3.5 rounded-2xl bg-indigo-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🌍</span>
@@ -173,7 +183,7 @@
       <button onclick="switchTab('sos')" class="p-3.5 rounded-2xl bg-rose-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🚨</span>
         <p class="font-bold text-sm mt-1.5">Tree SOS & Pump</p>
-        <p class="text-[11px] text-rose-100">Live Camera Rescue & IoT</p>
+        <p class="text-[11px] text-rose-100">Geofenced Rescue & IoT</p>
       </button>
       <button onclick="openModal('plantDoctorModal')" class="p-3.5 rounded-2xl bg-teal-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🩺</span>
@@ -192,10 +202,19 @@
         <span class="text-lg">🔒</span>
         <p class="font-bold text-[11px] text-slate-800 mt-0.5">5k Certificate</p>
       </button>
-      <button onclick="openQrModal(state.trees[0]?.id)" class="p-2.5 rounded-2xl bg-white border border-sky-200 text-center shadow-sm active:scale-95">
-        <span class="text-lg">🏷️</span>
-        <p class="font-bold text-[11px] text-slate-800 mt-0.5">Tree QR Tag</p>
+      <button onclick="switchTab('identity')" class="p-2.5 rounded-2xl bg-white border border-purple-200 text-center shadow-sm active:scale-95">
+        <span class="text-lg">⚔️</span>
+        <p class="font-bold text-[11px] text-slate-800 mt-0.5">Team Battles</p>
       </button>
+    </section>
+
+    <!-- Campus / Ward Live Team Battle Preview -->
+    <section class="bg-white rounded-2xl p-4 border border-purple-200 shadow-sm space-y-2.5">
+      <div class="flex items-center justify-between">
+        <h2 class="font-bold text-sm text-slate-800">⚔️ Campus & Ward Team Battle</h2>
+        <button onclick="switchTab('identity')" class="text-xs font-bold text-purple-700">Full Standings →</button>
+      </div>
+      <div id="homeTeamBattlePreview" class="space-y-2 text-xs"></div>
     </section>
 
     <section class="bg-white rounded-2xl p-4 border border-indigo-100 shadow-sm space-y-2.5">
@@ -208,35 +227,54 @@
 
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm">
       <div class="flex items-center justify-between mb-3">
-        <h2 class="font-bold text-sm text-slate-800">💧 Today's Care Reminders</h2>
-        <span class="text-[11px] text-emerald-700 font-semibold">Live Camera = +50 pts</span>
+        <h2 class="font-bold text-sm text-slate-800">💧 Today's Care Reminders (100m Geofence)</h2>
+        <span class="text-[11px] text-emerald-700 font-semibold">+50 pts</span>
       </div>
       <div id="homeReminders" class="space-y-2.5"></div>
     </section>
   </main>
 
-  <!-- TAB 2: LIVE MAP & TREE QR TAGS -->
+  <!-- TAB 2: LIVE MAP, NURSERY/COMPOST PINS & TREE QR TAGS -->
   <main id="tab-map" class="hidden p-4 space-y-3">
     <div class="flex items-center justify-between">
-      <h2 class="font-bold text-base text-slate-800">🗺️ Live Google/Satellite Map</h2>
+      <h2 class="font-bold text-base text-slate-800">🗺️ Live Tree, Nursery & Compost Map</h2>
       <div class="flex rounded-xl bg-slate-200 p-0.5 text-xs font-semibold">
         <button id="layerStreetBtn" onclick="setMapLayer('street')" class="px-2.5 py-1 rounded-lg bg-white text-emerald-800 shadow-sm">Streets</button>
         <button id="layerSatBtn" onclick="setMapLayer('sat')" class="px-2.5 py-1 rounded-lg text-slate-600">Satellite</button>
       </div>
     </div>
+
+    <!-- Map Pin Filter Strip -->
+    <div class="flex gap-1.5 overflow-x-auto pb-0.5 text-[11px] font-bold">
+      <button onclick="setMapPinFilter('all')" id="mapf-all" class="px-2.5 py-1 rounded-full bg-emerald-700 text-white shrink-0">All Pins</button>
+      <button onclick="setMapPinFilter('trees')" id="mapf-trees" class="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">🌳 Trees & SOS</button>
+      <button onclick="setMapPinFilter('hubs')" id="mapf-hubs" class="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">🏡 Nurseries & Compost</button>
+    </div>
+
     <div class="grid grid-cols-3 gap-2 text-xs font-semibold">
       <button onclick="requestLiveGPS(true)" class="py-2 px-2 rounded-xl bg-blue-600 text-white shadow-sm active:scale-95">🛰️ My Live GPS</button>
       <button id="tapPinBtn" onclick="toggleTapPinMode()" class="py-2 px-2 rounded-xl bg-amber-500 text-white shadow-sm active:scale-95">📌 Tap Map = Me</button>
       <button onclick="jumpToNearestSOS()" class="py-2 px-2 rounded-xl bg-rose-600 text-white shadow-sm active:scale-95">🚨 Nearest SOS</button>
     </div>
     <p id="tapPinHint" class="hidden text-xs bg-amber-50 border border-amber-300 text-amber-900 px-3 py-2 rounded-xl font-medium">
-      👆 Touch anywhere on the map below to pin your exact current spot!
+      👆 Touch anywhere on the map below to move your GPS spot (useful for testing 100m Geofence on-site!).
     </p>
     <div class="relative rounded-2xl overflow-hidden border-2 border-emerald-200 shadow-sm">
       <div id="map"></div>
     </div>
+
+    <!-- Local Nurseries & Compost Stations List -->
+    <div class="bg-white rounded-2xl p-3.5 border border-teal-200 shadow-sm space-y-2.5">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-sm text-teal-900">🏡 Local Nurseries, Compost & Water Hubs</h3>
+        <button onclick="openModal('addHubModal')" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-teal-600 text-white">+ Add Hub</button>
+      </div>
+      <div id="mapHubList" class="space-y-2"></div>
+    </div>
+
+    <!-- Nearby Tracked Trees -->
     <div class="bg-white rounded-2xl p-3.5 border border-emerald-100 shadow-sm">
-      <h3 class="font-bold text-sm text-slate-800 mb-2.5">📍 Nearby Tracked Trees & QR ID Tags</h3>
+      <h3 class="font-bold text-sm text-slate-800 mb-2.5">📍 Nearby Tracked Trees (100m Geofence Lock)</h3>
       <div id="mapTreeList" class="space-y-2.5"></div>
     </div>
   </main>
@@ -246,19 +284,18 @@
     <div class="bg-gradient-to-r from-indigo-800 to-emerald-800 text-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
       <div>
         <h2 class="font-bold text-base">🌍 Community & Sapling Hub</h2>
-        <p class="text-xs text-indigo-100 mt-0.5">Share updates, gallery photos & free saplings (No pts for posts)</p>
+        <p class="text-xs text-indigo-100 mt-0.5">Share updates, gallery photos & free saplings (0 pts for posts)</p>
       </div>
       <span id="communityCountBadge" class="text-xs font-extrabold bg-white/15 px-2.5 py-1 rounded-full">0 live</span>
     </div>
 
-    <!-- Facebook-Style Create Post & Sapling Giveaway Composer (Gallery Allowed, 0 Pts) -->
+    <!-- Facebook-Style Create Post & Sapling Giveaway Composer -->
     <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm space-y-2.5">
       <div class="flex items-start gap-2.5">
         <div id="composerAvatar" class="w-9 h-9 rounded-full bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">G</div>
         <textarea id="fbPostText" rows="2" placeholder="Share a garden update, old tree photos, or offer free saplings nearby..." class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:border-emerald-600 focus:bg-white resize-none"></textarea>
       </div>
 
-      <!-- Optional Photo Preview (Gallery or Camera Allowed) -->
       <div id="fbPhotoPreviewBox" class="hidden relative">
         <img id="fbPhotoPreviewImg" alt="Post photo preview" class="w-full max-h-48 object-cover rounded-xl border border-slate-200" />
         <button type="button" onclick="clearFbPhoto()" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 text-white text-xs font-bold">✕</button>
@@ -287,7 +324,7 @@
     <!-- Search Bar + Feed Filter Pills -->
     <div class="space-y-2">
       <div class="relative">
-        <input id="feedSearchInput" type="text" oninput="renderAll()" placeholder="🔍 Search posts, saplings, compost, users..." class="w-full pl-3.5 pr-8 py-2 rounded-xl bg-white border border-slate-200 text-xs focus:outline-none focus:border-emerald-600" />
+        <input id="feedSearchInput" type="text" oninput="renderAll()" placeholder="🔍 Search posts, saplings, compost, teams..." class="w-full pl-3.5 pr-8 py-2 rounded-xl bg-white border border-slate-200 text-xs focus:outline-none focus:border-emerald-600" />
         <button onclick="document.getElementById('feedSearchInput').value=''; renderAll();" class="absolute right-2.5 top-1.5 text-slate-400 text-xs font-bold">✕</button>
       </div>
       <div class="flex gap-1.5 overflow-x-auto pb-0.5 text-[11px] font-bold">
@@ -299,7 +336,6 @@
       </div>
     </div>
 
-    <!-- Live Feed Stream -->
     <div id="communityFeedList" class="space-y-3"></div>
   </main>
 
@@ -316,7 +352,7 @@
       </div>
       <div>
         <label class="block text-xs font-semibold text-slate-700 mb-1">Landmark / Campus Name</label>
-        <input id="plantPlace" type="text" placeholder="e.g., Saradha Matric HSS, Gingee / Chennai Campus" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-500" />
+        <input id="plantPlace" type="text" placeholder="e.g., Chennai Institute of Technology / Kunrattur" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-500" />
       </div>
       <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs flex items-center justify-between">
         <div>
@@ -330,7 +366,6 @@
       </button>
     </div>
 
-    <!-- AI Plant Doctor Quick Card -->
     <div class="bg-teal-900 text-white rounded-2xl p-4 shadow-sm flex items-center justify-between gap-3">
       <div>
         <p class="text-[10px] font-bold uppercase text-teal-300">Live Leaf Health Scanner</p>
@@ -358,7 +393,6 @@
         <input id="moistureSlider" type="range" min="5" max="100" value="64" oninput="handleMoistureChange(this.value)" class="w-full accent-emerald-400 cursor-pointer" />
       </div>
 
-      <!-- 2-Way IoT Water Pump Relay Control -->
       <div class="p-3 rounded-xl bg-slate-800 border border-slate-700 space-y-2">
         <div class="flex items-center justify-between text-xs">
           <span class="font-bold text-sky-300">🚿 ESP32 Relay Water Pump</span>
@@ -383,7 +417,7 @@
     <section class="bg-white rounded-2xl p-4 border border-rose-100 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-sm text-rose-700">🚨 Active Tree SOS Alerts</h3>
-        <span class="text-[11px] font-bold bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full">Live Camera = +100 pts</span>
+        <span class="text-[10px] font-bold bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full">100m Geofence + Live Cam</span>
       </div>
       <div id="sosList" class="space-y-3"></div>
     </section>
@@ -391,13 +425,13 @@
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-sm text-slate-800">🤝 Adopt & Care for Community Trees</h3>
-        <span class="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full">Live Photo = +25 pts</span>
+        <span class="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full">Within 100m + Live Photo</span>
       </div>
       <div id="adoptList" class="space-y-2.5"></div>
     </section>
   </main>
 
-  <!-- TAB 6: GMAIL PROFILE, BADGES, 5000-PT E-CERTIFICATE, EDIT & ACCOUNT DELETE -->
+  <!-- TAB 6: GMAIL PROFILE, TEAM BATTLES, BADGES, 5000-PT E-CERTIFICATE -->
   <main id="tab-identity" class="hidden p-4 space-y-4">
     <!-- User Profile Card -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm space-y-3">
@@ -408,6 +442,7 @@
             <p id="profileCardName" class="font-bold text-sm text-slate-900 truncate">Guardian User</p>
             <p id="profileCardGmail" class="text-xs text-emerald-700 font-medium truncate">user@gmail.com</p>
             <p id="profileCardIdentity" class="text-[11px] text-slate-500 mt-0.5">🎓 Students</p>
+            <p id="profileCardTeam" class="text-[11px] font-bold text-purple-700 truncate mt-0.5">⚔️ Chennai Institute of Technology</p>
           </div>
         </div>
         <button onclick="openEditProfileModal()" class="shrink-0 px-3 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm">✏️ Edit</button>
@@ -447,6 +482,18 @@
       </div>
     </section>
 
+    <!-- CAMPUS / WARD / COLLEGE TEAM BATTLES LEADERBOARD -->
+    <section class="bg-white rounded-2xl p-4 border border-purple-200 shadow-sm space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-sm text-purple-950">⚔️ Campus / Ward Team Battles</h3>
+          <p class="text-[11px] text-slate-500">Every verified action adds points to your squad!</p>
+        </div>
+        <span class="text-[10px] font-extrabold bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">LIVE WAR</span>
+      </div>
+      <div id="teamBattleList" class="space-y-2 text-xs"></div>
+    </section>
+
     <!-- Earned Badges Section -->
     <section class="bg-white rounded-2xl p-4 border border-amber-200 shadow-sm space-y-2.5">
       <div class="flex items-center justify-between">
@@ -462,7 +509,7 @@
     </section>
 
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-2.5">
-      <h3 class="font-bold text-sm text-slate-800">🏆 Green Champions Leaderboard</h3>
+      <h3 class="font-bold text-sm text-slate-800">🏆 Individual Champions Leaderboard</h3>
       <div id="leaderboardList" class="space-y-2 text-xs"></div>
     </section>
 
@@ -498,7 +545,7 @@
     <div id="toastInner" class="bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-lg border border-white/10 text-center"></div>
   </div>
 
-  <!-- MODAL 1: STRICT LIVE CAMERA PHOTO PROOF UPLOAD -->
+  <!-- MODAL 1: STRICT LIVE CAMERA + 100M GEOFENCE VERIFICATION -->
   <div id="proofModal" class="hidden fixed inset-0 z-40 bg-black/75 flex items-end sm:items-center justify-center p-3">
     <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between">
@@ -509,11 +556,10 @@
         <button onclick="closeProofModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
 
-      <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-900 font-medium">
-        🔒 <strong>Live Photo Only:</strong> Gallery uploads are disabled for points. Capture a real-time camera photo on-site with active GPS.
+      <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-900 font-medium">
+        ✅ <strong>Geofence & Live Cam Passed:</strong> You are within 100m of this tree. Capture a live photo on-site.
       </div>
 
-      <!-- Direct Live WebRTC Camera Viewfinder -->
       <div id="liveCamStage" class="space-y-2">
         <div class="relative rounded-2xl overflow-hidden bg-slate-950 aspect-[4/3] flex items-center justify-center border-2 border-emerald-500">
           <video id="liveCameraVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
@@ -529,7 +575,6 @@
         </button>
       </div>
 
-      <!-- Fallback Native Camera-Only Input (if WebRTC blocked in WebView) -->
       <div id="nativeCamFallback" class="hidden space-y-2">
         <label class="block w-full p-4 border-2 border-dashed border-emerald-400 rounded-2xl bg-emerald-50 text-center cursor-pointer">
           <span class="text-2xl block mb-1">📷</span>
@@ -539,7 +584,6 @@
         </label>
       </div>
 
-      <!-- Stamped Live Proof Preview -->
       <div id="proofPreviewWrap" class="hidden space-y-2">
         <img id="proofStampedImg" alt="Live verified geotagged proof" class="w-full rounded-2xl border-2 border-emerald-500 shadow-sm" />
         <button type="button" onclick="retakeLivePhoto()" class="w-full py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">
@@ -630,23 +674,23 @@
 
   <!-- MODAL 5: EDIT PROFILE MODAL -->
   <div id="editProfileModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-end sm:items-center justify-center p-3">
-    <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl">
+    <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-base text-slate-900">✏️ Edit Your Profile</h3>
+        <h3 class="font-bold text-base text-slate-900">✏️ Edit Your Profile & Squad</h3>
         <button onclick="closeModal('editProfileModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
       <div class="space-y-2.5 text-xs">
         <div>
           <label class="block font-bold text-slate-700 mb-1">Display Name</label>
-          <input id="editNameInput" type="text" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
+          <input id="editNameInput" type="text" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
         </div>
         <div>
           <label class="block font-bold text-slate-700 mb-1">Gmail Address</label>
-          <input id="editGmailInput" type="email" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
+          <input id="editGmailInput" type="email" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
         </div>
         <div>
           <label class="block font-bold text-slate-700 mb-1">Identity Role</label>
-          <select id="editIdentitySelect" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:border-emerald-600">
+          <select id="editIdentitySelect" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:border-emerald-600">
             <option value="Students">🎓 Students</option>
             <option value="Volunteers">🙋 Volunteers</option>
             <option value="NGOs">🌍 NGOs</option>
@@ -656,8 +700,18 @@
           </select>
         </div>
         <div>
+          <label class="block font-bold text-slate-700 mb-1">⚔️ Campus / Ward / Team Squad</label>
+          <select id="editTeamSelect" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:border-emerald-600">
+            <option value="Chennai Institute of Technology">🏫 Chennai Institute of Technology</option>
+            <option value="Saradha Matric HSS Eco Club">🏫 Saradha Matric HSS Eco Club</option>
+            <option value="Kunrattur Green Ward">🏘️ Kunrattur Green Ward</option>
+            <option value="Gingee Youth Brigade">🌿 Gingee Youth Brigade</option>
+            <option value="SYNOVA Green Force">⚡ SYNOVA Green Force</option>
+          </select>
+        </div>
+        <div>
           <label class="block font-bold text-slate-700 mb-1">Short Bio / Tagline</label>
-          <input id="editBioInput" type="text" maxlength="90" placeholder="e.g., IoT & Urban Forestry Builder" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
+          <input id="editBioInput" type="text" maxlength="90" placeholder="e.g., IoT & Urban Forestry Builder" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-600" />
         </div>
       </div>
       <button onclick="saveEditedProfile()" class="w-full py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow">
@@ -682,10 +736,6 @@
             <option value="♻️ Compost / Seeds">♻️ Compost / Seeds</option>
             <option value="💧 Care Tip">💧 Care Tip</option>
             <option value="🚨 Need Help">🚨 Need Help</option>
-            <option value="🌱 New Tree Planted">🌱 New Tree Planted</option>
-            <option value="💧 Watered & Cared">💧 Watered & Cared</option>
-            <option value="🚨 SOS Rescued">🚨 SOS Rescued</option>
-            <option value="🤝 Adopted Tree">🤝 Adopted Tree</option>
           </select>
         </div>
         <div>
@@ -772,10 +822,42 @@
     </div>
   </div>
 
+  <!-- MODAL 11: ADD NURSERY / COMPOST / WATER HUB PIN -->
+  <div id="addHubModal" class="hidden fixed inset-0 z-50 bg-black/65 flex items-end sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base text-slate-900">🏡 Pin Local Nursery / Compost Hub</h3>
+        <button onclick="closeModal('addHubModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+      </div>
+      <div class="space-y-2.5 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Hub Type</label>
+          <select id="hubTypeSelect" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+            <option value="nursery">🏡 Free Sapling Nursery</option>
+            <option value="compost">♻️ Organic Compost Drop-off</option>
+            <option value="water">💧 Community Water Refill Point</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Hub Name</label>
+          <input id="hubNameInput" type="text" placeholder="e.g., CIT Eco Nursery / Kunrattur Compost Bin" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Details / Timings</label>
+          <input id="hubInfoInput" type="text" placeholder="e.g., Free Neem & Pongamia saplings Mon–Sat" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs" />
+        </div>
+      </div>
+      <button onclick="saveNewResourceHub()" class="w-full py-3 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-sm shadow">
+        📍 Pin Hub at My Live GPS
+      </button>
+    </div>
+  </div>
+
   <script>
     const SYNC_TOPIC = 'gg-synova-2026-community-v2';
-    const STORAGE_KEY = 'gg_synova_state_v2';
+    const STORAGE_KEY = 'gg_synova_state_v3';
     const CERT_REQUIRED_PTS = 5000;
+    const GEOFENCE_MAX_METERS = 100; // Strict 100-meter proximity lock
 
     const IDENTITIES = [
       { id: 'Students', icon: '🎓', desc: 'Plant & care on campus' },
@@ -792,6 +874,12 @@
       { id: 't3', name: 'Pongamia Sapling #103', place: 'Chennai Campus Block A', lat: 13.0835, lng: 80.2718, health: 'Healthy', moisture: 68, sos: false, adoptedBy: 'Students', lastWatered: 'Today' },
       { id: 't4', name: 'Banyan Sapling #104', place: 'Chennai Eco Park', lat: 13.0812, lng: 80.2689, health: 'Healthy', moisture: 72, sos: false, adoptedBy: 'Volunteers', lastWatered: 'Yesterday' },
       { id: 't5', name: 'Tamarind Tree #105', place: 'Community Park South', lat: 13.0850, lng: 80.2735, health: 'Healthy', moisture: 61, sos: false, adoptedBy: 'Local Communities', lastWatered: 'Today' }
+    ];
+
+    const DEFAULT_HUBS = [
+      { id: 'hub_1', type: 'nursery', name: 'CIT Campus Eco Nursery', info: 'Free Neem, Pongamia & Badam saplings for students & residents', lat: 12.9718, lng: 80.0432 },
+      { id: 'hub_2', type: 'compost', name: 'Kunrattur Organic Compost Hub', info: 'Free vermicompost & leaf mulch bags for sapling care', lat: 12.9975, lng: 80.0972 },
+      { id: 'hub_3', type: 'water', name: 'Gingee Eco Water Refill Point', info: '20L watering cans available for SOS tree rescue', lat: 12.2520, lng: 79.4175 }
     ];
 
     const SEED_CONTRIBUTIONS = [
@@ -818,7 +906,7 @@
         identity: 'Volunteers',
         badge: '🚨 SOS Rescued',
         title: 'Rescued Banyan Sapling #104 from Dry Soil',
-        body: 'Responded to low moisture alert and watered 5 liters. Leaves looking fresh again!',
+        body: 'Responded to low moisture alert within 100m geofence and watered 5 liters!',
         place: 'Chennai Eco Park',
         pts: 100,
         time: '38 mins ago',
@@ -831,19 +919,21 @@
 
     let state = {
       user: { name: '', gmail: '', bio: '🌱 Planting & protecting green cover in my community.', loggedIn: false },
-      userLoc: { lat: 13.0827, lng: 80.2707, accuracy: null, label: 'Chennai / Gingee', pinned: false },
+      userLoc: { lat: 12.9970, lng: 80.0970, accuracy: null, label: 'Kunrattur, Tamil Nadu', pinned: false },
       identity: 'Students',
+      team: 'Chennai Institute of Technology',
       points: 250,
       streakDays: 1,
       lastActiveDate: new Date().toDateString(),
       autoWaterEnabled: false,
       moisture: 64,
       trees: [...DEFAULT_TREES],
+      hubs: [...DEFAULT_HUBS],
       contributions: [...SEED_CONTRIBUTIONS],
       proofs: [],
       notifications: [
-        { id: 'n1', title: '🚨 Tree SOS: Mango Young Tree #102', body: 'Wilting leaves & dry soil detected at Gingee. Live camera rescue needed!', time: 'Just now', targetTab: 'sos' },
-        { id: 'n2', title: '🎁 Kavya S. (kavya.green@gmail.com)', body: 'Offering 12 free Neem & Pongamia saplings!', time: '12m ago', targetTab: 'community' }
+        { id: 'n1', title: '🚨 Tree SOS: Mango Young Tree #102', body: 'Wilting leaves & dry soil detected. Move within 100m to rescue!', time: 'Just now', targetTab: 'sos' },
+        { id: 'n2', title: '⚔️ Team Battle Live!', body: 'Chennai Institute of Technology vs Saradha Matric HSS Eco Club!', time: '12m ago', targetTab: 'identity' }
       ],
       seenSyncIds: [],
       deletedPostIds: []
@@ -851,6 +941,8 @@
 
     let map, streetLayer, satLayer, userMarker, accuracyCircle;
     let treeMarkers = [];
+    let hubMarkers = [];
+    let mapPinFilter = 'all';
     let tapPinMode = false;
     let pendingProof = null;
     let stampedDataUrl = null;
@@ -899,6 +991,7 @@
             ...state,
             ...parsed,
             user: { ...state.user, ...(parsed.user || {}) },
+            hubs: parsed.hubs && parsed.hubs.length ? parsed.hubs : [...DEFAULT_HUBS],
             deletedPostIds: parsed.deletedPostIds || []
           };
         }
@@ -936,6 +1029,7 @@
       document.getElementById('loginNameInput').value = state.user.name || '';
       document.getElementById('loginGmailInput').value = state.user.gmail || '';
       document.getElementById('loginIdentitySelect').value = state.identity || 'Students';
+      document.getElementById('loginTeamSelect').value = state.team || 'Chennai Institute of Technology';
       document.getElementById('loginScreen').classList.remove('hidden');
     }
 
@@ -943,16 +1037,18 @@
       const nameRaw = document.getElementById('loginNameInput').value.trim();
       let gmailRaw = document.getElementById('loginGmailInput').value.trim().toLowerCase();
       const chosenIdentity = document.getElementById('loginIdentitySelect').value;
+      const chosenTeam = document.getElementById('loginTeamSelect').value;
       if (!nameRaw) return showToast('Please enter your name');
       if (!gmailRaw) return showToast('Please enter your Gmail address');
       if (!gmailRaw.includes('@')) gmailRaw = `${gmailRaw}@gmail.com`;
       state.user = { ...state.user, name: nameRaw, gmail: gmailRaw, loggedIn: true };
       state.identity = chosenIdentity;
+      state.team = chosenTeam;
       saveState();
       document.getElementById('loginScreen').classList.add('hidden');
       renderAll();
       enableOSNotifications(false);
-      showToast(`👋 Signed in as ${nameRaw}`);
+      showToast(`👋 Welcome ${nameRaw} (${chosenTeam})!`);
     }
 
     // --- PROFILE EDIT & ACCOUNT DELETE ---
@@ -960,6 +1056,7 @@
       document.getElementById('editNameInput').value = state.user.name || '';
       document.getElementById('editGmailInput').value = state.user.gmail || '';
       document.getElementById('editIdentitySelect').value = state.identity || 'Students';
+      document.getElementById('editTeamSelect').value = state.team || 'Chennai Institute of Technology';
       document.getElementById('editBioInput').value = state.user.bio || '';
       openModal('editProfileModal');
     }
@@ -968,6 +1065,7 @@
       const newName = document.getElementById('editNameInput').value.trim();
       let newGmail = document.getElementById('editGmailInput').value.trim().toLowerCase();
       const newIdentity = document.getElementById('editIdentitySelect').value;
+      const newTeam = document.getElementById('editTeamSelect').value;
       const newBio = document.getElementById('editBioInput').value.trim() || '🌱 Planting & protecting green cover in my community.';
 
       if (!newName) return showToast('Name cannot be empty');
@@ -977,19 +1075,21 @@
       const oldGmail = state.user.gmail;
       state.user = { name: newName, gmail: newGmail, bio: newBio, loggedIn: true };
       state.identity = newIdentity;
+      state.team = newTeam;
 
       state.contributions.forEach(c => {
         if (c.userGmail === oldGmail) {
           c.userName = newName;
           c.userGmail = newGmail;
           c.identity = newIdentity;
+          c.team = newTeam;
         }
       });
 
       saveState();
       closeModal('editProfileModal');
       renderAll();
-      showToast('✅ Profile updated successfully!');
+      showToast('✅ Profile & Team Squad updated!');
     }
 
     function confirmDeleteAccount() {
@@ -1011,7 +1111,66 @@
       showToast('🗑️ Account & posts deleted.');
     }
 
-    // --- LIVE PHOTO FRESHNESS VALIDATOR (FOR POINTS-ELIGIBLE ACTIVITIES ONLY) ---
+    // --- #2: PROXIMITY GEOFENCE LOCK (100M ON-SITE CHECK) ---
+    function checkTreeGeofence(tree) {
+      if (!tree) return { allowed: true, dist: 0 };
+      const dist = getDistanceMeters(state.userLoc.lat, state.userLoc.lng, tree.lat, tree.lng);
+      return {
+        allowed: dist <= GEOFENCE_MAX_METERS,
+        dist: Math.round(dist)
+      };
+    }
+
+    function showGeofenceBlockedAlert(tree, distMeters) {
+      showToast(`🚫 Geofence Lock: You are ${formatDist(distMeters)} from ${tree.name}. Move within 100m to verify!`);
+    }
+
+    // --- #4: LOCAL NURSERY, COMPOST & WATER HUB PINS ---
+    function saveNewResourceHub() {
+      const type = document.getElementById('hubTypeSelect').value;
+      const name = document.getElementById('hubNameInput').value.trim();
+      const info = document.getElementById('hubInfoInput').value.trim() || 'Community Eco Resource Point';
+      if (!name) return showToast('Enter a Hub name first!');
+
+      const newHub = {
+        id: 'hub_' + Date.now(),
+        type,
+        name,
+        info,
+        lat: state.userLoc.lat,
+        lng: state.userLoc.lng
+      };
+      state.hubs.unshift(newHub);
+      document.getElementById('hubNameInput').value = '';
+      document.getElementById('hubInfoInput').value = '';
+      saveState();
+      closeModal('addHubModal');
+      renderAll();
+      showToast(`📍 Pinned ${name} on Live Map!`);
+
+      publishSyncEvent({
+        kind: 'new_hub',
+        id: newHub.id,
+        hub: newHub,
+        notifTitle: `🏡 New Eco Hub Pinned: ${name}`,
+        notifBody: `${info} (${state.userLoc.label})`
+      });
+    }
+
+    function setMapPinFilter(filter) {
+      mapPinFilter = filter;
+      ['all', 'trees', 'hubs'].forEach(f => {
+        const btn = document.getElementById(`mapf-${f}`);
+        if (btn) {
+          btn.className = f === filter
+            ? 'px-2.5 py-1 rounded-full bg-emerald-700 text-white shrink-0'
+            : 'px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0';
+        }
+      });
+      renderMapMarkers();
+    }
+
+    // --- LIVE PHOTO FRESHNESS VALIDATOR ---
     function verifyLiveFileFreshness(file) {
       if (!file) return false;
       const ageMs = Date.now() - (file.lastModified || 0);
@@ -1022,7 +1181,7 @@
       return true;
     }
 
-    // --- AI PLANT DOCTOR (LIVE LEAF COLOR & HEALTH VISION SCANNER) ---
+    // --- AI PLANT DOCTOR ---
     function analyzeLeafPhoto(event) {
       const file = event.target.files[0];
       if (!verifyLiveFileFreshness(file)) {
@@ -1099,6 +1258,7 @@
         userName: actorName,
         userGmail: state.user.gmail || 'guardian@gmail.com',
         identity: state.identity,
+        team: state.team,
         badge: '🩺 AI Plant Doctor Live Scan',
         title: lastLeafDiagnosis.status,
         body: `${lastLeafDiagnosis.metrics}\nRemedy: ${lastLeafDiagnosis.remedy}`,
@@ -1187,7 +1347,7 @@
       ctx.fillText(`GPS: ${tree.lat.toFixed(4)}, ${tree.lng.toFixed(4)}`, canvas.width / 2, 276);
       ctx.fillStyle = '#64748b';
       ctx.font = '9px sans-serif';
-      ctx.fillText('Scan to view live moisture & log watering', canvas.width / 2, 295);
+      ctx.fillText('100m Geofence Verified Tree Tag', canvas.width / 2, 295);
     }
 
     function downloadTreeQrPng() {
@@ -1265,45 +1425,45 @@
       ctx.textAlign = 'center';
       ctx.fillStyle = '#14532d';
       ctx.font = 'bold 20px sans-serif';
-      ctx.fillText('🌱 GREENGUARDIAN • SYNOVA', w / 2, 82);
+      ctx.fillText('🌱 GREENGUARDIAN • SYNOVA', w / 2, 78);
 
       ctx.fillStyle = '#b45309';
       ctx.font = 'bold 34px Georgia, serif';
-      ctx.fillText('Certificate of Eco Stewardship', w / 2, 134);
+      ctx.fillText('Certificate of Eco Stewardship', w / 2, 128);
 
       ctx.fillStyle = '#475569';
-      ctx.font = '16px sans-serif';
-      ctx.fillText('This proudly certifies that', w / 2, 178);
+      ctx.font = '15px sans-serif';
+      ctx.fillText('This proudly certifies that', w / 2, 168);
 
       const holderName = state.user.name || 'Green Guardian';
       ctx.fillStyle = '#064e3b';
-      ctx.font = 'bold 36px sans-serif';
-      ctx.fillText(holderName, w / 2, 228);
+      ctx.font = 'bold 34px sans-serif';
+      ctx.fillText(holderName, w / 2, 214);
 
       ctx.strokeStyle = '#10b981';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(160, 240);
-      ctx.lineTo(w - 160, 240);
+      ctx.moveTo(150, 226);
+      ctx.lineTo(w - 150, 226);
       ctx.stroke();
 
       ctx.fillStyle = '#1e293b';
-      ctx.font = '16px sans-serif';
-      ctx.fillText(`Role: ${state.identity}  •  Email: ${maskGmail(state.user.gmail)}`, w / 2, 276);
-      ctx.fillText(`Achieved the 5,000+ Green Points Milestone (${state.points.toLocaleString()} pts)`, w / 2, 310);
-      ctx.fillText(`with ${state.proofs.length} Live Camera Geotagged Proofs.`, w / 2, 336);
+      ctx.font = '15px sans-serif';
+      ctx.fillText(`Squad: ${state.team} • ${state.identity}`, w / 2, 260);
+      ctx.fillText(`Achieved the 5,000+ Green Points Milestone (${state.points.toLocaleString()} pts)`, w / 2, 292);
+      ctx.fillText(`with ${state.proofs.length} Geofenced Live Camera Proofs.`, w / 2, 320);
 
       ctx.fillStyle = '#fef3c7';
       ctx.beginPath();
-      ctx.arc(w / 2, 405, 36, 0, Math.PI * 2);
+      ctx.arc(w / 2, 398, 36, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = '#d97706';
       ctx.lineWidth = 3;
       ctx.stroke();
       ctx.fillStyle = '#92400e';
       ctx.font = 'bold 11px sans-serif';
-      ctx.fillText('5000+ PTS', w / 2, 402);
-      ctx.fillText('VERIFIED', w / 2, 417);
+      ctx.fillText('5000+ PTS', w / 2, 395);
+      ctx.fillText('VERIFIED', w / 2, 410);
 
       ctx.fillStyle = '#64748b';
       ctx.font = '12px monospace';
@@ -1328,7 +1488,7 @@
       document.getElementById('toastInner').textContent = msg;
       box.classList.remove('opacity-0', 'translate-y-2');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => box.classList.add('opacity-0', 'translate-y-2'), 3500);
+      toastTimer = setTimeout(() => box.classList.add('opacity-0', 'translate-y-2'), 3800);
     }
 
     function getDistanceMeters(lat1, lon1, lat2, lon2) {
@@ -1343,12 +1503,13 @@
     }
 
     function ensureLocalTreesAround(lat, lng, areaLabel) {
-      if (state.trees.some(t => getDistanceMeters(lat, lng, t.lat, t.lng) < 15000)) return;
+      if (state.trees.some(t => getDistanceMeters(lat, lng, t.lat, t.lng) < 200)) return;
       const place = areaLabel || 'Your Neighborhood';
+      // Place 2 trees right inside the 100m geofence (~35m and ~65m away) and 1 nearby (~240m away)
       state.trees = [
-        { id: 'loc_' + Date.now() + '_1', name: 'Neem Sapling (Local #1)', place: `${place} North`, lat: lat + 0.0024, lng: lng + 0.0019, health: 'Needs Water', moisture: 21, sos: true, adoptedBy: 'Unassigned', lastWatered: '3 days ago' },
-        { id: 'loc_' + Date.now() + '_2', name: 'Pongamia Sapling (Local #2)', place: `${place} School Gate`, lat: lat - 0.0018, lng: lng + 0.0026, health: 'Healthy', moisture: 66, sos: false, adoptedBy: 'Students', lastWatered: 'Today' },
-        { id: 'loc_' + Date.now() + '_3', name: 'Banyan Young Tree (Local #3)', place: `${place} Main Road`, lat: lat + 0.0015, lng: lng - 0.0028, health: 'Healthy', moisture: 71, sos: false, adoptedBy: 'Volunteers', lastWatered: 'Yesterday' },
+        { id: 'loc_' + Date.now() + '_1', name: 'Neem Sapling (On-Site #1)', place: `${place} Gate`, lat: lat + 0.00025, lng: lng + 0.00022, health: 'Needs Water', moisture: 21, sos: true, adoptedBy: 'Unassigned', lastWatered: '3 days ago' },
+        { id: 'loc_' + Date.now() + '_2', name: 'Pongamia Sapling (On-Site #2)', place: `${place} Courtyard`, lat: lat - 0.00035, lng: lng + 0.00030, health: 'Healthy', moisture: 66, sos: false, adoptedBy: 'Students', lastWatered: 'Today' },
+        { id: 'loc_' + Date.now() + '_3', name: 'Banyan Young Tree (Nearby #3)', place: `${place} Main Road`, lat: lat + 0.0018, lng: lng - 0.0016, health: 'Healthy', moisture: 71, sos: false, adoptedBy: 'Volunteers', lastWatered: 'Yesterday' },
         ...state.trees
       ];
       saveState();
@@ -1376,10 +1537,10 @@
           const pulseIcon = L.divIcon({ className: '', html: '<div class="gps-pulse"></div>', iconSize: [18, 18], iconAnchor: [9, 9] });
           userMarker = L.marker([lat, lng], { icon: pulseIcon }).addTo(map);
         } else userMarker.setLatLng([lat, lng]);
-        userMarker.bindPopup(`<strong>📍 You Are Here</strong><br>${label}`);
+        userMarker.bindPopup(`<strong>📍 You Are Here</strong><br>${label}<br><span style="font-size:10px;color:#2563eb;">100m Geofence Active Radius</span>`);
         if (accuracyCircle) map.removeLayer(accuracyCircle);
-        accuracyCircle = L.circle([lat, lng], { radius: accuracy || 80, color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 0.12, weight: 1 }).addTo(map);
-        if (recenter) map.setView([lat, lng], 15);
+        accuracyCircle = L.circle([lat, lng], { radius: GEOFENCE_MAX_METERS, color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 0.12, weight: 1.5, dashArray: '4,4' }).addTo(map);
+        if (recenter) map.setView([lat, lng], 16);
       }
     }
 
@@ -1449,12 +1610,12 @@
     }
 
     function initMap() {
-      map = L.map('map', { zoomControl: true }).setView([state.userLoc.lat, state.userLoc.lng], 14);
+      map = L.map('map', { zoomControl: true }).setView([state.userLoc.lat, state.userLoc.lng], 15);
       streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
       satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '© Esri Satellite' });
       map.on('click', e => {
         if (!tapPinMode) return;
-        updateUserLocation(e.latlng.lat, e.latlng.lng, 20, `Pinned Spot (${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)})`, true, false);
+        updateUserLocation(e.latlng.lat, e.latlng.lng, 15, `Pinned Spot (${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)})`, true, false);
         toggleTapPinMode(false);
         showToast('📍 "You Are Here" moved to tapped spot!');
       });
@@ -1480,26 +1641,50 @@
       const sosTrees = state.trees.filter(t => t.sos);
       if (!sosTrees.length) return showToast('🎉 Zero active SOS—all trees healthy!');
       sosTrees.sort((a, b) => getDistanceMeters(state.userLoc.lat, state.userLoc.lng, a.lat, a.lng) - getDistanceMeters(state.userLoc.lat, state.userLoc.lng, b.lat, b.lng));
-      if (map) map.setView([sosTrees[0].lat, sosTrees[0].lng], 16);
+      if (map) map.setView([sosTrees[0].lat, sosTrees[0].lng], 17);
       showToast(`🚨 Nearest SOS: ${sosTrees[0].name}`);
     }
 
     function renderMapMarkers() {
       if (!map) return;
       treeMarkers.forEach(m => map.removeLayer(m));
+      hubMarkers.forEach(m => map.removeLayer(m));
       treeMarkers = [];
-      state.trees.forEach(tree => {
-        const color = tree.sos ? '#e11d48' : '#16a34a';
-        const icon = L.divIcon({
-          className: '',
-          html: `<div style="background:${color};color:#fff;width:30px;height:30px;border-radius:9999px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.35);font-size:14px;">${tree.sos ? '🚨' : '🌳'}</div>`,
-          iconSize: [30, 30], iconAnchor: [15, 15]
+      hubMarkers = [];
+
+      if (mapPinFilter === 'all' || mapPinFilter === 'trees') {
+        state.trees.forEach(tree => {
+          const color = tree.sos ? '#e11d48' : '#16a34a';
+          const icon = L.divIcon({
+            className: '',
+            html: `<div style="background:${color};color:#fff;width:30px;height:30px;border-radius:9999px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.35);font-size:14px;">${tree.sos ? '🚨' : '🌳'}</div>`,
+            iconSize: [30, 30], iconAnchor: [15, 15]
+          });
+          const geo = checkTreeGeofence(tree);
+          const dist = formatDist(geo.dist);
+          const marker = L.marker([tree.lat, tree.lng], { icon }).addTo(map);
+          marker.bindPopup(`<div style="min-width:170px"><strong>${tree.name}</strong><br/><span style="font-size:11px;color:#475569">${tree.place} (${dist})</span><br/><span style="font-size:11px;font-weight:700;color:${color}">${tree.health} • Moisture ${tree.moisture}%</span><br/><span style="font-size:10px;font-weight:700;color:${geo.allowed ? '#15803d' : '#b45309'}">${geo.allowed ? '✅ Inside 100m Geofence' : '🔒 Move within 100m to unlock'}</span><div style="display:flex;gap:4px;margin-top:6px;"><button onclick="openProofModal('${tree.sos ? 'sos' : 'care'}','${tree.id}')" style="flex:1;background:${geo.allowed ? color : '#94a3b8'};color:#fff;border:none;padding:6px;border-radius:8px;font-weight:700;font-size:10px;cursor:pointer;">${geo.allowed ? (tree.sos ? '📸 Live Rescue' : '📸 Live Water') : '🔒 100m Lock'}</button><button onclick="openQrModal('${tree.id}')" style="background:#0f172a;color:#fff;border:none;padding:6px 8px;border-radius:8px;font-weight:700;font-size:10px;cursor:pointer;">🏷️ QR</button></div></div>`);
+          treeMarkers.push(marker);
         });
-        const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, tree.lat, tree.lng));
-        const marker = L.marker([tree.lat, tree.lng], { icon }).addTo(map);
-        marker.bindPopup(`<div style="min-width:165px"><strong>${tree.name}</strong><br/><span style="font-size:11px;color:#475569">${tree.place} (${dist})</span><br/><span style="font-size:11px;font-weight:700;color:${color}">${tree.health} • Moisture ${tree.moisture}%</span><div style="display:flex;gap:4px;margin-top:6px;"><button onclick="openProofModal('${tree.sos ? 'sos' : 'care'}','${tree.id}')" style="flex:1;background:${color};color:#fff;border:none;padding:6px;border-radius:8px;font-weight:700;font-size:10px;cursor:pointer;">📸 ${tree.sos ? 'Live Rescue' : 'Live Water'}</button><button onclick="openQrModal('${tree.id}')" style="background:#0f172a;color:#fff;border:none;padding:6px 8px;border-radius:8px;font-weight:700;font-size:10px;cursor:pointer;">🏷️ QR</button></div></div>`);
-        treeMarkers.push(marker);
-      });
+      }
+
+      if (mapPinFilter === 'all' || mapPinFilter === 'hubs') {
+        state.hubs.forEach(hub => {
+          const isNursery = hub.type === 'nursery';
+          const isCompost = hub.type === 'compost';
+          const bg = isNursery ? '#0d9488' : isCompost ? '#d97706' : '#0284c7';
+          const emoji = isNursery ? '🏡' : isCompost ? '♻️' : '💧';
+          const icon = L.divIcon({
+            className: '',
+            html: `<div style="background:${bg};color:#fff;width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.35);font-size:14px;">${emoji}</div>`,
+            iconSize: [30, 30], iconAnchor: [15, 15]
+          });
+          const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, hub.lat, hub.lng));
+          const marker = L.marker([hub.lat, hub.lng], { icon }).addTo(map);
+          marker.bindPopup(`<div style="min-width:165px"><span style="font-size:10px;font-weight:800;color:${bg};text-transform:uppercase;">${hub.type} Hub</span><br/><strong>${escapeHtml(hub.name)}</strong><br/><span style="font-size:11px;color:#475569">${escapeHtml(hub.info)}</span><br/><span style="font-size:10px;font-weight:700;color:#0f172a;">📍 ${dist}</span></div>`);
+          hubMarkers.push(marker);
+        });
+      }
     }
 
     function switchTab(tab) {
@@ -1565,6 +1750,7 @@
         userName: actorName,
         userGmail: actorGmail,
         identity: state.identity,
+        team: state.team,
         badge: chosenTag,
         title: postTitle,
         body: bodyText,
@@ -1718,7 +1904,7 @@
       });
     }
 
-    // --- STRICT LIVE CAMERA CAPTURE FOR RESCUE, ADOPT, PLANT & CARE ---
+    // --- STRICT LIVE CAMERA + 100M GEOFENCE FOR RESCUE, ADOPT, PLANT & CARE ---
     function startPlantProof() {
       const species = document.getElementById('plantSpecies').value.trim();
       const place = document.getElementById('plantPlace').value.trim() || state.userLoc.label;
@@ -1734,6 +1920,16 @@
 
     async function openProofModal(type, treeId, extra = {}) {
       const tree = treeId ? state.trees.find(t => t.id === treeId) : null;
+
+      // Enforce 100m Geofence Lock for existing trees (Rescue, Water Care, Adopt)
+      if (tree) {
+        const geo = checkTreeGeofence(tree);
+        if (!geo.allowed) {
+          showGeofenceBlockedAlert(tree, geo.dist);
+          return;
+        }
+      }
+
       const pts = type === 'sos' ? 100 : type === 'plant' ? 75 : type === 'adopt' ? 25 : 50;
       const title = type === 'sos' ? `Rescued ${tree ? tree.name : 'SOS Tree'}`
         : type === 'plant' ? `Planted ${extra.species}`
@@ -1818,23 +2014,21 @@
       const ctx = canvas.getContext('2d');
       ctx.drawImage(sourceEl, 0, 0, canvas.width, canvas.height);
 
-      // Top-right LIVE VERIFIED badge
-      const tagW = Math.max(125, Math.round(canvas.width * 0.34));
+      const tagW = Math.max(135, Math.round(canvas.width * 0.36));
       const tagH = Math.max(22, Math.round(canvas.height * 0.06));
       ctx.fillStyle = 'rgba(220, 38, 38, 0.92)';
       ctx.fillRect(canvas.width - tagW - 8, 8, tagW, tagH);
       ctx.fillStyle = '#ffffff';
-      ctx.font = `bold ${Math.max(9, Math.round(canvas.width * 0.02))}px sans-serif`;
-      ctx.fillText('● LIVE CAMERA VERIFIED', canvas.width - tagW - 2, 8 + tagH * 0.68);
+      ctx.font = `bold ${Math.max(9, Math.round(canvas.width * 0.019))}px sans-serif`;
+      ctx.fillText('● LIVE + 100M GEOFENCE', canvas.width - tagW - 2, 8 + tagH * 0.68);
 
-      // Bottom GPS & Timestamp bar
       const barH = Math.max(46, Math.round(canvas.height * 0.15));
       ctx.fillStyle = 'rgba(6, 78, 59, 0.92)';
       ctx.fillRect(0, canvas.height - barH, canvas.width, barH);
       ctx.fillStyle = '#fde047';
-      ctx.font = `bold ${Math.max(10, Math.round(canvas.width * 0.022))}px sans-serif`;
-      const actor = state.user.name ? `${state.user.name} (${maskGmail(state.user.gmail)})` : state.identity;
-      ctx.fillText(`GreenGuardian • ${actor} | +${pendingProof.pts} pts`, 10, canvas.height - barH * 0.56);
+      ctx.font = `bold ${Math.max(10, Math.round(canvas.width * 0.021))}px sans-serif`;
+      const actor = state.user.name ? `${state.user.name} • ${state.team}` : state.identity;
+      ctx.fillText(`${actor} | +${pendingProof.pts} pts`, 10, canvas.height - barH * 0.56);
       ctx.fillStyle = '#ffffff';
       ctx.font = `${Math.max(9, Math.round(canvas.width * 0.018))}px monospace`;
       const nowStr = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
@@ -1880,7 +2074,7 @@
         const idx = state.trees.findIndex(t => t.id === treeId);
         if (idx !== -1) {
           placeLabel = state.trees[idx].place;
-          state.trees[idx].adoptedBy = `${state.user.name || state.identity} (${state.identity})`;
+          state.trees[idx].adoptedBy = `${state.user.name || state.identity} (${state.team})`;
           syncedTree = state.trees[idx];
         }
       } else if (treeId) {
@@ -1901,7 +2095,7 @@
         : type === 'adopt' ? '🤝 Adopted Tree (Live Verified)'
         : '💧 Watered & Cared (Live Verified)';
 
-      const contribItem = { id: 'contrib_' + Date.now(), userName: actorName, userGmail: actorGmail, identity: state.identity, badge: badgeText, title, body: '', place: placeLabel, pts, time: 'Just now', thumb: stampedThumbUrl, applauds: 1, applaudedByMe: true, comments: [] };
+      const contribItem = { id: 'contrib_' + Date.now(), userName: actorName, userGmail: actorGmail, identity: state.identity, team: state.team, badge: badgeText, title, body: '', place: placeLabel, pts, time: 'Just now', thumb: stampedThumbUrl, applauds: 1, applaudedByMe: true, comments: [] };
       state.contributions.unshift(contribItem);
       state.proofs.unshift({ id: 'proof_' + Date.now(), title, pts, identity: state.identity, coords: `${state.userLoc.lat.toFixed(4)}, ${state.userLoc.lng.toFixed(4)}`, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), img: stampedDataUrl });
 
@@ -1914,13 +2108,13 @@
         showToast('🏆 5,000 Green Points Reached! E-Certificate Unlocked!');
       } else if (type === 'plant' && syncedTree) {
         openQrModal(syncedTree.id);
-        showToast('🎉 +75 pts! Live proof verified & QR Tag ready.');
+        showToast(`🎉 +75 pts added to ${state.team}! QR Tag ready.`);
       } else {
         switchTab('community');
-        showToast(`🎉 +${pts} pts! Live verified proof published.`);
+        showToast(`🎉 +${pts} pts added to ${state.team}!`);
       }
 
-      publishSyncEvent({ kind: 'contribution', id: contribItem.id, tree: syncedTree, contribution: contribItem, notifTitle: `${badgeText} by ${actorName}`, notifBody: `${title} at ${placeLabel} (+${pts} pts)` });
+      publishSyncEvent({ kind: 'contribution', id: contribItem.id, tree: syncedTree, contribution: contribItem, notifTitle: `${badgeText} by ${actorName}`, notifBody: `${title} at ${placeLabel} (+${pts} pts for ${state.team})` });
     }
 
     function applaudContribution(contribId) {
@@ -1952,14 +2146,14 @@
       const target = state.trees[0]; if (!target) return;
       target.sos = true; target.health = `SOS: Dry Soil (${pct}%)`; target.moisture = pct;
       saveState(); renderAll();
-      const title = `🚨 IoT Sensor Tree SOS: ${target.name}`, body = `Soil moisture dropped to ${pct}% at ${target.place}. Tap to rescue (+100 pts)!`;
+      const title = `🚨 IoT Sensor Tree SOS: ${target.name}`, body = `Soil moisture dropped to ${pct}% at ${target.place}. Move within 100m to rescue (+100 pts)!`;
       pushNotification(title, body, 'sos');
       publishSyncEvent({ kind: 'sos_alert', id: 'sos_' + Date.now(), tree: target, notifTitle: title, notifBody: body });
     }
 
     function triggerManualSOS() {
       const actorName = state.user.name || state.identity;
-      const newSOS = { id: 'sos_tree_' + Date.now(), name: 'Dry Sapling Alert #' + Math.floor(100 + Math.random() * 899), place: state.userLoc.label, lat: state.userLoc.lat + 0.0008, lng: state.userLoc.lng + 0.0008, health: 'At Risk (Reported Dry)', moisture: 19, sos: true, adoptedBy: 'Unassigned', lastWatered: 'Unknown' };
+      const newSOS = { id: 'sos_tree_' + Date.now(), name: 'Dry Sapling Alert #' + Math.floor(100 + Math.random() * 899), place: state.userLoc.label, lat: state.userLoc.lat + 0.0002, lng: state.userLoc.lng + 0.0002, health: 'At Risk (Reported Dry)', moisture: 19, sos: true, adoptedBy: 'Unassigned', lastWatered: 'Unknown' };
       state.trees.unshift(newSOS); saveState(); renderAll();
       const title = `🚨 Tree SOS by ${actorName}`, body = `${newSOS.name} needs water near ${newSOS.place}.`;
       pushNotification(title, body, 'sos');
@@ -2035,21 +2229,18 @@
               if (slider) slider.value = data.moisture;
               if (valEl) {
                 valEl.textContent = `${data.moisture}%`;
-                valEl.className = data.moisture < 25
-                  ? 'text-2xl font-extrabold text-rose-400'
-                  : 'text-2xl font-extrabold text-emerald-400';
+                valEl.className = data.moisture < 25 ? 'text-2xl font-extrabold text-rose-400' : 'text-2xl font-extrabold text-emerald-400';
               }
               if (stEl) {
-                stEl.textContent = data.moisture < 25
-                  ? 'LIVE HARDWARE: CRITICAL DRY!'
-                  : 'LIVE HARDWARE: Connected';
+                stEl.textContent = data.moisture < 25 ? 'LIVE HARDWARE: CRITICAL DRY!' : 'LIVE HARDWARE: Connected';
               }
-              if (state.trees[0]) {
-                state.trees[0].moisture = data.moisture;
-              }
-              if (data.moisture < 25 && state.autoWaterEnabled) {
-                triggerRemoteWaterPump(5);
-              }
+              if (state.trees[0]) state.trees[0].moisture = data.moisture;
+              if (data.moisture < 25 && state.autoWaterEnabled) triggerRemoteWaterPump(5);
+              changed = true;
+            }
+
+            if (data.hub && !state.hubs.some(h => h.id === data.hub.id)) {
+              state.hubs.unshift(data.hub);
               changed = true;
             }
 
@@ -2102,7 +2293,7 @@
               }
             }
             if (data.notifTitle) {
-              const targetTab = data.contribution ? 'community' : 'sos';
+              const targetTab = data.contribution ? 'community' : data.hub ? 'map' : 'sos';
               state.notifications.unshift({ id: data.id, title: data.notifTitle, body: data.notifBody || '', time: 'Live', targetTab });
               document.getElementById('notifDot').classList.remove('hidden');
               sendNativeNotification(data.notifTitle, data.notifBody || '', targetTab);
@@ -2206,12 +2397,28 @@
       `;
     }
 
+    function getTeamBattlesStandings() {
+      const baseSquads = {
+        'Chennai Institute of Technology': 6120,
+        'Saradha Matric HSS Eco Club': 5420,
+        'Kunrattur Green Ward': 4280,
+        'Gingee Youth Brigade': 3650,
+        'SYNOVA Green Force': 2940
+      };
+      const myTeam = state.team || 'Chennai Institute of Technology';
+      baseSquads[myTeam] = (baseSquads[myTeam] || 2500) + state.points;
+
+      return Object.entries(baseSquads)
+        .map(([name, pts]) => ({ name, pts, isMine: name === myTeam }))
+        .sort((a, b) => b.pts - a.pts);
+    }
+
     function renderAll() {
       const idObj = IDENTITIES.find(i => i.id === state.identity) || IDENTITIES[0];
       const userInitial = (state.user.name || 'G')[0].toUpperCase();
       document.getElementById('headerUserLabel').textContent = state.user.name || 'Sign In';
       document.getElementById('homeIdentity').textContent = `${idObj.icon} ${idObj.id} • ${state.user.name || 'Guardian'}`;
-      document.getElementById('homeGmailBadge').textContent = `✉️ ${state.user.gmail || 'Tap Sign In'}`;
+      document.getElementById('homeTeamBadge').textContent = `⚔️ ${state.team}`;
       document.getElementById('homePoints').textContent = state.points.toLocaleString();
       document.getElementById('profileAvatar').textContent = userInitial;
       const compAvatar = document.getElementById('composerAvatar');
@@ -2219,6 +2426,7 @@
       document.getElementById('profileCardName').textContent = state.user.name || 'Guest Guardian';
       document.getElementById('profileCardGmail').textContent = `✉️ ${state.user.gmail || 'Not signed in'}`;
       document.getElementById('profileCardIdentity').textContent = `${idObj.icon} ${idObj.id}`;
+      document.getElementById('profileCardTeam').textContent = `⚔️ ${state.team}`;
       document.getElementById('profileCardBio').textContent = state.user.bio || '🌱 Planting & protecting green cover in my community.';
 
       // 5,000 Pts Certificate Progress & Lock UI
@@ -2249,6 +2457,27 @@
         }
       }
 
+      // Render Campus / Ward Team Battles
+      const teamStandings = getTeamBattlesStandings();
+      const topTeamPts = teamStandings[0]?.pts || 1;
+      const renderTeamRow = (t, idx) => {
+        const barW = Math.max(15, Math.round((t.pts / topTeamPts) * 100));
+        const rankIcon = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+        return `
+          <div class="p-2.5 rounded-xl border ${t.isMine ? 'bg-purple-50 border-purple-300' : 'bg-slate-50 border-slate-100'} space-y-1">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-bold text-slate-800 truncate">${rankIcon} ${escapeHtml(t.name)} ${t.isMine ? '(Your Squad)' : ''}</span>
+              <span class="font-extrabold text-purple-800 shrink-0">${t.pts.toLocaleString()} pts</span>
+            </div>
+            <div class="w-full h-1.5 rounded-full bg-slate-200 overflow-hidden">
+              <div class="h-full ${t.isMine ? 'bg-purple-600' : 'bg-emerald-600'} rounded-full" style="width:${barW}%"></div>
+            </div>
+          </div>
+        `;
+      };
+      document.getElementById('homeTeamBattlePreview').innerHTML = teamStandings.slice(0, 3).map(renderTeamRow).join('');
+      document.getElementById('teamBattleList').innerHTML = teamStandings.map(renderTeamRow).join('');
+
       const myPostsCount = state.contributions.filter(c => state.user.gmail && c.userGmail === state.user.gmail).length;
       document.getElementById('profileStatPts').textContent = state.points.toLocaleString();
       document.getElementById('profileStatStreak').textContent = `🔥 ${state.streakDays || 1}d`;
@@ -2263,11 +2492,10 @@
           : 'py-2 px-2.5 rounded-xl bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600';
       }
 
-      // Earned Eco Badges
       const badgesList = [
         { icon: '🌱', title: 'First Sprout', desc: 'Joined GreenGuardian', unlocked: true },
-        { icon: '📸', title: 'Live Verifier', desc: 'Captured live camera proof', unlocked: state.proofs.length >= 1 },
-        { icon: '🔥', title: '3-Day Streak', desc: 'Care 3 days in a row', unlocked: (state.streakDays || 1) >= 3 || state.points >= 1000 },
+        { icon: '📸', title: 'Geofence Verifier', desc: '100m on-site live proof', unlocked: state.proofs.length >= 1 },
+        { icon: '⚔️', title: 'Squad Warrior', desc: 'Joined Team Battles', unlocked: true },
         { icon: '🏅', title: '5,000-Pt Legend', desc: 'Unlocked Official Certificate', unlocked: certUnlocked }
       ];
       const unlockedCount = badgesList.filter(b => b.unlocked).length;
@@ -2306,15 +2534,45 @@
         ? filteredContribs.map(c => renderContributionCard(c, false)).join('')
         : '<p class="text-xs text-center text-slate-500 py-6">No matching posts found.</p>';
 
-      document.getElementById('homeReminders').innerHTML = state.trees.slice(0, 3).map(t => `<div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500 truncate">${t.place} • ${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</p></div><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl ${t.sos ? 'bg-rose-600' : 'bg-emerald-600'} text-white font-bold text-xs">📸 ${t.sos ? 'Live Rescue' : 'Live Water'}</button></div>`).join('');
+      // Home Care Reminders with 100m Geofence Check
+      document.getElementById('homeReminders').innerHTML = state.trees.slice(0, 3).map(t => {
+        const geo = checkTreeGeofence(t);
+        const btnStyle = geo.allowed ? (t.sos ? 'bg-rose-600 text-white' : 'bg-emerald-600 text-white') : 'bg-slate-200 text-slate-600';
+        const btnText = geo.allowed ? (t.sos ? '📸 Live Rescue' : '📸 Live Water') : `🔒 ${formatDist(geo.dist)}`;
+        return `<div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500 truncate">${t.place} • ${geo.allowed ? '✅ Within 100m' : formatDist(geo.dist)}</p></div><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl ${btnStyle} font-bold text-xs">${btnText}</button></div>`;
+      }).join('');
+
+      // Local Nursery & Compost Hubs List
+      const sortedHubs = [...state.hubs].sort((a, b) => getDistanceMeters(state.userLoc.lat, state.userLoc.lng, a.lat, a.lng) - getDistanceMeters(state.userLoc.lat, state.userLoc.lng, b.lat, b.lng));
+      document.getElementById('mapHubList').innerHTML = sortedHubs.map(h => {
+        const emoji = h.type === 'nursery' ? '🏡' : h.type === 'compost' ? '♻️' : '💧';
+        const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, h.lat, h.lng));
+        return `<div onclick="if(map) map.setView([${h.lat},${h.lng}],16)" class="p-2.5 rounded-xl bg-teal-50/60 border border-teal-100 flex items-center justify-between gap-2 cursor-pointer"><div class="min-w-0"><p class="font-bold text-xs text-teal-950 truncate">${emoji} ${escapeHtml(h.name)}</p><p class="text-[10px] text-slate-600 truncate">${escapeHtml(h.info)}</p></div><span class="text-[10px] font-bold text-teal-800 bg-white px-2 py-1 rounded-lg border border-teal-200 shrink-0">${dist}</span></div>`;
+      }).join('');
+
+      // Map Tree List with 100m Geofence Status
       const sortedTrees = [...state.trees].sort((a, b) => getDistanceMeters(state.userLoc.lat, state.userLoc.lng, a.lat, a.lng) - getDistanceMeters(state.userLoc.lat, state.userLoc.lng, b.lat, b.lng));
-      document.getElementById('mapTreeList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl border ${t.sos ? 'border-rose-200 bg-rose-50/50' : 'border-slate-100 bg-slate-50'} flex items-center justify-between gap-2"><div class="min-w-0" onclick="if(map) map.setView([${t.lat},${t.lng}],16)"><span class="text-xs font-bold text-slate-800 truncate">${t.name}</span><p class="text-[11px] text-slate-500 truncate">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><div class="flex items-center gap-1 shrink-0"><button onclick="openQrModal('${t.id}')" class="px-2 py-1.5 rounded-xl bg-slate-800 text-white font-bold text-[11px]">🏷️ QR</button><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="px-2.5 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-[11px]">📸 Live</button></div></div>`).join('');
+      document.getElementById('mapTreeList').innerHTML = sortedTrees.map(t => {
+        const geo = checkTreeGeofence(t);
+        return `<div class="p-3 rounded-xl border ${t.sos ? 'border-rose-200 bg-rose-50/50' : 'border-slate-100 bg-slate-50'} flex items-center justify-between gap-2"><div class="min-w-0" onclick="if(map) map.setView([${t.lat},${t.lng}],17)"><span class="text-xs font-bold text-slate-800 truncate">${t.name}</span><p class="text-[11px] text-slate-500 truncate">${t.place} • <strong>${geo.allowed ? '✅ In 100m Zone' : formatDist(geo.dist)}</strong></p></div><div class="flex items-center gap-1 shrink-0"><button onclick="openQrModal('${t.id}')" class="px-2 py-1.5 rounded-xl bg-slate-800 text-white font-bold text-[11px]">🏷️ QR</button><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="px-2.5 py-1.5 rounded-xl ${geo.allowed ? 'bg-emerald-700 text-white' : 'bg-slate-200 text-slate-600'} font-bold text-[11px]">${geo.allowed ? '📸 Live' : '🔒 >100m'}</button></div></div>`;
+      }).join('');
+
+      // SOS List with 100m Geofence Check
       const sosTrees = sortedTrees.filter(t => t.sos);
-      document.getElementById('sosList').innerHTML = sosTrees.length ? sosTrees.map(t => `<div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 space-y-2"><div class="flex items-start justify-between"><div><p class="font-bold text-sm text-rose-900">${t.name}</p><p class="text-xs text-rose-700">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><span class="text-xs font-extrabold bg-rose-600 text-white px-2 py-0.5 rounded-lg">Moisture ${t.moisture}%</span></div><button onclick="openProofModal('sos','${t.id}')" class="w-full py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs shadow">📸 I WILL HELP — Live Camera Proof (+100 pts)</button></div>`).join('') : '<p class="text-xs text-emerald-700 font-semibold">🎉 All tracked trees are healthy right now!</p>';
-      document.getElementById('adoptList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500">Guardian: <strong>${t.adoptedBy}</strong></p></div><button onclick="adoptTree('${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl bg-sky-600 text-white font-bold text-xs">📸 Live Adopt</button></div>`).join('');
+      document.getElementById('sosList').innerHTML = sosTrees.length ? sosTrees.map(t => {
+        const geo = checkTreeGeofence(t);
+        return `<div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 space-y-2"><div class="flex items-start justify-between"><div><p class="font-bold text-sm text-rose-900">${t.name}</p><p class="text-xs text-rose-700">${t.place} • <strong>${geo.allowed ? '✅ Inside 100m Geofence' : formatDist(geo.dist)}</strong></p></div><span class="text-xs font-extrabold bg-rose-600 text-white px-2 py-0.5 rounded-lg">Moisture ${t.moisture}%</span></div><button onclick="openProofModal('sos','${t.id}')" class="w-full py-2.5 rounded-xl ${geo.allowed ? 'bg-rose-600 text-white' : 'bg-slate-300 text-slate-700'} font-bold text-xs shadow">${geo.allowed ? '📸 I WILL HELP — Live Camera Proof (+100 pts)' : `🔒 Move within 100m to Rescue (${formatDist(geo.dist)})`}</button></div>`;
+      }).join('') : '<p class="text-xs text-emerald-700 font-semibold">🎉 All tracked trees are healthy right now!</p>';
+
+      // Adopt List with 100m Geofence Check
+      document.getElementById('adoptList').innerHTML = sortedTrees.map(t => {
+        const geo = checkTreeGeofence(t);
+        return `<div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500">Guardian: <strong>${t.adoptedBy}</strong> • ${geo.allowed ? '✅ <100m' : formatDist(geo.dist)}</p></div><button onclick="adoptTree('${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl ${geo.allowed ? 'bg-sky-600 text-white' : 'bg-slate-200 text-slate-600'} font-bold text-xs">${geo.allowed ? '📸 Live Adopt' : '🔒 >100m'}</button></div>`;
+      }).join('');
+
       document.getElementById('identityGrid').innerHTML = IDENTITIES.map(item => `<button onclick="state.identity='${item.id}'; saveState(); renderAll(); showToast('Identity set: ${item.id}');" class="p-3 rounded-2xl border text-left transition ${item.id === state.identity ? 'bg-emerald-700 text-white border-emerald-700 shadow' : 'bg-slate-50 text-slate-800 border-slate-200'}"><span class="text-xl">${item.icon}</span><p class="font-bold text-xs mt-1">${item.id}</p></button>`).join('');
       const myBoardName = state.user.name ? `${state.user.name} (${maskGmail(state.user.gmail)})` : `You (${state.identity})`;
-      const board = [{ name: myBoardName, pts: state.points, me: true }, { name: 'Saradha Matric HSS Eco Club', pts: 5420, me: false }, { name: 'Rohan M. (roha***@gmail.com)', pts: 3840, me: false }, { name: 'Kavya S. (kavy***@gmail.com)', pts: 2480, me: false }].sort((a, b) => b.pts - a.pts);
+      const board = [{ name: myBoardName, pts: state.points, me: true }, { name: 'Rohan M. (roha***@gmail.com)', pts: 5120, me: false }, { name: 'Kavya S. (kavy***@gmail.com)', pts: 3840, me: false }, { name: 'Ananya R. (anan***@gmail.com)', pts: 2480, me: false }].sort((a, b) => b.pts - a.pts);
       document.getElementById('leaderboardList').innerHTML = board.map((row, i) => `<div class="p-2.5 rounded-xl flex items-center justify-between gap-2 ${row.me ? 'bg-amber-50 border border-amber-300 font-bold' : 'bg-slate-50'}"><span class="truncate">#${i + 1} ${row.name}</span><span class="text-emerald-700 font-extrabold shrink-0">${row.pts.toLocaleString()} pts</span></div>`).join('');
       document.getElementById('proofCountBadge').textContent = `${state.proofs.length} live verified`;
       document.getElementById('proofGallery').innerHTML = state.proofs.length ? state.proofs.map(p => `<div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-50"><img src="${p.img}" alt="${p.title}" class="w-full max-h-52 object-cover" /><div class="p-2.5 flex items-center justify-between text-xs"><div><p class="font-bold text-slate-800">${p.title}</p><p class="text-[10px] text-slate-500">${p.identity} • GPS ${p.coords} • ${p.time}</p></div><span class="font-extrabold text-emerald-700">+${p.pts} pts</span></div></div>`).join('') : '<p class="text-xs text-slate-500">No live camera proofs yet.</p>';
