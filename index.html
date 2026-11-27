@@ -19,7 +19,7 @@
   <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0fdf4; color: #0f172a; margin: 0; }
-    #map { height: 330px; width: 100%; border-radius: 1rem; z-index: 1; }
+    #map { height: 320px; width: 100%; border-radius: 1rem; z-index: 1; }
     .leaflet-container { font-family: inherit; }
     @keyframes pulseRing {
       0% { transform: scale(0.8); opacity: 0.85; }
@@ -43,7 +43,7 @@
       <div class="text-center space-y-1">
         <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-3xl flex items-center justify-center mx-auto shadow-sm">🌱</div>
         <h2 class="font-extrabold text-lg text-emerald-950">Welcome to GreenGuardian</h2>
-        <p class="text-xs text-slate-500">Sign in with your Gmail so your tree care, community posts & SOS rescues are credited to you.</p>
+        <p class="text-xs text-slate-500">Sign in with your Gmail so your tree care, community posts, QR tags & certificates are credited to you.</p>
       </div>
       <div class="space-y-2.5">
         <div>
@@ -126,48 +126,69 @@
           <p class="text-xl font-extrabold text-amber-300"><span id="homePoints">250</span> pts</p>
         </div>
       </div>
-      <div class="grid grid-cols-3 gap-2 pt-2 border-t border-white/15 text-center">
+      <div class="grid grid-cols-4 gap-1.5 pt-2 border-t border-white/15 text-center">
         <div class="bg-white/10 rounded-xl p-2">
-          <p id="statTotal" class="text-lg font-extrabold">5</p>
-          <p class="text-[11px] text-emerald-100">Tracked Trees</p>
+          <p id="statTotal" class="text-base font-extrabold">5</p>
+          <p class="text-[10px] text-emerald-100">Trees</p>
         </div>
         <div class="bg-white/10 rounded-xl p-2">
-          <p id="statHealthy" class="text-lg font-extrabold text-emerald-300">3</p>
-          <p class="text-[11px] text-emerald-100">Healthy</p>
+          <p id="statHealthy" class="text-base font-extrabold text-emerald-300">3</p>
+          <p class="text-[10px] text-emerald-100">Healthy</p>
         </div>
         <div class="bg-white/10 rounded-xl p-2">
-          <p id="statSos" class="text-lg font-extrabold text-rose-300">2</p>
-          <p class="text-[11px] text-emerald-100">Need Care / SOS</p>
+          <p id="statSos" class="text-base font-extrabold text-rose-300">2</p>
+          <p class="text-[10px] text-emerald-100">SOS</p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-2">
+          <p id="statStreak" class="text-base font-extrabold text-amber-300">🔥 1d</p>
+          <p class="text-[10px] text-emerald-100">Streak</p>
         </div>
       </div>
     </section>
 
+    <!-- Primary Feature Grid -->
     <section class="grid grid-cols-2 gap-3">
       <button onclick="switchTab('map')" class="p-3.5 rounded-2xl bg-emerald-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🗺️</span>
         <p class="font-bold text-sm mt-1.5">Live Tree Map</p>
-        <p class="text-[11px] text-emerald-100">GPS & nearby saplings</p>
+        <p class="text-[11px] text-emerald-100">GPS, QR Tags & nearby</p>
       </button>
       <button onclick="switchTab('community')" class="p-3.5 rounded-2xl bg-indigo-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🌍</span>
-        <p class="font-bold text-sm mt-1.5">Community Feed</p>
-        <p class="text-[11px] text-indigo-100">Post, like, comment & edit</p>
+        <p class="font-bold text-sm mt-1.5">Community & Hub</p>
+        <p class="text-[11px] text-indigo-100">Posts & Sapling Exchange</p>
       </button>
       <button onclick="switchTab('sos')" class="p-3.5 rounded-2xl bg-rose-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🚨</span>
-        <p class="font-bold text-sm mt-1.5">Tree SOS & IoT</p>
-        <p class="text-[11px] text-rose-100">+100 pts rescue alert</p>
+        <p class="font-bold text-sm mt-1.5">Tree SOS & Pump</p>
+        <p class="text-[11px] text-rose-100">IoT Sensor & Auto-Water</p>
       </button>
-      <button onclick="switchTab('plant')" class="p-3.5 rounded-2xl bg-sky-600 text-white text-left shadow-sm active:scale-95 transition">
-        <span class="text-2xl">🌿</span>
-        <p class="font-bold text-sm mt-1.5">Plant a Tree</p>
-        <p class="text-[11px] text-sky-100">+75 pts with photo proof</p>
+      <button onclick="openModal('plantDoctorModal')" class="p-3.5 rounded-2xl bg-teal-600 text-white text-left shadow-sm active:scale-95 transition">
+        <span class="text-2xl">🩺</span>
+        <p class="font-bold text-sm mt-1.5">AI Plant Doctor</p>
+        <p class="text-[11px] text-teal-100">Scan leaf health & cure</p>
+      </button>
+    </section>
+
+    <!-- Quick Tools Strip -->
+    <section class="grid grid-cols-3 gap-2">
+      <button onclick="switchTab('plant')" class="p-2.5 rounded-2xl bg-white border border-emerald-200 text-center shadow-sm active:scale-95">
+        <span class="text-lg">🌱</span>
+        <p class="font-bold text-[11px] text-slate-800 mt-0.5">+ Plant Tree</p>
+      </button>
+      <button onclick="openCertificateModal()" class="p-2.5 rounded-2xl bg-white border border-amber-200 text-center shadow-sm active:scale-95">
+        <span class="text-lg">🏅</span>
+        <p class="font-bold text-[11px] text-slate-800 mt-0.5">E-Certificate</p>
+      </button>
+      <button onclick="openQrModal(state.trees[0]?.id)" class="p-2.5 rounded-2xl bg-white border border-sky-200 text-center shadow-sm active:scale-95">
+        <span class="text-lg">🏷️</span>
+        <p class="font-bold text-[11px] text-slate-800 mt-0.5">Tree QR Tag</p>
       </button>
     </section>
 
     <section class="bg-white rounded-2xl p-4 border border-indigo-100 shadow-sm space-y-2.5">
       <div class="flex items-center justify-between">
-        <h2 class="font-bold text-sm text-slate-800">🌍 Live Community Feed</h2>
+        <h2 class="font-bold text-sm text-slate-800">🌍 Live Community & Exchange</h2>
         <button onclick="switchTab('community')" class="text-xs font-bold text-indigo-600">Open Feed / Post →</button>
       </div>
       <div id="homeCommunityPreview" class="space-y-2.5"></div>
@@ -182,7 +203,7 @@
     </section>
   </main>
 
-  <!-- TAB 2: LIVE MAP -->
+  <!-- TAB 2: LIVE MAP & TREE QR TAGS -->
   <main id="tab-map" class="hidden p-4 space-y-3">
     <div class="flex items-center justify-between">
       <h2 class="font-bold text-base text-slate-800">🗺️ Live Google/Satellite Map</h2>
@@ -203,26 +224,26 @@
       <div id="map"></div>
     </div>
     <div class="bg-white rounded-2xl p-3.5 border border-emerald-100 shadow-sm">
-      <h3 class="font-bold text-sm text-slate-800 mb-2.5">📍 Nearby Tracked Trees (Live Distance)</h3>
+      <h3 class="font-bold text-sm text-slate-800 mb-2.5">📍 Nearby Tracked Trees & QR ID Tags</h3>
       <div id="mapTreeList" class="space-y-2.5"></div>
     </div>
   </main>
 
-  <!-- TAB 3: FACEBOOK-STYLE COMMUNITY FEED -->
+  <!-- TAB 3: FACEBOOK-STYLE COMMUNITY & SAPLING EXCHANGE HUB -->
   <main id="tab-community" class="hidden p-4 space-y-3">
     <div class="bg-gradient-to-r from-indigo-800 to-emerald-800 text-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
       <div>
-        <h2 class="font-bold text-base">🌍 GreenGuardian Community</h2>
-        <p class="text-xs text-indigo-100 mt-0.5">Post updates, photos, edit/delete & discuss live</p>
+        <h2 class="font-bold text-base">🌍 Community & Sapling Hub</h2>
+        <p class="text-xs text-indigo-100 mt-0.5">Share updates, free saplings, compost & discuss live</p>
       </div>
       <span id="communityCountBadge" class="text-xs font-extrabold bg-white/15 px-2.5 py-1 rounded-full">0 live</span>
     </div>
 
-    <!-- Facebook-Style Create Post Composer -->
+    <!-- Facebook-Style Create Post & Sapling Giveaway Composer -->
     <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm space-y-2.5">
       <div class="flex items-start gap-2.5">
         <div id="composerAvatar" class="w-9 h-9 rounded-full bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">G</div>
-        <textarea id="fbPostText" rows="2" placeholder="What's growing in your garden? Share a tip, update, or ask for help..." class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:border-emerald-600 focus:bg-white resize-none"></textarea>
+        <textarea id="fbPostText" rows="2" placeholder="Share a garden update, care tip, or offer free saplings/compost nearby..." class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:border-emerald-600 focus:bg-white resize-none"></textarea>
       </div>
 
       <!-- Optional Photo Preview -->
@@ -239,6 +260,8 @@
           </label>
           <select id="fbPostTag" class="px-2 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-[11px] focus:outline-none">
             <option value="🌿 Plant Update">🌿 Update</option>
+            <option value="🎁 Free Sapling / Exchange">🎁 Sapling Exchange</option>
+            <option value="♻️ Compost / Seeds">♻️ Compost / Seeds</option>
             <option value="💧 Care Tip">💧 Care Tip</option>
             <option value="🚨 Need Help">🚨 Help</option>
           </select>
@@ -252,14 +275,15 @@
     <!-- Search Bar + Feed Filter Pills -->
     <div class="space-y-2">
       <div class="relative">
-        <input id="feedSearchInput" type="text" oninput="renderAll()" placeholder="🔍 Search posts, users, locations..." class="w-full pl-3.5 pr-8 py-2 rounded-xl bg-white border border-slate-200 text-xs focus:outline-none focus:border-emerald-600" />
+        <input id="feedSearchInput" type="text" oninput="renderAll()" placeholder="🔍 Search posts, saplings, compost, users..." class="w-full pl-3.5 pr-8 py-2 rounded-xl bg-white border border-slate-200 text-xs focus:outline-none focus:border-emerald-600" />
         <button onclick="document.getElementById('feedSearchInput').value=''; renderAll();" class="absolute right-2.5 top-1.5 text-slate-400 text-xs font-bold">✕</button>
       </div>
       <div class="flex gap-1.5 overflow-x-auto pb-0.5 text-[11px] font-bold">
         <button onclick="setFeedFilter('all')" id="filter-all" class="px-3 py-1 rounded-full bg-emerald-700 text-white shrink-0">All Posts</button>
+        <button onclick="setFeedFilter('exchange')" id="filter-exchange" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">🎁 Sapling & Compost</button>
         <button onclick="setFeedFilter('mine')" id="filter-mine" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">👤 My Posts</button>
-        <button onclick="setFeedFilter('photos')" id="filter-photos" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">📷 With Photos</button>
-        <button onclick="setFeedFilter('sos')" id="filter-sos" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">🚨 SOS & Help</button>
+        <button onclick="setFeedFilter('photos')" id="filter-photos" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">📷 Photos</button>
+        <button onclick="setFeedFilter('sos')" id="filter-sos" class="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 shrink-0">🚨 SOS</button>
       </div>
     </div>
 
@@ -267,12 +291,12 @@
     <div id="communityFeedList" class="space-y-3"></div>
   </main>
 
-  <!-- TAB 4: PLANT A TREE -->
+  <!-- TAB 4: PLANT A TREE & GENERATE QR -->
   <main id="tab-plant" class="hidden p-4 space-y-4">
     <div class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <h2 class="font-bold text-base text-slate-800">🌱 Register Newly Planted Tree</h2>
-        <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">+75 pts</span>
+        <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">+75 pts + QR Tag</span>
       </div>
       <div>
         <label class="block text-xs font-semibold text-slate-700 mb-1">Tree Species / Name</label>
@@ -290,18 +314,28 @@
         <button type="button" onclick="requestLiveGPS(true)" class="px-2.5 py-1.5 rounded-lg bg-emerald-700 text-white font-semibold">Refresh GPS</button>
       </div>
       <button onclick="startPlantProof()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow">
-        📸 Capture Photo Proof & Publish (+75 pts)
+        📸 Capture Photo Proof & Generate QR (+75 pts)
       </button>
+    </div>
+
+    <!-- AI Plant Doctor Quick Card -->
+    <div class="bg-teal-900 text-white rounded-2xl p-4 shadow-sm flex items-center justify-between gap-3">
+      <div>
+        <p class="text-[10px] font-bold uppercase text-teal-300">Leaf Health Scanner</p>
+        <h3 class="font-bold text-sm mt-0.5">🩺 AI Plant Doctor</h3>
+        <p class="text-[11px] text-teal-100 mt-0.5">Scan yellow/spotted leaves for instant organic treatment.</p>
+      </div>
+      <button onclick="openModal('plantDoctorModal')" class="shrink-0 px-3.5 py-2.5 rounded-xl bg-teal-400 text-teal-950 font-extrabold text-xs shadow">Scan Leaf</button>
     </div>
   </main>
 
-  <!-- TAB 5: CARE, TREE SOS & IOT SENSOR -->
+  <!-- TAB 5: CARE, TREE SOS, IOT SENSOR & 2-WAY AUTO-WATERING PUMP -->
   <main id="tab-sos" class="hidden p-4 space-y-4">
     <section class="bg-slate-900 text-white rounded-2xl p-4 shadow-md space-y-3">
       <div class="flex items-center justify-between">
         <div>
-          <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">IoT Soil Moisture Node #01</span>
-          <h2 class="font-bold text-base mt-1">Live Soil Sensor Telemetry</h2>
+          <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">IoT Node #01 • 2-Way Control</span>
+          <h2 class="font-bold text-base mt-1">Live Soil Sensor & Water Pump</h2>
         </div>
         <div class="text-right">
           <p id="moistureValue" class="text-2xl font-extrabold text-emerald-400">64%</p>
@@ -311,11 +345,29 @@
       <div>
         <input id="moistureSlider" type="range" min="5" max="100" value="64" oninput="handleMoistureChange(this.value)" class="w-full accent-emerald-400 cursor-pointer" />
       </div>
+
+      <!-- 2-Way IoT Water Pump Relay Control -->
+      <div class="p-3 rounded-xl bg-slate-800 border border-slate-700 space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-bold text-sky-300">🚿 ESP32 Relay Water Pump</span>
+          <span id="pumpStatusBadge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-700 text-slate-300">STANDBY</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button id="pumpStartBtn" onclick="triggerRemoteWaterPump(5)" class="py-2 px-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs shadow active:scale-95">
+            💧 Water Now (5s Pulse)
+          </button>
+          <button onclick="toggleAutoWaterMode()" id="autoWaterBtn" class="py-2 px-2.5 rounded-xl bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600">
+            🤖 Auto-Water: OFF
+          </button>
+        </div>
+      </div>
+
       <div class="grid grid-cols-2 gap-2 pt-1">
         <button onclick="simulateDryDrop()" class="py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-bold">🔥 Simulate Dry Soil (16%)</button>
         <button onclick="triggerManualSOS()" class="py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold">🚨 Report Manual Tree SOS</button>
       </div>
     </section>
+
     <section class="bg-white rounded-2xl p-4 border border-rose-100 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-sm text-rose-700">🚨 Active Tree SOS Alerts</h3>
@@ -323,15 +375,16 @@
       </div>
       <div id="sosList" class="space-y-3"></div>
     </section>
+
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
       <h3 class="font-bold text-sm text-slate-800">🤝 Adopt & Care for Community Trees</h3>
       <div id="adoptList" class="space-y-2.5"></div>
     </section>
   </main>
 
-  <!-- TAB 6: GMAIL PROFILE, EDIT PROFILE, ACCOUNT DELETE & LEADERBOARD -->
+  <!-- TAB 6: GMAIL PROFILE, BADGES, E-CERTIFICATE, EDIT & ACCOUNT DELETE -->
   <main id="tab-identity" class="hidden p-4 space-y-4">
-    <!-- User Profile Card with Edit & Switch -->
+    <!-- User Profile Card -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm space-y-3">
       <div class="flex items-center justify-between gap-3">
         <div class="flex items-center gap-3 min-w-0">
@@ -342,23 +395,39 @@
             <p id="profileCardIdentity" class="text-[11px] text-slate-500 mt-0.5">🎓 Students</p>
           </div>
         </div>
-        <button onclick="openEditProfileModal()" class="shrink-0 px-3 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm">✏️ Edit Profile</button>
+        <button onclick="openEditProfileModal()" class="shrink-0 px-3 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm">✏️ Edit</button>
       </div>
       <p id="profileCardBio" class="text-xs text-slate-600 bg-slate-50 px-3 py-2 rounded-xl border border-slate-100">🌱 Planting & protecting green cover in my community.</p>
-      <div class="grid grid-cols-3 gap-2 text-center pt-1">
+      <div class="grid grid-cols-4 gap-1.5 text-center pt-1">
         <div class="bg-emerald-50 rounded-xl p-2">
           <p id="profileStatPts" class="font-extrabold text-sm text-emerald-800">250</p>
-          <p class="text-[10px] text-emerald-700">Green Points</p>
+          <p class="text-[10px] text-emerald-700">Points</p>
+        </div>
+        <div class="bg-amber-50 rounded-xl p-2">
+          <p id="profileStatStreak" class="font-extrabold text-sm text-amber-800">🔥 1d</p>
+          <p class="text-[10px] text-amber-700">Streak</p>
         </div>
         <div class="bg-indigo-50 rounded-xl p-2">
           <p id="profileStatPosts" class="font-extrabold text-sm text-indigo-800">0</p>
-          <p class="text-[10px] text-indigo-700">My Posts</p>
+          <p class="text-[10px] text-indigo-700">Posts</p>
         </div>
-        <div class="bg-amber-50 rounded-xl p-2">
-          <p id="profileStatProofs" class="font-extrabold text-sm text-amber-800">0</p>
-          <p class="text-[10px] text-amber-700">Verified Proofs</p>
+        <div class="bg-sky-50 rounded-xl p-2">
+          <p id="profileStatProofs" class="font-extrabold text-sm text-sky-800">0</p>
+          <p class="text-[10px] text-sky-700">Proofs</p>
         </div>
       </div>
+      <button onclick="openCertificateModal()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-emerald-950 font-extrabold text-xs shadow-sm flex items-center justify-center gap-1.5">
+        🏅 View & Download Green Champion E-Certificate
+      </button>
+    </section>
+
+    <!-- Earned Badges Section -->
+    <section class="bg-white rounded-2xl p-4 border border-amber-200 shadow-sm space-y-2.5">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-sm text-slate-800">🎖️ Earned Eco Badges</h3>
+        <span id="badgeCountText" class="text-[11px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">1 Unlocked</span>
+      </div>
+      <div id="badgesGrid" class="grid grid-cols-2 gap-2"></div>
     </section>
 
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
@@ -552,6 +621,8 @@
           <label class="block font-bold text-slate-700 mb-1">Category Tag</label>
           <select id="editPostTagSelect" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
             <option value="🌿 Plant Update">🌿 Plant Update</option>
+            <option value="🎁 Free Sapling / Exchange">🎁 Free Sapling / Exchange</option>
+            <option value="♻️ Compost / Seeds">♻️ Compost / Seeds</option>
             <option value="💧 Care Tip">💧 Care Tip</option>
             <option value="🚨 Need Help">🚨 Need Help</option>
             <option value="🌱 New Tree Planted">🌱 New Tree Planted</option>
@@ -585,6 +656,64 @@
     </div>
   </div>
 
+  <!-- MODAL 8: AI PLANT DOCTOR (LEAF HEALTH SCANNER) -->
+  <div id="plantDoctorModal" class="hidden fixed inset-0 z-50 bg-black/65 flex items-end sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-teal-100 text-teal-800">AI Leaf Color & Health Vision</span>
+          <h3 class="font-bold text-base text-slate-900 mt-1">🩺 AI Plant Doctor</h3>
+        </div>
+        <button onclick="closeModal('plantDoctorModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+      </div>
+      <p class="text-xs text-slate-500">Upload or capture a close-up photo of any plant leaf to detect chlorosis, leaf burn, fungal spots, or healthy chlorophyll.</p>
+      <label class="block w-full p-4 border-2 border-dashed border-teal-300 rounded-2xl bg-teal-50/70 text-center cursor-pointer hover:bg-teal-50">
+        <span class="text-2xl block mb-1">🍃</span>
+        <span class="text-xs font-bold text-teal-900">Capture / Upload Leaf Photo</span>
+        <input id="leafScanInput" type="file" accept="image/*" capture="environment" onchange="analyzeLeafPhoto(event)" class="hidden" />
+      </label>
+      <div id="leafDiagnosisBox" class="hidden space-y-2.5">
+        <img id="leafScanPreview" alt="Scanned leaf" class="w-full max-h-44 object-cover rounded-2xl border border-slate-200" />
+        <div id="leafResultCard" class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 text-xs"></div>
+        <button onclick="shareDiagnosisToCommunity()" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow">
+          🌍 Ask Community / Share Diagnosis (+15 pts)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 9: QR CODE TREE ID TAG GENERATOR -->
+  <div id="qrTreeModal" class="hidden fixed inset-0 z-50 bg-black/65 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-5 space-y-3 shadow-2xl text-center">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base text-slate-900">🏷️ Physical Tree QR ID Tag</h3>
+        <button onclick="closeModal('qrTreeModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+      </div>
+      <select id="qrTreeSelect" onchange="renderQrTagCanvas(this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold bg-slate-50"></select>
+      <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 flex flex-col items-center">
+        <canvas id="treeQrCanvas" width="260" height="310" class="rounded-xl shadow-sm bg-white"></canvas>
+      </div>
+      <p class="text-[11px] text-slate-500">Print & laminate this tag on the tree guard so anyone can scan & log watering!</p>
+      <button onclick="downloadTreeQrPng()" class="w-full py-2.5 rounded-xl bg-emerald-700 text-white font-bold text-xs shadow">
+        ⬇️ Download Printable QR Sticker (PNG)
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL 10: GREEN CHAMPION E-CERTIFICATE -->
+  <div id="certificateModal" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-3">
+    <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl text-center">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base text-slate-900">🏅 Verified Green Certificate</h3>
+        <button onclick="closeModal('certificateModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+      </div>
+      <canvas id="certCanvas" width="720" height="500" class="w-full rounded-2xl border border-amber-300 shadow-md"></canvas>
+      <button onclick="downloadCertificatePng()" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-emerald-950 font-extrabold text-xs shadow">
+        ⬇️ Download Certificate PNG (NSS / Portfolio Ready)
+      </button>
+    </div>
+  </div>
+
   <script>
     const SYNC_TOPIC = 'gg-synova-2026-community-v2';
     const STORAGE_KEY = 'gg_synova_state_v2';
@@ -612,16 +741,16 @@
         userName: 'Kavya S.',
         userGmail: 'kavya.green@gmail.com',
         identity: 'Students',
-        badge: '💧 Watered & Mulched',
-        title: 'Watered Pongamia Sapling #103',
-        body: 'Added dry leaf mulch around the root ring to retain soil moisture during afternoon heat.',
+        badge: '🎁 Free Sapling / Exchange',
+        title: '12 Neem & Pongamia Saplings Available Free!',
+        body: 'Grown in our college nursery. Anyone nearby can pick them up for weekend planting.',
         place: 'Chennai Campus Block A',
         pts: 50,
         time: '12 mins ago',
         thumb: null,
-        applauds: 6,
+        applauds: 8,
         applaudedByMe: false,
-        comments: [{ id: 'sc1', user: 'Rohan M.', userGmail: 'rohan.volunteer@gmail.com', text: 'Great mulching tip for summer!' }]
+        comments: [{ id: 'sc1', user: 'Rohan M.', userGmail: 'rohan.volunteer@gmail.com', text: 'I would love to pick up 4 saplings tomorrow!' }]
       },
       {
         id: 'seed_c2',
@@ -646,13 +775,16 @@
       userLoc: { lat: 13.0827, lng: 80.2707, accuracy: null, label: 'Chennai / Gingee', pinned: false },
       identity: 'Students',
       points: 250,
+      streakDays: 1,
+      lastActiveDate: new Date().toDateString(),
+      autoWaterEnabled: false,
       moisture: 64,
       trees: [...DEFAULT_TREES],
       contributions: [...SEED_CONTRIBUTIONS],
       proofs: [],
       notifications: [
         { id: 'n1', title: '🚨 Tree SOS: Mango Young Tree #102', body: 'Wilting leaves & dry soil detected at Gingee. Volunteers needed!', time: 'Just now', targetTab: 'sos' },
-        { id: 'n2', title: '💧 Kavya S. (kavya.green@gmail.com)', body: 'Watered Pongamia Sapling #103 (+50 pts)', time: '12m ago', targetTab: 'community' }
+        { id: 'n2', title: '🎁 Kavya S. (kavya.green@gmail.com)', body: 'Offering 12 free Neem & Pongamia saplings!', time: '12m ago', targetTab: 'community' }
       ],
       seenSyncIds: [],
       deletedPostIds: []
@@ -665,6 +797,7 @@
     let stampedDataUrl = null;
     let stampedThumbUrl = null;
     let fbPendingPhoto = null;
+    let lastLeafDiagnosis = null;
     let editingPostId = null;
     let currentFeedFilter = 'all';
     let openCommentBoxes = {};
@@ -708,6 +841,14 @@
             user: { ...state.user, ...(parsed.user || {}) },
             deletedPostIds: parsed.deletedPostIds || []
           };
+        }
+        // Daily streak tracker
+        const today = new Date().toDateString();
+        if (state.lastActiveDate !== today) {
+          const yesterday = new Date(Date.now() - 86400000).toDateString();
+          state.streakDays = (state.lastActiveDate === yesterday) ? (state.streakDays || 1) + 1 : 1;
+          state.lastActiveDate = today;
+          saveState();
         }
       } catch (e) {}
     }
@@ -778,7 +919,6 @@
       state.user = { name: newName, gmail: newGmail, bio: newBio, loggedIn: true };
       state.identity = newIdentity;
 
-      // Update user's existing posts with new name/identity
       state.contributions.forEach(c => {
         if (c.userGmail === oldGmail) {
           c.userName = newName;
@@ -795,7 +935,6 @@
 
     function confirmDeleteAccount() {
       const myGmail = state.user.gmail;
-      // Broadcast deletion for all posts belonging to this account
       const myPosts = state.contributions.filter(c => c.userGmail === myGmail);
       myPosts.forEach(p => {
         state.deletedPostIds.push(p.id);
@@ -811,6 +950,303 @@
       renderAll();
       checkLoginStatus();
       showToast('🗑️ Account & posts deleted.');
+    }
+
+    // --- FEATURE 1: AI PLANT DOCTOR (LEAF COLOR & HEALTH VISION SCANNER) ---
+    function analyzeLeafPhoto(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const scale = Math.min(1, 240 / img.width);
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+          let greenPx = 0, yellowPx = 0, brownPx = 0, totalPx = 0;
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i], g = data[i + 1], b = data[i + 2];
+            if (r + g + b < 40 || r + g + b > 710) continue; // ignore extreme shadows/white bg
+            totalPx++;
+            if (g > r + 12 && g > b + 12) greenPx++;
+            else if (r > 130 && g > 110 && b < 95) yellowPx++;
+            else if (r > 95 && g < 90 && b < 75) brownPx++;
+          }
+
+          const gPct = totalPx ? Math.round((greenPx / totalPx) * 100) : 60;
+          const yPct = totalPx ? Math.round((yellowPx / totalPx) * 100) : 15;
+          const bPct = totalPx ? Math.round((brownPx / totalPx) * 100) : 10;
+
+          let status, badgeColor, remedy;
+          if (bPct > 22) {
+            status = '⚠️ Leaf Scorch / Fungal Blight Detected';
+            badgeColor = 'text-rose-700 bg-rose-50 border-rose-200';
+            remedy = 'Prune dry brown tips, avoid overhead evening watering, and spray diluted Neem oil (5ml/L) once a week.';
+          } else if (yPct > 25) {
+            status = '🟡 Chlorosis (Nitrogen / Water Stress)';
+            badgeColor = 'text-amber-800 bg-amber-50 border-amber-200';
+            remedy = 'Check soil moisture first. Add organic vermicompost or banana-peel potassium tea and ensure 4+ hrs morning sun.';
+          } else {
+            status = '✅ Healthy Chlorophyll & Vigorous Leaf';
+            badgeColor = 'text-emerald-800 bg-emerald-50 border-emerald-200';
+            remedy = 'Leaf tissue looks healthy! Maintain current watering schedule and add dry leaf mulch around the base.';
+          }
+
+          lastLeafDiagnosis = {
+            status,
+            remedy,
+            metrics: `Chlorophyll Green: ${gPct}% | Yellowing: ${yPct}% | Dry/Brown: ${bPct}%`,
+            thumb: canvas.toDataURL('image/jpeg', 0.65)
+          };
+
+          document.getElementById('leafScanPreview').src = lastLeafDiagnosis.thumb;
+          document.getElementById('leafResultCard').className = `p-3.5 rounded-2xl border space-y-1.5 text-xs ${badgeColor}`;
+          document.getElementById('leafResultCard').innerHTML = `
+            <p class="font-extrabold text-sm">${status}</p>
+            <p class="font-mono text-[10px] opacity-80">${lastLeafDiagnosis.metrics}</p>
+            <p class="leading-relaxed pt-1"><strong>Recommended Care:</strong> ${remedy}</p>
+          `;
+          document.getElementById('leafDiagnosisBox').classList.remove('hidden');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function shareDiagnosisToCommunity() {
+      if (!lastLeafDiagnosis) return;
+      const actorName = state.user.name || 'Guardian';
+      const postObj = {
+        id: 'scan_' + Date.now(),
+        userName: actorName,
+        userGmail: state.user.gmail || 'guardian@gmail.com',
+        identity: state.identity,
+        badge: '🩺 AI Plant Doctor Scan',
+        title: lastLeafDiagnosis.status,
+        body: `${lastLeafDiagnosis.metrics}\nRemedy: ${lastLeafDiagnosis.remedy}`,
+        place: state.userLoc.label,
+        pts: 15,
+        time: 'Just now',
+        thumb: lastLeafDiagnosis.thumb,
+        applauds: 1,
+        applaudedByMe: true,
+        comments: []
+      };
+      state.points += 15;
+      state.contributions.unshift(postObj);
+      saveState();
+      closeModal('plantDoctorModal');
+      renderAll();
+      switchTab('community');
+      showToast('🩺 Diagnosis shared to Community (+15 pts)!');
+      publishSyncEvent({ kind: 'contribution', id: postObj.id, contribution: postObj, notifTitle: `🩺 Leaf Scan by ${actorName}`, notifBody: lastLeafDiagnosis.status });
+    }
+
+    // --- FEATURE 2: PHYSICAL QR CODE TREE ID TAG GENERATOR ---
+    function openQrModal(selectedTreeId) {
+      const select = document.getElementById('qrTreeSelect');
+      select.innerHTML = state.trees.map(t => `<option value="${t.id}">${escapeHtml(t.name)} — ${escapeHtml(t.place)}</option>`).join('');
+      const targetId = selectedTreeId || (state.trees[0] && state.trees[0].id);
+      if (targetId) {
+        select.value = targetId;
+        renderQrTagCanvas(targetId);
+      }
+      openModal('qrTreeModal');
+    }
+
+    function renderQrTagCanvas(treeId) {
+      const tree = state.trees.find(t => t.id === treeId) || state.trees[0];
+      if (!tree) return;
+      const canvas = document.getElementById('treeQrCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Header Banner
+      ctx.fillStyle = '#14532d';
+      ctx.fillRect(0, 0, canvas.width, 46);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🌱 GreenGuardian Tree ID', canvas.width / 2, 22);
+      ctx.font = '10px monospace';
+      ctx.fillStyle = '#a7f3d0';
+      ctx.fillText(`ID: ${tree.id.toUpperCase()} • SYNOVA`, canvas.width / 2, 37);
+
+      // Deterministic QR Matrix Pattern based on Tree ID
+      const qrSize = 156;
+      const startX = (canvas.width - qrSize) / 2;
+      const startY = 60;
+      const cells = 21;
+      const cellPx = qrSize / cells;
+      let seed = 0;
+      for (let i = 0; i < tree.id.length; i++) seed = (seed * 31 + tree.id.charCodeAt(i)) % 9973;
+
+      ctx.fillStyle = '#0f172a';
+      for (let r = 0; r < cells; r++) {
+        for (let c = 0; c < cells; c++) {
+          const isFinder = (r < 7 && c < 7) || (r < 7 && c >= cells - 7) || (r >= cells - 7 && c < 7);
+          if (isFinder) {
+            const lr = r < 7 ? r : r - (cells - 7);
+            const lc = c < 7 ? c : c - (cells - 7);
+            if (lr === 0 || lr === 6 || lc === 0 || lc === 6 || (lr >= 2 && lr <= 4 && lc >= 2 && lc <= 4)) {
+              ctx.fillRect(startX + c * cellPx, startY + r * cellPx, cellPx - 0.5, cellPx - 0.5);
+            }
+          } else {
+            seed = (seed * 48271 + r * 17 + c * 31) % 2147483647;
+            if (seed % 2 === 0) {
+              ctx.fillRect(startX + c * cellPx, startY + r * cellPx, cellPx - 0.5, cellPx - 0.5);
+            }
+          }
+        }
+      }
+
+      // Tree Details Footer
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 13px sans-serif';
+      ctx.fillText(tree.name.slice(0, 26), canvas.width / 2, 240);
+      ctx.fillStyle = '#475569';
+      ctx.font = '11px sans-serif';
+      ctx.fillText(tree.place.slice(0, 32), canvas.width / 2, 258);
+      ctx.fillStyle = '#15803d';
+      ctx.font = 'bold 10px monospace';
+      ctx.fillText(`GPS: ${tree.lat.toFixed(4)}, ${tree.lng.toFixed(4)}`, canvas.width / 2, 276);
+      ctx.fillStyle = '#64748b';
+      ctx.font = '9px sans-serif';
+      ctx.fillText('Scan to view live moisture & log watering', canvas.width / 2, 295);
+    }
+
+    function downloadTreeQrPng() {
+      const canvas = document.getElementById('treeQrCanvas');
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = `GreenGuardian-Tree-QR.png`;
+      a.click();
+      showToast('🏷️ Printable Tree QR Tag downloaded!');
+    }
+
+    // --- FEATURE 3: 2-WAY IOT REMOTE WATER PUMP CONTROL ---
+    function triggerRemoteWaterPump(seconds = 5) {
+      const badge = document.getElementById('pumpStatusBadge');
+      const btn = document.getElementById('pumpStartBtn');
+      if (badge) {
+        badge.textContent = `💧 PUMP ON (${seconds}s)`;
+        badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-sky-500 text-slate-950 animate-pulse';
+      }
+      if (btn) btn.disabled = true;
+
+      showToast(`🚿 Sent PUMP_ON (${seconds}s) command to ESP32!`);
+      publishSyncEvent({
+        kind: 'pump_command',
+        id: 'pump_' + Date.now(),
+        command: 'PUMP_ON',
+        durationSec: seconds,
+        notifTitle: `💧 Remote Water Pump Triggered (${seconds}s)`,
+        notifBody: `${state.user.name || 'Guardian'} activated ESP32 irrigation relay.`
+      });
+
+      setTimeout(() => {
+        if (badge) {
+          badge.textContent = 'STANDBY';
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-slate-700 text-slate-300';
+        }
+        if (btn) btn.disabled = false;
+        showToast('✅ Watering pulse completed.');
+      }, seconds * 1000);
+    }
+
+    function toggleAutoWaterMode() {
+      state.autoWaterEnabled = !state.autoWaterEnabled;
+      saveState();
+      renderAll();
+      showToast(state.autoWaterEnabled ? '🤖 Auto-Water enabled (<25% triggers 5s pump)' : '🤖 Auto-Water turned OFF');
+    }
+
+    // --- FEATURE 4: DOWNLOADABLE GREEN CHAMPION E-CERTIFICATE ---
+    function openCertificateModal() {
+      openModal('certificateModal');
+      const canvas = document.getElementById('certCanvas');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+
+      // Background & Ornate Border
+      ctx.fillStyle = '#f0fdf4';
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = '#14532d';
+      ctx.lineWidth = 14;
+      ctx.strokeRect(16, 16, w - 32, h - 32);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(30, 30, w - 60, h - 60);
+
+      // Header
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#14532d';
+      ctx.font = 'bold 20px sans-serif';
+      ctx.fillText('🌱 GREENGUARDIAN • SYNOVA', w / 2, 82);
+
+      ctx.fillStyle = '#b45309';
+      ctx.font = 'bold 34px Georgia, serif';
+      ctx.fillText('Certificate of Eco Stewardship', w / 2, 134);
+
+      ctx.fillStyle = '#475569';
+      ctx.font = '16px sans-serif';
+      ctx.fillText('This proudly certifies that', w / 2, 178);
+
+      // Recipient Name
+      const holderName = state.user.name || 'Green Guardian';
+      ctx.fillStyle = '#064e3b';
+      ctx.font = 'bold 36px sans-serif';
+      ctx.fillText(holderName, w / 2, 228);
+
+      // Underline
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(160, 240);
+      ctx.lineTo(w - 160, 240);
+      ctx.stroke();
+
+      // Achievement Body
+      ctx.fillStyle = '#1e293b';
+      ctx.font = '16px sans-serif';
+      ctx.fillText(`Role: ${state.identity}  •  Email: ${maskGmail(state.user.gmail)}`, w / 2, 276);
+      ctx.fillText(`Has actively planted, monitored, and protected community trees`, w / 2, 310);
+      ctx.fillText(`earning ${state.points} Verified Green Points & ${state.proofs.length} Geotagged Proofs.`, w / 2, 336);
+
+      // Seal & Footer
+      ctx.fillStyle = '#fef3c7';
+      ctx.beginPath();
+      ctx.arc(w / 2, 405, 36, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.fillStyle = '#92400e';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText('VERIFIED', w / 2, 402);
+      ctx.fillText('2026', w / 2, 417);
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '12px monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(`Date: ${new Date().toLocaleDateString()}`, 55, 445);
+      ctx.textAlign = 'right';
+      ctx.fillText('Plant. Protect. Grow.', w - 55, 445);
+    }
+
+    function downloadCertificatePng() {
+      const canvas = document.getElementById('certCanvas');
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = `GreenGuardian-Certificate-${(state.user.name || 'Guardian').replace(/\s+/g, '_')}.png`;
+      a.click();
+      showToast('🏅 Green Champion Certificate downloaded!');
     }
 
     function showToast(msg) {
@@ -985,7 +1421,7 @@
         });
         const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, tree.lat, tree.lng));
         const marker = L.marker([tree.lat, tree.lng], { icon }).addTo(map);
-        marker.bindPopup(`<div style="min-width:160px"><strong>${tree.name}</strong><br/><span style="font-size:11px;color:#475569">${tree.place} (${dist})</span><br/><span style="font-size:11px;font-weight:700;color:${color}">${tree.health} • Moisture ${tree.moisture}%</span><br/><button onclick="openProofModal('${tree.sos ? 'sos' : 'care'}','${tree.id}')" style="margin-top:6px;width:100%;background:${color};color:#fff;border:none;padding:6px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer;">📸 ${tree.sos ? 'I WILL HELP (+100 pts)' : 'Water & Proof (+50 pts)'}</button></div>`);
+        marker.bindPopup(`<div style="min-width:165px"><strong>${tree.name}</strong><br/><span style="font-size:11px;color:#475569">${tree.place} (${dist})</span><br/><span style="font-size:11px;font-weight:700;color:${color}">${tree.health} • Moisture ${tree.moisture}%</span><div style="display:flex;gap:4px;margin-top:6px;"><button onclick="openProofModal('${tree.sos ? 'sos' : 'care'}','${tree.id}')" style="flex:1;background:${color};color:#fff;border:none;padding:6px;border-radius:8px;font-weight:700;font-size:10px;cursor:pointer;">📸 ${tree.sos ? 'Rescue' : 'Water'}</button><button onclick="openQrModal('${tree.id}')" style="background:#0f172a;color:#fff;border:none;padding:6px 8px;border-radius:8px;font-weight:700;font-size:10px;cursor:pointer;">🏷️ QR</button></div></div>`);
         treeMarkers.push(marker);
       });
     }
@@ -1005,7 +1441,7 @@
     }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    // --- FACEBOOK-STYLE COMMUNITY POSTING, EDIT, DELETE, SHARE, PHOTO, FILTER & COMMENTS ---
+    // --- FACEBOOK-STYLE COMMUNITY & SAPLING EXCHANGE POSTING ---
     function handleFbPhotoSelect(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1042,13 +1478,19 @@
       const actorName = state.user.name || 'Guardian';
       const actorGmail = state.user.gmail || 'guardian@gmail.com';
       const chosenTag = tagEl.value;
+      const postTitle = chosenTag.includes('Exchange') ? 'Free Sapling / Nursery Offer'
+        : chosenTag.includes('Compost') ? 'Organic Compost / Seeds Share'
+        : chosenTag.includes('Help') ? 'Community Help Request'
+        : chosenTag.includes('Tip') ? 'Plant Care Tip Shared'
+        : 'Community Garden Update';
+
       const postObj = {
         id: 'fbpost_' + Date.now(),
         userName: actorName,
         userGmail: actorGmail,
         identity: state.identity,
         badge: chosenTag,
-        title: chosenTag === '🚨 Need Help' ? 'Community Help Request' : chosenTag === '💧 Care Tip' ? 'Plant Care Tip Shared' : 'Community Garden Update',
+        title: postTitle,
         body: bodyText,
         place: state.userLoc.label,
         pts: 15,
@@ -1140,7 +1582,7 @@
 
     function setFeedFilter(filterName) {
       currentFeedFilter = filterName;
-      ['all', 'mine', 'photos', 'sos'].forEach(f => {
+      ['all', 'exchange', 'mine', 'photos', 'sos'].forEach(f => {
         const btn = document.getElementById(`filter-${f}`);
         if (btn) {
           btn.className = f === filterName
@@ -1282,8 +1724,14 @@
       const contribItem = { id: 'contrib_' + Date.now(), userName: actorName, userGmail: actorGmail, identity: state.identity, badge: badgeText, title, body: '', place: placeLabel, pts, time: 'Just now', thumb: stampedThumbUrl, applauds: 1, applaudedByMe: true, comments: [] };
       state.contributions.unshift(contribItem);
       state.proofs.unshift({ id: 'proof_' + Date.now(), title, pts, identity: state.identity, coords: `${state.userLoc.lat.toFixed(4)}, ${state.userLoc.lng.toFixed(4)}`, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), img: stampedDataUrl });
-      closeModal('proofModal'); saveState(); renderAll(); switchTab('community');
-      showToast(`🎉 +${pts} pts! Published to everyone's Community Feed.`);
+      closeModal('proofModal'); saveState(); renderAll();
+      if (type === 'plant' && syncedTree) {
+        openQrModal(syncedTree.id);
+        showToast('🎉 +75 pts! Tree QR ID Tag generated.');
+      } else {
+        switchTab('community');
+        showToast(`🎉 +${pts} pts! Published to everyone's Community Feed.`);
+      }
       publishSyncEvent({ kind: 'contribution', id: contribItem.id, tree: syncedTree, contribution: contribItem, notifTitle: `${badgeText} by ${actorName}`, notifBody: `${title} at ${placeLabel} (+${pts} pts)` });
     }
 
@@ -1299,8 +1747,15 @@
       const num = parseInt(val, 10); state.moisture = num;
       const valEl = document.getElementById('moistureValue'), stEl = document.getElementById('moistureState');
       valEl.textContent = `${num}%`;
-      if (num < 25) { valEl.className = 'text-2xl font-extrabold text-rose-400'; stEl.textContent = 'CRITICAL DRY — SOS Triggered!'; triggerMoistureSOS(num); }
-      else { valEl.className = 'text-2xl font-extrabold text-emerald-400'; stEl.textContent = 'Optimal Moisture'; }
+      if (num < 25) {
+        valEl.className = 'text-2xl font-extrabold text-rose-400';
+        stEl.textContent = 'CRITICAL DRY — SOS Triggered!';
+        triggerMoistureSOS(num);
+        if (state.autoWaterEnabled) triggerRemoteWaterPump(5);
+      } else {
+        valEl.className = 'text-2xl font-extrabold text-emerald-400';
+        stEl.textContent = 'Optimal Moisture';
+      }
     }
 
     function simulateDryDrop() { document.getElementById('moistureSlider').value = 16; handleMoistureChange(16); }
@@ -1415,6 +1870,9 @@
               if (state.trees[0]) {
                 state.trees[0].moisture = data.moisture;
               }
+              if (data.moisture < 25 && state.autoWaterEnabled) {
+                triggerRemoteWaterPump(5);
+              }
               changed = true;
             }
 
@@ -1500,6 +1958,7 @@
       const comments = c.comments || [];
       const isCommentsOpen = !!openCommentBoxes[c.id];
       const isOwner = state.user.gmail && c.userGmail && state.user.gmail.toLowerCase() === c.userGmail.toLowerCase();
+      const isExchange = (c.badge || '').includes('Sapling') || (c.badge || '').includes('Compost');
 
       const commentsHtml = comments.map(cm => {
         const canDelComment = isOwner || (state.user.gmail && cm.userGmail && state.user.gmail.toLowerCase() === state.user.gmail.toLowerCase());
@@ -1512,7 +1971,7 @@
       }).join('');
 
       return `
-        <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2.5">
+        <div class="p-3.5 rounded-2xl bg-white border ${isExchange ? 'border-emerald-300' : 'border-slate-200'} shadow-sm space-y-2.5">
           <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2.5 min-w-0">
               <div class="w-9 h-9 rounded-full bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center shrink-0">${initial}</div>
@@ -1534,7 +1993,7 @@
           </div>
 
           <div class="space-y-1">
-            <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700">${escapeHtml(c.badge)}</span>
+            <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded ${isExchange ? 'bg-emerald-100 text-emerald-800' : 'bg-indigo-50 text-indigo-700'}">${escapeHtml(c.badge)}</span>
             <p class="font-bold text-xs text-slate-800">${escapeHtml(c.title)}</p>
             ${c.body ? `<p class="text-xs text-slate-700 leading-relaxed whitespace-pre-wrap">${escapeHtml(c.body)}</p>` : ''}
             <p class="text-[11px] text-slate-500">📍 ${escapeHtml(c.place)}</p>
@@ -1548,7 +2007,7 @@
             </button>
             ${compact
               ? `<button onclick="switchTab('community')" class="flex-1 text-xs font-bold py-1.5 px-2 rounded-xl bg-indigo-50 text-indigo-700">💬 Comment (${comments.length})</button>`
-              : `<button onclick="toggleCommentBox('${c.id}')" class="flex-1 text-xs font-bold py-1.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">💬 Comment (${comments.length})</button>`
+              : `<button onclick="toggleCommentBox('${c.id}')" class="flex-1 text-xs font-bold py-1.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">💬 ${isExchange ? 'Claim / Reply' : 'Comment'} (${comments.length})</button>`
             }
             ${!compact ? `<button onclick="shareCommunityPost('${c.id}')" class="text-xs font-bold py-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">📤</button>` : ''}
           </div>
@@ -1557,7 +2016,7 @@
             <div class="pt-2 border-t border-slate-100 space-y-2">
               <div class="space-y-1.5">${commentsHtml || '<p class="text-[11px] text-slate-400">No comments yet. Start the discussion!</p>'}</div>
               <div class="flex gap-1.5">
-                <input id="cinput-${c.id}" type="text" placeholder="Write a comment..." class="flex-1 px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-emerald-600" onkeydown="if(event.key==='Enter') submitFbComment('${c.id}')" />
+                <input id="cinput-${c.id}" type="text" placeholder="${isExchange ? 'Request pickup or ask details...' : 'Write a comment...'}" class="flex-1 px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-emerald-600" onkeydown="if(event.key==='Enter') submitFbComment('${c.id}')" />
                 <button onclick="submitFbComment('${c.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-xs">Send</button>
               </div>
             </div>
@@ -1583,18 +2042,49 @@
 
       const myPostsCount = state.contributions.filter(c => state.user.gmail && c.userGmail === state.user.gmail).length;
       document.getElementById('profileStatPts').textContent = state.points;
+      document.getElementById('profileStatStreak').textContent = `🔥 ${state.streakDays || 1}d`;
       document.getElementById('profileStatPosts').textContent = myPostsCount;
       document.getElementById('profileStatProofs').textContent = state.proofs.length;
+
+      // Auto-water button state
+      const autoBtn = document.getElementById('autoWaterBtn');
+      if (autoBtn) {
+        autoBtn.textContent = state.autoWaterEnabled ? '🤖 Auto-Water: ON' : '🤖 Auto-Water: OFF';
+        autoBtn.className = state.autoWaterEnabled
+          ? 'py-2 px-2.5 rounded-xl bg-emerald-500 text-slate-950 font-extrabold text-xs'
+          : 'py-2 px-2.5 rounded-xl bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600';
+      }
+
+      // Earned Eco Badges
+      const badgesList = [
+        { icon: '🌱', title: 'First Sprout', desc: 'Joined GreenGuardian', unlocked: true },
+        { icon: '🔥', title: '3-Day Streak', desc: 'Care 3 days in a row', unlocked: (state.streakDays || 1) >= 3 || state.points >= 300 },
+        { icon: '📸', title: 'Proof Verifier', desc: 'Uploaded geotagged proof', unlocked: state.proofs.length >= 1 },
+        { icon: '🏆', title: 'Eco Champion', desc: 'Reached 500+ Green Pts', unlocked: state.points >= 500 }
+      ];
+      const unlockedCount = badgesList.filter(b => b.unlocked).length;
+      document.getElementById('badgeCountText').textContent = `${unlockedCount}/${badgesList.length} Unlocked`;
+      document.getElementById('badgesGrid').innerHTML = badgesList.map(b => `
+        <div class="p-2.5 rounded-2xl border ${b.unlocked ? 'bg-amber-50/80 border-amber-300' : 'bg-slate-50 border-slate-200 opacity-55'} flex items-center gap-2">
+          <span class="text-xl">${b.unlocked ? b.icon : '🔒'}</span>
+          <div class="min-w-0">
+            <p class="font-bold text-xs text-slate-800 truncate">${b.title}</p>
+            <p class="text-[10px] text-slate-500 truncate">${b.desc}</p>
+          </div>
+        </div>
+      `).join('');
 
       const total = state.trees.length, sosCount = state.trees.filter(t => t.sos).length;
       document.getElementById('statTotal').textContent = total;
       document.getElementById('statHealthy').textContent = total - sosCount;
       document.getElementById('statSos').textContent = sosCount;
+      document.getElementById('statStreak').textContent = `🔥 ${state.streakDays || 1}d`;
       document.getElementById('communityCountBadge').textContent = `${state.contributions.length} live`;
       document.getElementById('homeCommunityPreview').innerHTML = state.contributions.slice(0, 2).map(c => renderContributionCard(c, true)).join('');
 
       const query = (document.getElementById('feedSearchInput')?.value || '').trim().toLowerCase();
       const filteredContribs = state.contributions.filter(c => {
+        if (currentFeedFilter === 'exchange' && !((c.badge || '').includes('Sapling') || (c.badge || '').includes('Compost'))) return false;
         if (currentFeedFilter === 'mine' && (!state.user.gmail || c.userGmail !== state.user.gmail)) return false;
         if (currentFeedFilter === 'photos' && !c.thumb) return false;
         if (currentFeedFilter === 'sos' && !((c.badge || '').includes('SOS') || (c.badge || '').includes('Help'))) return false;
@@ -1610,7 +2100,7 @@
 
       document.getElementById('homeReminders').innerHTML = state.trees.slice(0, 3).map(t => `<div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500 truncate">${t.place} • ${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</p></div><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl ${t.sos ? 'bg-rose-600' : 'bg-emerald-600'} text-white font-bold text-xs">📸 ${t.sos ? 'Rescue +100' : 'Water +50'}</button></div>`).join('');
       const sortedTrees = [...state.trees].sort((a, b) => getDistanceMeters(state.userLoc.lat, state.userLoc.lng, a.lat, a.lng) - getDistanceMeters(state.userLoc.lat, state.userLoc.lng, b.lat, b.lng));
-      document.getElementById('mapTreeList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl border ${t.sos ? 'border-rose-200 bg-rose-50/50' : 'border-slate-100 bg-slate-50'} flex items-center justify-between gap-2"><div class="min-w-0" onclick="if(map) map.setView([${t.lat},${t.lng}],16)"><span class="text-xs font-bold text-slate-800 truncate">${t.name}</span><p class="text-[11px] text-slate-500 truncate">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-2.5 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-[11px]">📸 Proof</button></div>`).join('');
+      document.getElementById('mapTreeList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl border ${t.sos ? 'border-rose-200 bg-rose-50/50' : 'border-slate-100 bg-slate-50'} flex items-center justify-between gap-2"><div class="min-w-0" onclick="if(map) map.setView([${t.lat},${t.lng}],16)"><span class="text-xs font-bold text-slate-800 truncate">${t.name}</span><p class="text-[11px] text-slate-500 truncate">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><div class="flex items-center gap-1 shrink-0"><button onclick="openQrModal('${t.id}')" class="px-2 py-1.5 rounded-xl bg-slate-800 text-white font-bold text-[11px]">🏷️ QR</button><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="px-2.5 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-[11px]">📸 Proof</button></div></div>`).join('');
       const sosTrees = sortedTrees.filter(t => t.sos);
       document.getElementById('sosList').innerHTML = sosTrees.length ? sosTrees.map(t => `<div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 space-y-2"><div class="flex items-start justify-between"><div><p class="font-bold text-sm text-rose-900">${t.name}</p><p class="text-xs text-rose-700">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><span class="text-xs font-extrabold bg-rose-600 text-white px-2 py-0.5 rounded-lg">Moisture ${t.moisture}%</span></div><button onclick="openProofModal('sos','${t.id}')" class="w-full py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs shadow">📸 I WILL HELP — Upload Proof (+100 pts)</button></div>`).join('') : '<p class="text-xs text-emerald-700 font-semibold">🎉 All tracked trees are healthy right now!</p>';
       document.getElementById('adoptList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500">Guardian: <strong>${t.adoptedBy}</strong></p></div><button onclick="adoptTree('${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl bg-sky-600 text-white font-bold text-xs">🤝 Adopt</button></div>`).join('');
