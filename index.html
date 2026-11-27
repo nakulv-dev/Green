@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta http-equiv="Permissions-Policy" content="geolocation=(self)" />
+  <meta http-equiv="Permissions-Policy" content="geolocation=(self), camera=(self)" />
   <meta name="theme-color" content="#14532d" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -43,7 +43,7 @@
       <div class="text-center space-y-1">
         <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-3xl flex items-center justify-center mx-auto shadow-sm">🌱</div>
         <h2 class="font-extrabold text-lg text-emerald-950">Welcome to GreenGuardian</h2>
-        <p class="text-xs text-slate-500">Sign in with your Gmail so your tree care, community posts, QR tags & certificates are credited to you.</p>
+        <p class="text-xs text-slate-500">Sign in with your Gmail so your live camera proofs, tree care & 5,000-pt E-Certificate are credited to you.</p>
       </div>
       <div class="space-y-2.5">
         <div>
@@ -115,8 +115,8 @@
 
   <!-- TAB 1: HOME -->
   <main id="tab-home" class="p-4 space-y-4">
-    <section class="rounded-2xl bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-700 text-white p-4 shadow-md">
-      <div class="flex items-center justify-between mb-3">
+    <section class="rounded-2xl bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-700 text-white p-4 shadow-md space-y-3">
+      <div class="flex items-center justify-between">
         <div class="min-w-0 pr-2">
           <p id="homeIdentity" class="text-xs font-bold text-emerald-200">🎓 Students</p>
           <p id="homeGmailBadge" class="text-xs font-medium text-white/90 truncate mt-0.5">guest@gmail.com</p>
@@ -126,7 +126,19 @@
           <p class="text-xl font-extrabold text-amber-300"><span id="homePoints">250</span> pts</p>
         </div>
       </div>
-      <div class="grid grid-cols-4 gap-1.5 pt-2 border-t border-white/15 text-center">
+
+      <!-- 5,000 Pts E-Certificate Progress Bar -->
+      <div class="bg-black/20 rounded-xl p-2.5 space-y-1.5">
+        <div class="flex items-center justify-between text-[11px]">
+          <span class="font-bold text-amber-200">🏅 E-Certificate Goal (5,000 pts)</span>
+          <span id="homeCertProgressText" class="font-bold text-white">250 / 5,000 pts</span>
+        </div>
+        <div class="w-full h-2 rounded-full bg-white/20 overflow-hidden">
+          <div id="homeCertProgressBar" class="h-full bg-amber-400 rounded-full transition-all duration-300" style="width: 5%"></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-4 gap-1.5 pt-1 text-center">
         <div class="bg-white/10 rounded-xl p-2">
           <p id="statTotal" class="text-base font-extrabold">5</p>
           <p class="text-[10px] text-emerald-100">Trees</p>
@@ -161,12 +173,12 @@
       <button onclick="switchTab('sos')" class="p-3.5 rounded-2xl bg-rose-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🚨</span>
         <p class="font-bold text-sm mt-1.5">Tree SOS & Pump</p>
-        <p class="text-[11px] text-rose-100">IoT Sensor & Auto-Water</p>
+        <p class="text-[11px] text-rose-100">Live Camera Rescue & IoT</p>
       </button>
       <button onclick="openModal('plantDoctorModal')" class="p-3.5 rounded-2xl bg-teal-600 text-white text-left shadow-sm active:scale-95 transition">
         <span class="text-2xl">🩺</span>
         <p class="font-bold text-sm mt-1.5">AI Plant Doctor</p>
-        <p class="text-[11px] text-teal-100">Scan leaf health & cure</p>
+        <p class="text-[11px] text-teal-100">Live leaf scan & cure</p>
       </button>
     </section>
 
@@ -176,9 +188,9 @@
         <span class="text-lg">🌱</span>
         <p class="font-bold text-[11px] text-slate-800 mt-0.5">+ Plant Tree</p>
       </button>
-      <button onclick="openCertificateModal()" class="p-2.5 rounded-2xl bg-white border border-amber-200 text-center shadow-sm active:scale-95">
-        <span class="text-lg">🏅</span>
-        <p class="font-bold text-[11px] text-slate-800 mt-0.5">E-Certificate</p>
+      <button onclick="handleCertificateAccess()" id="homeCertBtn" class="p-2.5 rounded-2xl bg-white border border-amber-200 text-center shadow-sm active:scale-95">
+        <span class="text-lg">🔒</span>
+        <p class="font-bold text-[11px] text-slate-800 mt-0.5">5k Certificate</p>
       </button>
       <button onclick="openQrModal(state.trees[0]?.id)" class="p-2.5 rounded-2xl bg-white border border-sky-200 text-center shadow-sm active:scale-95">
         <span class="text-lg">🏷️</span>
@@ -197,7 +209,7 @@
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm">
       <div class="flex items-center justify-between mb-3">
         <h2 class="font-bold text-sm text-slate-800">💧 Today's Care Reminders</h2>
-        <span class="text-[11px] text-emerald-700 font-semibold">Photo Proof = +50 pts</span>
+        <span class="text-[11px] text-emerald-700 font-semibold">Live Camera = +50 pts</span>
       </div>
       <div id="homeReminders" class="space-y-2.5"></div>
     </section>
@@ -246,17 +258,18 @@
         <textarea id="fbPostText" rows="2" placeholder="Share a garden update, care tip, or offer free saplings/compost nearby..." class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:border-emerald-600 focus:bg-white resize-none"></textarea>
       </div>
 
-      <!-- Optional Photo Preview -->
+      <!-- Optional Live Photo Preview -->
       <div id="fbPhotoPreviewBox" class="hidden relative">
-        <img id="fbPhotoPreviewImg" alt="Post photo preview" class="w-full max-h-48 object-cover rounded-xl border border-slate-200" />
+        <img id="fbPhotoPreviewImg" alt="Live post photo preview" class="w-full max-h-48 object-cover rounded-xl border border-slate-200" />
+        <span class="absolute bottom-2 left-2 text-[10px] font-bold bg-emerald-900/90 text-emerald-200 px-2 py-0.5 rounded-full">📷 LIVE CAMERA CAPTURED</span>
         <button type="button" onclick="clearFbPhoto()" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 text-white text-xs font-bold">✕</button>
       </div>
 
       <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
         <div class="flex items-center gap-1.5">
           <label class="px-2.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[11px] cursor-pointer flex items-center gap-1">
-            <span>📷</span> Photo
-            <input id="fbPostPhotoInput" type="file" accept="image/*" onchange="handleFbPhotoSelect(event)" class="hidden" />
+            <span>📷</span> Live Photo
+            <input id="fbPostPhotoInput" type="file" accept="image/*" capture="environment" onchange="handleFbPhotoSelect(event)" class="hidden" />
           </label>
           <select id="fbPostTag" class="px-2 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-[11px] focus:outline-none">
             <option value="🌿 Plant Update">🌿 Update</option>
@@ -314,18 +327,18 @@
         <button type="button" onclick="requestLiveGPS(true)" class="px-2.5 py-1.5 rounded-lg bg-emerald-700 text-white font-semibold">Refresh GPS</button>
       </div>
       <button onclick="startPlantProof()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow">
-        📸 Capture Photo Proof & Generate QR (+75 pts)
+        📸 Open Live Camera & Publish (+75 pts)
       </button>
     </div>
 
     <!-- AI Plant Doctor Quick Card -->
     <div class="bg-teal-900 text-white rounded-2xl p-4 shadow-sm flex items-center justify-between gap-3">
       <div>
-        <p class="text-[10px] font-bold uppercase text-teal-300">Leaf Health Scanner</p>
+        <p class="text-[10px] font-bold uppercase text-teal-300">Live Leaf Health Scanner</p>
         <h3 class="font-bold text-sm mt-0.5">🩺 AI Plant Doctor</h3>
-        <p class="text-[11px] text-teal-100 mt-0.5">Scan yellow/spotted leaves for instant organic treatment.</p>
+        <p class="text-[11px] text-teal-100 mt-0.5">Capture live leaf photo for instant organic treatment.</p>
       </div>
-      <button onclick="openModal('plantDoctorModal')" class="shrink-0 px-3.5 py-2.5 rounded-xl bg-teal-400 text-teal-950 font-extrabold text-xs shadow">Scan Leaf</button>
+      <button onclick="openModal('plantDoctorModal')" class="shrink-0 px-3.5 py-2.5 rounded-xl bg-teal-400 text-teal-950 font-extrabold text-xs shadow">Scan Live</button>
     </div>
   </main>
 
@@ -371,18 +384,21 @@
     <section class="bg-white rounded-2xl p-4 border border-rose-100 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-sm text-rose-700">🚨 Active Tree SOS Alerts</h3>
-        <span class="text-[11px] font-bold bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full">+100 pts / rescue</span>
+        <span class="text-[11px] font-bold bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full">Live Camera = +100 pts</span>
       </div>
       <div id="sosList" class="space-y-3"></div>
     </section>
 
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
-      <h3 class="font-bold text-sm text-slate-800">🤝 Adopt & Care for Community Trees</h3>
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-sm text-slate-800">🤝 Adopt & Care for Community Trees</h3>
+        <span class="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full">Live Photo = +25 pts</span>
+      </div>
       <div id="adoptList" class="space-y-2.5"></div>
     </section>
   </main>
 
-  <!-- TAB 6: GMAIL PROFILE, BADGES, E-CERTIFICATE, EDIT & ACCOUNT DELETE -->
+  <!-- TAB 6: GMAIL PROFILE, BADGES, 5000-PT E-CERTIFICATE, EDIT & ACCOUNT DELETE -->
   <main id="tab-identity" class="hidden p-4 space-y-4">
     <!-- User Profile Card -->
     <section class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm space-y-3">
@@ -413,12 +429,23 @@
         </div>
         <div class="bg-sky-50 rounded-xl p-2">
           <p id="profileStatProofs" class="font-extrabold text-sm text-sky-800">0</p>
-          <p class="text-[10px] text-sky-700">Proofs</p>
+          <p class="text-[10px] text-sky-700">Live Proofs</p>
         </div>
       </div>
-      <button onclick="openCertificateModal()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-emerald-950 font-extrabold text-xs shadow-sm flex items-center justify-center gap-1.5">
-        🏅 View & Download Green Champion E-Certificate
-      </button>
+
+      <!-- 5,000 Pts Certificate Gate -->
+      <div class="p-3 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-bold text-amber-950">🏅 Verified E-Certificate Unlock</span>
+          <span id="profileCertStatusLabel" class="font-extrabold text-amber-800">250 / 5,000 pts</span>
+        </div>
+        <div class="w-full h-2 rounded-full bg-amber-200 overflow-hidden">
+          <div id="profileCertProgressBar" class="h-full bg-emerald-600 rounded-full transition-all duration-300" style="width: 5%"></div>
+        </div>
+        <button id="profileCertActionBtn" onclick="handleCertificateAccess()" class="w-full py-2.5 rounded-xl bg-slate-300 text-slate-700 font-extrabold text-xs shadow-sm flex items-center justify-center gap-1.5">
+          🔒 Earn 4,750 More Pts to Unlock Certificate
+        </button>
+      </div>
     </section>
 
     <!-- Earned Badges Section -->
@@ -442,7 +469,7 @@
 
     <section class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-sm text-slate-800">📸 My Geotagged Proof Log</h3>
+        <h3 class="font-bold text-sm text-slate-800">📸 My Live Camera Verified Proof Log</h3>
         <span id="proofCountBadge" class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">0 verified</span>
       </div>
       <div id="proofGallery" class="space-y-3"></div>
@@ -472,26 +499,57 @@
     <div id="toastInner" class="bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-lg border border-white/10 text-center"></div>
   </div>
 
-  <!-- MODAL 1: PHOTO PROOF UPLOAD -->
-  <div id="proofModal" class="hidden fixed inset-0 z-40 bg-black/60 flex items-end sm:items-center justify-center p-3">
-    <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl max-h-[90vh] overflow-y-auto">
+  <!-- MODAL 1: STRICT LIVE CAMERA PHOTO PROOF UPLOAD -->
+  <div id="proofModal" class="hidden fixed inset-0 z-40 bg-black/75 flex items-end sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between">
         <div>
-          <span id="proofBadge" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">+50 Green Points</span>
-          <h3 id="proofTitle" class="font-bold text-base text-slate-900 mt-1">Upload Care Proof</h3>
+          <span id="proofBadge" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">+50 Verified Points</span>
+          <h3 id="proofTitle" class="font-bold text-base text-slate-900 mt-1">Live Camera Verification</h3>
         </div>
-        <button onclick="closeModal('proofModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+        <button onclick="closeProofModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
-      <label class="block w-full p-4 border-2 border-dashed border-emerald-300 rounded-2xl bg-emerald-50/60 text-center cursor-pointer hover:bg-emerald-50">
-        <span class="text-2xl block mb-1">📷</span>
-        <span class="text-xs font-bold text-emerald-800">Tap to Open Camera or Choose Photo</span>
-        <input id="proofFileInput" type="file" accept="image/*" capture="environment" onchange="processProofImage(event)" class="hidden" />
-      </label>
+
+      <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-900 font-medium">
+        🔒 <strong>Live Photo Only:</strong> Gallery uploads are disabled. Capture a real-time camera photo on-site with active GPS.
+      </div>
+
+      <!-- Direct Live WebRTC Camera Viewfinder -->
+      <div id="liveCamStage" class="space-y-2">
+        <div class="relative rounded-2xl overflow-hidden bg-slate-950 aspect-[4/3] flex items-center justify-center border-2 border-emerald-500">
+          <video id="liveCameraVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
+          <span class="absolute top-2.5 left-2.5 text-[10px] font-extrabold bg-rose-600 text-white px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow">
+            <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span> LIVE CAMERA
+          </span>
+          <span id="liveCamGpsOverlay" class="absolute bottom-2 left-2 right-2 text-[10px] font-mono bg-black/70 text-emerald-300 px-2 py-1 rounded-lg truncate">
+            GPS: Locking...
+          </span>
+        </div>
+        <button type="button" onclick="snapLiveCameraPhoto()" class="w-full py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-sm shadow flex items-center justify-center gap-2">
+          📸 Capture Live Verified Photo
+        </button>
+      </div>
+
+      <!-- Fallback Native Camera-Only Input (if WebRTC blocked in WebView) -->
+      <div id="nativeCamFallback" class="hidden space-y-2">
+        <label class="block w-full p-4 border-2 border-dashed border-emerald-400 rounded-2xl bg-emerald-50 text-center cursor-pointer">
+          <span class="text-2xl block mb-1">📷</span>
+          <span class="text-xs font-bold text-emerald-900">Tap to Open Device Live Camera</span>
+          <span class="block text-[10px] text-emerald-700 mt-0.5">(Must be captured live within 45 seconds)</span>
+          <input id="proofFileInput" type="file" accept="image/*" capture="environment" onchange="processProofImage(event)" class="hidden" />
+        </label>
+      </div>
+
+      <!-- Stamped Live Proof Preview -->
       <div id="proofPreviewWrap" class="hidden space-y-2">
-        <img id="proofStampedImg" alt="Geotagged proof preview" class="w-full rounded-2xl border border-slate-200 shadow-sm" />
+        <img id="proofStampedImg" alt="Live verified geotagged proof" class="w-full rounded-2xl border-2 border-emerald-500 shadow-sm" />
+        <button type="button" onclick="retakeLivePhoto()" class="w-full py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">
+          🔄 Retake Live Photo
+        </button>
       </div>
+
       <button id="submitProofBtn" disabled onclick="submitVerifiedProof()" class="w-full py-3 rounded-xl bg-emerald-600 disabled:bg-slate-300 text-white font-bold text-sm shadow">
-        Publish to Community & Claim Points
+        ✅ Verify Live Proof & Claim Points
       </button>
     </div>
   </div>
@@ -628,6 +686,7 @@
             <option value="🌱 New Tree Planted">🌱 New Tree Planted</option>
             <option value="💧 Watered & Cared">💧 Watered & Cared</option>
             <option value="🚨 SOS Rescued">🚨 SOS Rescued</option>
+            <option value="🤝 Adopted Tree">🤝 Adopted Tree</option>
           </select>
         </div>
         <div>
@@ -647,7 +706,7 @@
       <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 text-2xl flex items-center justify-center mx-auto">⚠️</div>
       <h3 class="font-extrabold text-base text-slate-900">Delete Account Permanently?</h3>
       <p class="text-xs text-slate-600 leading-relaxed">
-        This will permanently remove your profile, Gmail link, Green Points, photo proofs, and all posts you created from this device and the live feed.
+        This will permanently remove your profile, Gmail link, Green Points, live photo proofs, and all posts you created from this device and the live feed.
       </p>
       <div class="grid grid-cols-2 gap-2 pt-2">
         <button onclick="closeModal('deleteAccountModal')" class="py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">Cancel</button>
@@ -656,27 +715,27 @@
     </div>
   </div>
 
-  <!-- MODAL 8: AI PLANT DOCTOR (LEAF HEALTH SCANNER) -->
+  <!-- MODAL 8: AI PLANT DOCTOR (LIVE LEAF HEALTH SCANNER) -->
   <div id="plantDoctorModal" class="hidden fixed inset-0 z-50 bg-black/65 flex items-end sm:items-center justify-center p-3">
     <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between">
         <div>
-          <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-teal-100 text-teal-800">AI Leaf Color & Health Vision</span>
+          <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-teal-100 text-teal-800">Live Leaf Color & Health Vision</span>
           <h3 class="font-bold text-base text-slate-900 mt-1">🩺 AI Plant Doctor</h3>
         </div>
         <button onclick="closeModal('plantDoctorModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
-      <p class="text-xs text-slate-500">Upload or capture a close-up photo of any plant leaf to detect chlorosis, leaf burn, fungal spots, or healthy chlorophyll.</p>
+      <p class="text-xs text-slate-500">Capture a live close-up photo of any plant leaf to detect chlorosis, leaf burn, fungal spots, or healthy chlorophyll.</p>
       <label class="block w-full p-4 border-2 border-dashed border-teal-300 rounded-2xl bg-teal-50/70 text-center cursor-pointer hover:bg-teal-50">
         <span class="text-2xl block mb-1">🍃</span>
-        <span class="text-xs font-bold text-teal-900">Capture / Upload Leaf Photo</span>
+        <span class="text-xs font-bold text-teal-900">Capture Live Leaf Photo</span>
         <input id="leafScanInput" type="file" accept="image/*" capture="environment" onchange="analyzeLeafPhoto(event)" class="hidden" />
       </label>
       <div id="leafDiagnosisBox" class="hidden space-y-2.5">
-        <img id="leafScanPreview" alt="Scanned leaf" class="w-full max-h-44 object-cover rounded-2xl border border-slate-200" />
+        <img id="leafScanPreview" alt="Scanned live leaf" class="w-full max-h-44 object-cover rounded-2xl border border-slate-200" />
         <div id="leafResultCard" class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 text-xs"></div>
         <button onclick="shareDiagnosisToCommunity()" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow">
-          🌍 Ask Community / Share Diagnosis (+15 pts)
+          🌍 Ask Community / Share Live Diagnosis (+15 pts)
         </button>
       </div>
     </div>
@@ -693,23 +752,23 @@
       <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 flex flex-col items-center">
         <canvas id="treeQrCanvas" width="260" height="310" class="rounded-xl shadow-sm bg-white"></canvas>
       </div>
-      <p class="text-[11px] text-slate-500">Print & laminate this tag on the tree guard so anyone can scan & log watering!</p>
+      <p class="text-[11px] text-slate-500">Print & laminate this tag on the tree guard so anyone can scan & log live watering!</p>
       <button onclick="downloadTreeQrPng()" class="w-full py-2.5 rounded-xl bg-emerald-700 text-white font-bold text-xs shadow">
         ⬇️ Download Printable QR Sticker (PNG)
       </button>
     </div>
   </div>
 
-  <!-- MODAL 10: GREEN CHAMPION E-CERTIFICATE -->
+  <!-- MODAL 10: GREEN CHAMPION E-CERTIFICATE (5,000 PTS REQUIRED) -->
   <div id="certificateModal" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-3">
     <div class="bg-white w-full max-w-md rounded-3xl p-4 space-y-3 shadow-2xl text-center">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-base text-slate-900">🏅 Verified Green Certificate</h3>
+        <h3 class="font-bold text-base text-slate-900">🏅 Verified 5,000-Pt E-Certificate</h3>
         <button onclick="closeModal('certificateModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
       </div>
       <canvas id="certCanvas" width="720" height="500" class="w-full rounded-2xl border border-amber-300 shadow-md"></canvas>
       <button onclick="downloadCertificatePng()" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-emerald-950 font-extrabold text-xs shadow">
-        ⬇️ Download Certificate PNG (NSS / Portfolio Ready)
+        ⬇️ Download Official Certificate PNG
       </button>
     </div>
   </div>
@@ -717,6 +776,7 @@
   <script>
     const SYNC_TOPIC = 'gg-synova-2026-community-v2';
     const STORAGE_KEY = 'gg_synova_state_v2';
+    const CERT_REQUIRED_PTS = 5000;
 
     const IDENTITIES = [
       { id: 'Students', icon: '🎓', desc: 'Plant & care on campus' },
@@ -783,7 +843,7 @@
       contributions: [...SEED_CONTRIBUTIONS],
       proofs: [],
       notifications: [
-        { id: 'n1', title: '🚨 Tree SOS: Mango Young Tree #102', body: 'Wilting leaves & dry soil detected at Gingee. Volunteers needed!', time: 'Just now', targetTab: 'sos' },
+        { id: 'n1', title: '🚨 Tree SOS: Mango Young Tree #102', body: 'Wilting leaves & dry soil detected at Gingee. Live camera rescue needed!', time: 'Just now', targetTab: 'sos' },
         { id: 'n2', title: '🎁 Kavya S. (kavya.green@gmail.com)', body: 'Offering 12 free Neem & Pongamia saplings!', time: '12m ago', targetTab: 'community' }
       ],
       seenSyncIds: [],
@@ -796,6 +856,7 @@
     let pendingProof = null;
     let stampedDataUrl = null;
     let stampedThumbUrl = null;
+    let liveCameraStream = null;
     let fbPendingPhoto = null;
     let lastLeafDiagnosis = null;
     let editingPostId = null;
@@ -842,7 +903,6 @@
             deletedPostIds: parsed.deletedPostIds || []
           };
         }
-        // Daily streak tracker
         const today = new Date().toDateString();
         if (state.lastActiveDate !== today) {
           const yesterday = new Date(Date.now() - 86400000).toDateString();
@@ -952,10 +1012,25 @@
       showToast('🗑️ Account & posts deleted.');
     }
 
-    // --- FEATURE 1: AI PLANT DOCTOR (LEAF COLOR & HEALTH VISION SCANNER) ---
+    // --- LIVE PHOTO FRESHNESS VALIDATOR (BLOCKS OLD GALLERY PHOTOS) ---
+    function verifyLiveFileFreshness(file) {
+      if (!file) return false;
+      const ageMs = Date.now() - (file.lastModified || 0);
+      // Must be captured within the last 45 seconds
+      if (ageMs > 45000 || ageMs < -5000) {
+        showToast('🚫 Old gallery photo blocked! Capture a LIVE photo with camera.');
+        return false;
+      }
+      return true;
+    }
+
+    // --- AI PLANT DOCTOR (LIVE LEAF COLOR & HEALTH VISION SCANNER) ---
     function analyzeLeafPhoto(event) {
       const file = event.target.files[0];
-      if (!file) return;
+      if (!verifyLiveFileFreshness(file)) {
+        event.target.value = '';
+        return;
+      }
       const reader = new FileReader();
       reader.onload = e => {
         const img = new Image();
@@ -971,7 +1046,7 @@
           let greenPx = 0, yellowPx = 0, brownPx = 0, totalPx = 0;
           for (let i = 0; i < data.length; i += 4) {
             const r = data[i], g = data[i + 1], b = data[i + 2];
-            if (r + g + b < 40 || r + g + b > 710) continue; // ignore extreme shadows/white bg
+            if (r + g + b < 40 || r + g + b > 710) continue;
             totalPx++;
             if (g > r + 12 && g > b + 12) greenPx++;
             else if (r > 130 && g > 110 && b < 95) yellowPx++;
@@ -1000,7 +1075,7 @@
           lastLeafDiagnosis = {
             status,
             remedy,
-            metrics: `Chlorophyll Green: ${gPct}% | Yellowing: ${yPct}% | Dry/Brown: ${bPct}%`,
+            metrics: `LIVE SCAN • Chlorophyll: ${gPct}% | Yellow: ${yPct}% | Dry: ${bPct}%`,
             thumb: canvas.toDataURL('image/jpeg', 0.65)
           };
 
@@ -1026,7 +1101,7 @@
         userName: actorName,
         userGmail: state.user.gmail || 'guardian@gmail.com',
         identity: state.identity,
-        badge: '🩺 AI Plant Doctor Scan',
+        badge: '🩺 AI Plant Doctor Live Scan',
         title: lastLeafDiagnosis.status,
         body: `${lastLeafDiagnosis.metrics}\nRemedy: ${lastLeafDiagnosis.remedy}`,
         place: state.userLoc.label,
@@ -1043,11 +1118,11 @@
       closeModal('plantDoctorModal');
       renderAll();
       switchTab('community');
-      showToast('🩺 Diagnosis shared to Community (+15 pts)!');
-      publishSyncEvent({ kind: 'contribution', id: postObj.id, contribution: postObj, notifTitle: `🩺 Leaf Scan by ${actorName}`, notifBody: lastLeafDiagnosis.status });
+      showToast('🩺 Live diagnosis shared (+15 pts)!');
+      publishSyncEvent({ kind: 'contribution', id: postObj.id, contribution: postObj, notifTitle: `🩺 Live Leaf Scan by ${actorName}`, notifBody: lastLeafDiagnosis.status });
     }
 
-    // --- FEATURE 2: PHYSICAL QR CODE TREE ID TAG GENERATOR ---
+    // --- PHYSICAL QR CODE TREE ID TAG GENERATOR ---
     function openQrModal(selectedTreeId) {
       const select = document.getElementById('qrTreeSelect');
       select.innerHTML = state.trees.map(t => `<option value="${t.id}">${escapeHtml(t.name)} — ${escapeHtml(t.place)}</option>`).join('');
@@ -1067,7 +1142,6 @@
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Header Banner
       ctx.fillStyle = '#14532d';
       ctx.fillRect(0, 0, canvas.width, 46);
       ctx.fillStyle = '#ffffff';
@@ -1078,7 +1152,6 @@
       ctx.fillStyle = '#a7f3d0';
       ctx.fillText(`ID: ${tree.id.toUpperCase()} • SYNOVA`, canvas.width / 2, 37);
 
-      // Deterministic QR Matrix Pattern based on Tree ID
       const qrSize = 156;
       const startX = (canvas.width - qrSize) / 2;
       const startY = 60;
@@ -1106,7 +1179,6 @@
         }
       }
 
-      // Tree Details Footer
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 13px sans-serif';
       ctx.fillText(tree.name.slice(0, 26), canvas.width / 2, 240);
@@ -1130,7 +1202,7 @@
       showToast('🏷️ Printable Tree QR Tag downloaded!');
     }
 
-    // --- FEATURE 3: 2-WAY IOT REMOTE WATER PUMP CONTROL ---
+    // --- 2-WAY IOT REMOTE WATER PUMP CONTROL ---
     function triggerRemoteWaterPump(seconds = 5) {
       const badge = document.getElementById('pumpStatusBadge');
       const btn = document.getElementById('pumpStartBtn');
@@ -1167,14 +1239,23 @@
       showToast(state.autoWaterEnabled ? '🤖 Auto-Water enabled (<25% triggers 5s pump)' : '🤖 Auto-Water turned OFF');
     }
 
-    // --- FEATURE 4: DOWNLOADABLE GREEN CHAMPION E-CERTIFICATE ---
+    // --- 5,000 POINTS E-CERTIFICATE GATE ---
+    function handleCertificateAccess() {
+      if (state.points < CERT_REQUIRED_PTS) {
+        const remaining = CERT_REQUIRED_PTS - state.points;
+        showToast(`🔒 Earn ${remaining.toLocaleString()} more Green Points to unlock your Verified E-Certificate!`);
+        return;
+      }
+      openCertificateModal();
+    }
+
     function openCertificateModal() {
+      if (state.points < CERT_REQUIRED_PTS) return handleCertificateAccess();
       openModal('certificateModal');
       const canvas = document.getElementById('certCanvas');
       const ctx = canvas.getContext('2d');
       const w = canvas.width, h = canvas.height;
 
-      // Background & Ornate Border
       ctx.fillStyle = '#f0fdf4';
       ctx.fillRect(0, 0, w, h);
       ctx.strokeStyle = '#14532d';
@@ -1184,7 +1265,6 @@
       ctx.lineWidth = 4;
       ctx.strokeRect(30, 30, w - 60, h - 60);
 
-      // Header
       ctx.textAlign = 'center';
       ctx.fillStyle = '#14532d';
       ctx.font = 'bold 20px sans-serif';
@@ -1198,13 +1278,11 @@
       ctx.font = '16px sans-serif';
       ctx.fillText('This proudly certifies that', w / 2, 178);
 
-      // Recipient Name
       const holderName = state.user.name || 'Green Guardian';
       ctx.fillStyle = '#064e3b';
       ctx.font = 'bold 36px sans-serif';
       ctx.fillText(holderName, w / 2, 228);
 
-      // Underline
       ctx.strokeStyle = '#10b981';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -1212,14 +1290,12 @@
       ctx.lineTo(w - 160, 240);
       ctx.stroke();
 
-      // Achievement Body
       ctx.fillStyle = '#1e293b';
       ctx.font = '16px sans-serif';
       ctx.fillText(`Role: ${state.identity}  •  Email: ${maskGmail(state.user.gmail)}`, w / 2, 276);
-      ctx.fillText(`Has actively planted, monitored, and protected community trees`, w / 2, 310);
-      ctx.fillText(`earning ${state.points} Verified Green Points & ${state.proofs.length} Geotagged Proofs.`, w / 2, 336);
+      ctx.fillText(`Achieved the 5,000+ Green Points Milestone (${state.points.toLocaleString()} pts)`, w / 2, 310);
+      ctx.fillText(`with ${state.proofs.length} Live Camera Geotagged Proofs.`, w / 2, 336);
 
-      // Seal & Footer
       ctx.fillStyle = '#fef3c7';
       ctx.beginPath();
       ctx.arc(w / 2, 405, 36, 0, Math.PI * 2);
@@ -1229,8 +1305,8 @@
       ctx.stroke();
       ctx.fillStyle = '#92400e';
       ctx.font = 'bold 11px sans-serif';
-      ctx.fillText('VERIFIED', w / 2, 402);
-      ctx.fillText('2026', w / 2, 417);
+      ctx.fillText('5000+ PTS', w / 2, 402);
+      ctx.fillText('VERIFIED', w / 2, 417);
 
       ctx.fillStyle = '#64748b';
       ctx.font = '12px monospace';
@@ -1241,12 +1317,13 @@
     }
 
     function downloadCertificatePng() {
+      if (state.points < CERT_REQUIRED_PTS) return handleCertificateAccess();
       const canvas = document.getElementById('certCanvas');
       const a = document.createElement('a');
       a.href = canvas.toDataURL('image/png');
-      a.download = `GreenGuardian-Certificate-${(state.user.name || 'Guardian').replace(/\s+/g, '_')}.png`;
+      a.download = `GreenGuardian-5000Pts-Certificate-${(state.user.name || 'Guardian').replace(/\s+/g, '_')}.png`;
       a.click();
-      showToast('🏅 Green Champion Certificate downloaded!');
+      showToast('🏅 Official 5,000-Pt Certificate downloaded!');
     }
 
     function showToast(msg) {
@@ -1254,7 +1331,7 @@
       document.getElementById('toastInner').textContent = msg;
       box.classList.remove('opacity-0', 'translate-y-2');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => box.classList.add('opacity-0', 'translate-y-2'), 3400);
+      toastTimer = setTimeout(() => box.classList.add('opacity-0', 'translate-y-2'), 3500);
     }
 
     function getDistanceMeters(lat1, lon1, lat2, lon2) {
@@ -1295,6 +1372,8 @@
       document.getElementById('gpsSummary').textContent = `${label}${accText}`;
       document.getElementById('locModalCurrent').textContent = `${label} (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
       document.getElementById('plantCoordsText').textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}${accText}`;
+      const camGps = document.getElementById('liveCamGpsOverlay');
+      if (camGps) camGps.textContent = `GPS: ${lat.toFixed(5)}, ${lng.toFixed(5)}${accText} • ${label}`;
       if (map) {
         if (!userMarker) {
           const pulseIcon = L.divIcon({ className: '', html: '<div class="gps-pulse"></div>', iconSize: [18, 18], iconAnchor: [9, 9] });
@@ -1421,7 +1500,7 @@
         });
         const dist = formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, tree.lat, tree.lng));
         const marker = L.marker([tree.lat, tree.lng], { icon }).addTo(map);
-        marker.bindPopup(`<div style="min-width:165px"><strong>${tree.name}</strong><br/><span style="font-size:11px;color:#475569">${tree.place} (${dist})</span><br/><span style="font-size:11px;font-weight:700;color:${color}">${tree.health} • Moisture ${tree.moisture}%</span><div style="display:flex;gap:4px;margin-top:6px;"><button onclick="openProofModal('${tree.sos ? 'sos' : 'care'}','${tree.id}')" style="flex:1;background:${color};color:#fff;border:none;padding:6px;border-radius:8px;font-weight:700;font-size:10px;cursor:pointer;">📸 ${tree.sos ? 'Rescue' : 'Water'}</button><button onclick="openQrModal('${tree.id}')" style="background:#0f172a;color:#fff;border:none;padding:6px 8px;border-radius:8px;font-weight:700;font-size:10px;cursor:pointer;">🏷️ QR</button></div></div>`);
+        marker.bindPopup(`<div style="min-width:165px"><strong>${tree.name}</strong><br/><span style="font-size:11px;color:#475569">${tree.place} (${dist})</span><br/><span style="font-size:11px;font-weight:700;color:${color}">${tree.health} • Moisture ${tree.moisture}%</span><div style="display:flex;gap:4px;margin-top:6px;"><button onclick="openProofModal('${tree.sos ? 'sos' : 'care'}','${tree.id}')" style="flex:1;background:${color};color:#fff;border:none;padding:6px;border-radius:8px;font-weight:700;font-size:10px;cursor:pointer;">📸 ${tree.sos ? 'Live Rescue' : 'Live Water'}</button><button onclick="openQrModal('${tree.id}')" style="background:#0f172a;color:#fff;border:none;padding:6px 8px;border-radius:8px;font-weight:700;font-size:10px;cursor:pointer;">🏷️ QR</button></div></div>`);
         treeMarkers.push(marker);
       });
     }
@@ -1444,7 +1523,10 @@
     // --- FACEBOOK-STYLE COMMUNITY & SAPLING EXCHANGE POSTING ---
     function handleFbPhotoSelect(event) {
       const file = event.target.files[0];
-      if (!file) return;
+      if (!verifyLiveFileFreshness(file)) {
+        event.target.value = '';
+        return;
+      }
       const reader = new FileReader();
       reader.onload = e => {
         const img = new Image();
@@ -1473,7 +1555,7 @@
       const textEl = document.getElementById('fbPostText');
       const tagEl = document.getElementById('fbPostTag');
       const bodyText = textEl.value.trim();
-      if (!bodyText && !fbPendingPhoto) return showToast('Write something or attach a photo first!');
+      if (!bodyText && !fbPendingPhoto) return showToast('Write something or capture a live photo first!');
 
       const actorName = state.user.name || 'Guardian';
       const actorGmail = state.user.gmail || 'guardian@gmail.com';
@@ -1514,7 +1596,7 @@
         id: postObj.id,
         contribution: postObj,
         notifTitle: `${chosenTag} by ${actorName}`,
-        notifBody: bodyText ? bodyText.slice(0, 80) : `Shared a photo from ${state.userLoc.label}`
+        notifBody: bodyText ? bodyText.slice(0, 80) : `Shared a live photo from ${state.userLoc.label}`
       });
     }
 
@@ -1643,6 +1725,7 @@
       });
     }
 
+    // --- STRICT LIVE CAMERA CAPTURE FOR RESCUE, ADOPT, PLANT & CARE ---
     function startPlantProof() {
       const species = document.getElementById('plantSpecies').value.trim();
       const place = document.getElementById('plantPlace').value.trim() || state.userLoc.label;
@@ -1650,48 +1733,138 @@
       openProofModal('plant', null, { species, place });
     }
 
-    function openProofModal(type, treeId, extra = {}) {
-      const tree = treeId ? state.trees.find(t => t.id === treeId) : null;
-      const pts = type === 'sos' ? 100 : type === 'plant' ? 75 : 50;
-      const title = type === 'sos' ? `Rescued ${tree ? tree.name : 'SOS Tree'}` : type === 'plant' ? `Planted ${extra.species}` : `Watered & Cared for ${tree ? tree.name : 'Sapling'}`;
-      pendingProof = { type, treeId, pts, title, tree, extra };
-      stampedDataUrl = null; stampedThumbUrl = null;
-      document.getElementById('proofBadge').textContent = `+${pts} Verified Green Points`;
-      document.getElementById('proofTitle').textContent = title;
-      document.getElementById('proofFileInput').value = '';
-      document.getElementById('proofPreviewWrap').classList.add('hidden');
-      document.getElementById('submitProofBtn').disabled = true;
-      openModal('proofModal');
+    function adoptTree(treeId) {
+      const tree = state.trees.find(t => t.id === treeId);
+      if (!tree) return;
+      // Adopting also requires a real-time live photo next to the tree
+      openProofModal('adopt', treeId);
     }
 
-    function renderStampedCanvas(img, maxW, quality) {
+    async function openProofModal(type, treeId, extra = {}) {
+      const tree = treeId ? state.trees.find(t => t.id === treeId) : null;
+      const pts = type === 'sos' ? 100 : type === 'plant' ? 75 : type === 'adopt' ? 25 : 50;
+      const title = type === 'sos' ? `Rescued ${tree ? tree.name : 'SOS Tree'}`
+        : type === 'plant' ? `Planted ${extra.species}`
+        : type === 'adopt' ? `Adopted ${tree ? tree.name : 'Community Tree'}`
+        : `Watered & Cared for ${tree ? tree.name : 'Sapling'}`;
+
+      pendingProof = { type, treeId, pts, title, tree, extra };
+      stampedDataUrl = null;
+      stampedThumbUrl = null;
+
+      document.getElementById('proofBadge').textContent = `+${pts} Live Verified Points`;
+      document.getElementById('proofTitle').textContent = title;
+      document.getElementById('proofPreviewWrap').classList.add('hidden');
+      document.getElementById('submitProofBtn').disabled = true;
+      updateLocationUI(false);
+      openModal('proofModal');
+
+      await startLiveCameraStream();
+    }
+
+    async function startLiveCameraStream() {
+      stopLiveCameraStream();
+      const liveStage = document.getElementById('liveCamStage');
+      const fallbackStage = document.getElementById('nativeCamFallback');
+      const videoEl = document.getElementById('liveCameraVideo');
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        try {
+          liveCameraStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 960 } },
+            audio: false
+          });
+          videoEl.srcObject = liveCameraStream;
+          liveStage.classList.remove('hidden');
+          fallbackStage.classList.add('hidden');
+          return;
+        } catch (err) {
+          // Camera permission denied or unavailable on desktop -> use strict camera-only input fallback
+        }
+      }
+      liveStage.classList.add('hidden');
+      fallbackStage.classList.remove('hidden');
+    }
+
+    function stopLiveCameraStream() {
+      if (liveCameraStream) {
+        liveCameraStream.getTracks().forEach(track => track.stop());
+        liveCameraStream = null;
+      }
+    }
+
+    function closeProofModal() {
+      stopLiveCameraStream();
+      closeModal('proofModal');
+    }
+
+    function snapLiveCameraPhoto() {
+      const videoEl = document.getElementById('liveCameraVideo');
+      if (!videoEl || !videoEl.videoWidth) return showToast('Camera warming up—try again in 1 second');
+      stampedDataUrl = renderStampedSource(videoEl, videoEl.videoWidth, videoEl.videoHeight, 720, 0.82);
+      stampedThumbUrl = renderStampedSource(videoEl, videoEl.videoWidth, videoEl.videoHeight, 320, 0.55);
+
+      stopLiveCameraStream();
+      document.getElementById('liveCamStage').classList.add('hidden');
+      document.getElementById('proofStampedImg').src = stampedDataUrl;
+      document.getElementById('proofPreviewWrap').classList.remove('hidden');
+      document.getElementById('submitProofBtn').disabled = false;
+      showToast('📸 Live photo captured & GPS-stamped!');
+    }
+
+    async function retakeLivePhoto() {
+      stampedDataUrl = null;
+      stampedThumbUrl = null;
+      document.getElementById('proofPreviewWrap').classList.add('hidden');
+      document.getElementById('submitProofBtn').disabled = true;
+      await startLiveCameraStream();
+    }
+
+    function renderStampedSource(sourceEl, srcW, srcH, maxW, quality) {
       const canvas = document.createElement('canvas');
-      const scale = Math.min(1, maxW / img.width);
-      canvas.width = img.width * scale; canvas.height = img.height * scale;
+      const scale = Math.min(1, maxW / srcW);
+      canvas.width = srcW * scale;
+      canvas.height = srcH * scale;
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      const barH = Math.max(44, Math.round(canvas.height * 0.14));
-      ctx.fillStyle = 'rgba(6, 78, 59, 0.90)';
+      ctx.drawImage(sourceEl, 0, 0, canvas.width, canvas.height);
+
+      // Top-right LIVE VERIFIED badge
+      const tagW = Math.max(125, Math.round(canvas.width * 0.34));
+      const tagH = Math.max(22, Math.round(canvas.height * 0.06));
+      ctx.fillStyle = 'rgba(220, 38, 38, 0.92)';
+      ctx.fillRect(canvas.width - tagW - 8, 8, tagW, tagH);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${Math.max(9, Math.round(canvas.width * 0.02))}px sans-serif`;
+      ctx.fillText('● LIVE CAMERA VERIFIED', canvas.width - tagW - 2, 8 + tagH * 0.68);
+
+      // Bottom GPS & Timestamp bar
+      const barH = Math.max(46, Math.round(canvas.height * 0.15));
+      ctx.fillStyle = 'rgba(6, 78, 59, 0.92)';
       ctx.fillRect(0, canvas.height - barH, canvas.width, barH);
       ctx.fillStyle = '#fde047';
       ctx.font = `bold ${Math.max(10, Math.round(canvas.width * 0.022))}px sans-serif`;
       const actor = state.user.name ? `${state.user.name} (${maskGmail(state.user.gmail)})` : state.identity;
-      ctx.fillText(`GreenGuardian • ${actor} | +${pendingProof.pts} pts`, 10, canvas.height - barH * 0.55);
+      ctx.fillText(`GreenGuardian • ${actor} | +${pendingProof.pts} pts`, 10, canvas.height - barH * 0.56);
       ctx.fillStyle = '#ffffff';
       ctx.font = `${Math.max(9, Math.round(canvas.width * 0.018))}px monospace`;
-      ctx.fillText(`GPS: ${state.userLoc.lat.toFixed(4)}, ${state.userLoc.lng.toFixed(4)} • ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`, 10, canvas.height - barH * 0.18);
+      const nowStr = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+      ctx.fillText(`GPS: ${state.userLoc.lat.toFixed(4)}, ${state.userLoc.lng.toFixed(4)} • ${nowStr}`, 10, canvas.height - barH * 0.18);
       return canvas.toDataURL('image/jpeg', quality);
     }
 
     function processProofImage(event) {
       const file = event.target.files[0];
-      if (!file) return;
+      if (!verifyLiveFileFreshness(file)) {
+        event.target.value = '';
+        return;
+      }
       const reader = new FileReader();
       reader.onload = e => {
         const img = new Image();
         img.onload = () => {
-          stampedDataUrl = renderStampedCanvas(img, 720, 0.80);
-          stampedThumbUrl = renderStampedCanvas(img, 320, 0.55);
+          stampedDataUrl = renderStampedSource(img, img.width, img.height, 720, 0.82);
+          stampedThumbUrl = renderStampedSource(img, img.width, img.height, 320, 0.55);
+          document.getElementById('nativeCamFallback').classList.add('hidden');
           document.getElementById('proofStampedImg').src = stampedDataUrl;
           document.getElementById('proofPreviewWrap').classList.remove('hidden');
           document.getElementById('submitProofBtn').disabled = false;
@@ -1704,34 +1877,59 @@
     function submitVerifiedProof() {
       if (!pendingProof || !stampedDataUrl) return;
       const { type, treeId, pts, title, extra } = pendingProof;
+      const prevPts = state.points;
       state.points += pts;
+
       let syncedTree = null, placeLabel = state.userLoc.label;
       if (type === 'plant') {
         placeLabel = extra.place;
-        const newTree = { id: 'tree_' + Date.now(), name: extra.species, place: extra.place, lat: state.userLoc.lat, lng: state.userLoc.lng, health: 'Healthy', moisture: 75, sos: false, adoptedBy: state.user.name || state.identity, lastWatered: 'Just planted' };
+        const newTree = { id: 'tree_' + Date.now(), name: extra.species, place: extra.place, lat: state.userLoc.lat, lng: state.userLoc.lng, health: 'Healthy', moisture: 75, sos: false, adoptedBy: state.user.name || state.identity, lastWatered: 'Just planted (Live Verified)' };
         state.trees.unshift(newTree); syncedTree = newTree;
         document.getElementById('plantSpecies').value = ''; document.getElementById('plantPlace').value = '';
+      } else if (type === 'adopt' && treeId) {
+        const idx = state.trees.findIndex(t => t.id === treeId);
+        if (idx !== -1) {
+          placeLabel = state.trees[idx].place;
+          state.trees[idx].adoptedBy = `${state.user.name || state.identity} (${state.identity})`;
+          syncedTree = state.trees[idx];
+        }
       } else if (treeId) {
         const idx = state.trees.findIndex(t => t.id === treeId);
         if (idx !== -1) {
           placeLabel = state.trees[idx].place;
-          state.trees[idx].sos = false; state.trees[idx].health = 'Healthy'; state.trees[idx].moisture = 78; state.trees[idx].lastWatered = 'Just now (Verified)';
+          state.trees[idx].sos = false;
+          state.trees[idx].health = 'Healthy';
+          state.trees[idx].moisture = 78;
+          state.trees[idx].lastWatered = 'Just now (Live Verified)';
           syncedTree = state.trees[idx];
         }
       }
+
       const actorName = state.user.name || 'Guardian', actorGmail = state.user.gmail || 'guardian@gmail.com';
-      const badgeText = type === 'sos' ? '🚨 SOS Rescued' : type === 'plant' ? '🌱 New Tree Planted' : '💧 Watered & Cared';
+      const badgeText = type === 'sos' ? '🚨 SOS Rescued (Live Verified)'
+        : type === 'plant' ? '🌱 New Tree Planted (Live Verified)'
+        : type === 'adopt' ? '🤝 Adopted Tree (Live Verified)'
+        : '💧 Watered & Cared (Live Verified)';
+
       const contribItem = { id: 'contrib_' + Date.now(), userName: actorName, userGmail: actorGmail, identity: state.identity, badge: badgeText, title, body: '', place: placeLabel, pts, time: 'Just now', thumb: stampedThumbUrl, applauds: 1, applaudedByMe: true, comments: [] };
       state.contributions.unshift(contribItem);
       state.proofs.unshift({ id: 'proof_' + Date.now(), title, pts, identity: state.identity, coords: `${state.userLoc.lat.toFixed(4)}, ${state.userLoc.lng.toFixed(4)}`, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), img: stampedDataUrl });
-      closeModal('proofModal'); saveState(); renderAll();
-      if (type === 'plant' && syncedTree) {
+
+      closeProofModal();
+      saveState();
+      renderAll();
+
+      if (prevPts < CERT_REQUIRED_PTS && state.points >= CERT_REQUIRED_PTS) {
+        openCertificateModal();
+        showToast('🏆 5,000 Green Points Reached! E-Certificate Unlocked!');
+      } else if (type === 'plant' && syncedTree) {
         openQrModal(syncedTree.id);
-        showToast('🎉 +75 pts! Tree QR ID Tag generated.');
+        showToast('🎉 +75 pts! Live proof verified & QR Tag ready.');
       } else {
         switchTab('community');
-        showToast(`🎉 +${pts} pts! Published to everyone's Community Feed.`);
+        showToast(`🎉 +${pts} pts! Live verified proof published.`);
       }
+
       publishSyncEvent({ kind: 'contribution', id: contribItem.id, tree: syncedTree, contribution: contribItem, notifTitle: `${badgeText} by ${actorName}`, notifBody: `${title} at ${placeLabel} (+${pts} pts)` });
     }
 
@@ -1777,16 +1975,6 @@
       pushNotification(title, body, 'sos');
       publishSyncEvent({ kind: 'sos_alert', id: newSOS.id, tree: newSOS, notifTitle: title, notifBody: body });
       showToast('🚨 Live Tree SOS broadcasted to all guardians!');
-    }
-
-    function adoptTree(treeId) {
-      const tree = state.trees.find(t => t.id === treeId); if (!tree) return;
-      const actorName = state.user.name || state.identity, actorGmail = state.user.gmail || 'guardian@gmail.com';
-      tree.adoptedBy = `${actorName} (${state.identity})`;
-      const contribItem = { id: 'adopt_' + Date.now(), userName: actorName, userGmail: actorGmail, identity: state.identity, badge: '🤝 Adopted Tree', title: `Adopted ${tree.name} for Ongoing Care`, body: '', place: tree.place, pts: 25, time: 'Just now', thumb: null, applauds: 1, applaudedByMe: true, comments: [] };
-      state.points += 25; state.contributions.unshift(contribItem); saveState(); renderAll();
-      showToast(`🤝 Adopted ${tree.name} (+25 pts)!`);
-      publishSyncEvent({ kind: 'contribution', id: contribItem.id, tree, contribution: contribItem, notifTitle: `🤝 ${actorName} adopted ${tree.name}`, notifBody: `Taking care at ${tree.place}` });
     }
 
     function updateNotifPermUI() {
@@ -1849,7 +2037,6 @@
             if (!data.id || state.seenSyncIds.includes(data.id)) return;
             state.seenSyncIds.push(data.id);
 
-            // Live IoT Hardware Telemetry Update
             if (typeof data.moisture === 'number') {
               state.moisture = data.moisture;
               const slider = document.getElementById('moistureSlider');
@@ -1999,7 +2186,7 @@
             <p class="text-[11px] text-slate-500">📍 ${escapeHtml(c.place)}</p>
           </div>
 
-          ${(!compact && c.thumb) ? `<img src="${c.thumb}" alt="Post media" class="w-full max-h-56 object-cover rounded-xl border border-slate-200" />` : ''}
+          ${(!compact && c.thumb) ? `<img src="${c.thumb}" alt="Live verified post media" class="w-full max-h-56 object-cover rounded-xl border border-slate-200" />` : ''}
 
           <div class="flex items-center gap-1.5 pt-2 border-t border-slate-100">
             <button onclick="applaudContribution('${c.id}')" class="flex-1 text-xs font-bold py-1.5 px-2 rounded-xl transition ${c.applaudedByMe ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
@@ -2031,7 +2218,7 @@
       document.getElementById('headerUserLabel').textContent = state.user.name || 'Sign In';
       document.getElementById('homeIdentity').textContent = `${idObj.icon} ${idObj.id} • ${state.user.name || 'Guardian'}`;
       document.getElementById('homeGmailBadge').textContent = `✉️ ${state.user.gmail || 'Tap Sign In'}`;
-      document.getElementById('homePoints').textContent = state.points;
+      document.getElementById('homePoints').textContent = state.points.toLocaleString();
       document.getElementById('profileAvatar').textContent = userInitial;
       const compAvatar = document.getElementById('composerAvatar');
       if (compAvatar) compAvatar.textContent = userInitial;
@@ -2040,13 +2227,40 @@
       document.getElementById('profileCardIdentity').textContent = `${idObj.icon} ${idObj.id}`;
       document.getElementById('profileCardBio').textContent = state.user.bio || '🌱 Planting & protecting green cover in my community.';
 
+      // 5,000 Pts Certificate Progress & Lock UI
+      const certUnlocked = state.points >= CERT_REQUIRED_PTS;
+      const pct = Math.min(100, Math.round((state.points / CERT_REQUIRED_PTS) * 100));
+      const remPts = Math.max(0, CERT_REQUIRED_PTS - state.points);
+
+      document.getElementById('homeCertProgressText').textContent = certUnlocked ? 'UNLOCKED! 🏅' : `${state.points.toLocaleString()} / 5,000 pts`;
+      document.getElementById('homeCertProgressBar').style.width = `${pct}%`;
+
+      const homeCertBtn = document.getElementById('homeCertBtn');
+      if (homeCertBtn) {
+        homeCertBtn.innerHTML = certUnlocked
+          ? `<span class="text-lg">🏅</span><p class="font-bold text-[11px] text-emerald-800 mt-0.5">E-Certificate</p>`
+          : `<span class="text-lg">🔒</span><p class="font-bold text-[11px] text-slate-600 mt-0.5">5k Certificate</p>`;
+      }
+
+      document.getElementById('profileCertStatusLabel').textContent = certUnlocked ? 'UNLOCKED 🏅' : `${state.points.toLocaleString()} / 5,000 pts`;
+      document.getElementById('profileCertProgressBar').style.width = `${pct}%`;
+      const profCertBtn = document.getElementById('profileCertActionBtn');
+      if (profCertBtn) {
+        if (certUnlocked) {
+          profCertBtn.className = 'w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-emerald-950 font-extrabold text-xs shadow-sm flex items-center justify-center gap-1.5';
+          profCertBtn.textContent = '🏅 View & Download Official E-Certificate';
+        } else {
+          profCertBtn.className = 'w-full py-2.5 rounded-xl bg-slate-200 text-slate-700 font-extrabold text-xs flex items-center justify-center gap-1.5';
+          profCertBtn.textContent = `🔒 Earn ${remPts.toLocaleString()} More Pts to Unlock Certificate`;
+        }
+      }
+
       const myPostsCount = state.contributions.filter(c => state.user.gmail && c.userGmail === state.user.gmail).length;
-      document.getElementById('profileStatPts').textContent = state.points;
+      document.getElementById('profileStatPts').textContent = state.points.toLocaleString();
       document.getElementById('profileStatStreak').textContent = `🔥 ${state.streakDays || 1}d`;
       document.getElementById('profileStatPosts').textContent = myPostsCount;
       document.getElementById('profileStatProofs').textContent = state.proofs.length;
 
-      // Auto-water button state
       const autoBtn = document.getElementById('autoWaterBtn');
       if (autoBtn) {
         autoBtn.textContent = state.autoWaterEnabled ? '🤖 Auto-Water: ON' : '🤖 Auto-Water: OFF';
@@ -2058,9 +2272,9 @@
       // Earned Eco Badges
       const badgesList = [
         { icon: '🌱', title: 'First Sprout', desc: 'Joined GreenGuardian', unlocked: true },
-        { icon: '🔥', title: '3-Day Streak', desc: 'Care 3 days in a row', unlocked: (state.streakDays || 1) >= 3 || state.points >= 300 },
-        { icon: '📸', title: 'Proof Verifier', desc: 'Uploaded geotagged proof', unlocked: state.proofs.length >= 1 },
-        { icon: '🏆', title: 'Eco Champion', desc: 'Reached 500+ Green Pts', unlocked: state.points >= 500 }
+        { icon: '📸', title: 'Live Verifier', desc: 'Captured live camera proof', unlocked: state.proofs.length >= 1 },
+        { icon: '🔥', title: '3-Day Streak', desc: 'Care 3 days in a row', unlocked: (state.streakDays || 1) >= 3 || state.points >= 1000 },
+        { icon: '🏅', title: '5,000-Pt Legend', desc: 'Unlocked Official Certificate', unlocked: certUnlocked }
       ];
       const unlockedCount = badgesList.filter(b => b.unlocked).length;
       document.getElementById('badgeCountText').textContent = `${unlockedCount}/${badgesList.length} Unlocked`;
@@ -2098,18 +2312,18 @@
         ? filteredContribs.map(c => renderContributionCard(c, false)).join('')
         : '<p class="text-xs text-center text-slate-500 py-6">No matching posts found.</p>';
 
-      document.getElementById('homeReminders').innerHTML = state.trees.slice(0, 3).map(t => `<div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500 truncate">${t.place} • ${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</p></div><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl ${t.sos ? 'bg-rose-600' : 'bg-emerald-600'} text-white font-bold text-xs">📸 ${t.sos ? 'Rescue +100' : 'Water +50'}</button></div>`).join('');
+      document.getElementById('homeReminders').innerHTML = state.trees.slice(0, 3).map(t => `<div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500 truncate">${t.place} • ${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</p></div><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl ${t.sos ? 'bg-rose-600' : 'bg-emerald-600'} text-white font-bold text-xs">📸 ${t.sos ? 'Live Rescue' : 'Live Water'}</button></div>`).join('');
       const sortedTrees = [...state.trees].sort((a, b) => getDistanceMeters(state.userLoc.lat, state.userLoc.lng, a.lat, a.lng) - getDistanceMeters(state.userLoc.lat, state.userLoc.lng, b.lat, b.lng));
-      document.getElementById('mapTreeList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl border ${t.sos ? 'border-rose-200 bg-rose-50/50' : 'border-slate-100 bg-slate-50'} flex items-center justify-between gap-2"><div class="min-w-0" onclick="if(map) map.setView([${t.lat},${t.lng}],16)"><span class="text-xs font-bold text-slate-800 truncate">${t.name}</span><p class="text-[11px] text-slate-500 truncate">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><div class="flex items-center gap-1 shrink-0"><button onclick="openQrModal('${t.id}')" class="px-2 py-1.5 rounded-xl bg-slate-800 text-white font-bold text-[11px]">🏷️ QR</button><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="px-2.5 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-[11px]">📸 Proof</button></div></div>`).join('');
+      document.getElementById('mapTreeList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl border ${t.sos ? 'border-rose-200 bg-rose-50/50' : 'border-slate-100 bg-slate-50'} flex items-center justify-between gap-2"><div class="min-w-0" onclick="if(map) map.setView([${t.lat},${t.lng}],16)"><span class="text-xs font-bold text-slate-800 truncate">${t.name}</span><p class="text-[11px] text-slate-500 truncate">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><div class="flex items-center gap-1 shrink-0"><button onclick="openQrModal('${t.id}')" class="px-2 py-1.5 rounded-xl bg-slate-800 text-white font-bold text-[11px]">🏷️ QR</button><button onclick="openProofModal('${t.sos ? 'sos' : 'care'}','${t.id}')" class="px-2.5 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-[11px]">📸 Live</button></div></div>`).join('');
       const sosTrees = sortedTrees.filter(t => t.sos);
-      document.getElementById('sosList').innerHTML = sosTrees.length ? sosTrees.map(t => `<div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 space-y-2"><div class="flex items-start justify-between"><div><p class="font-bold text-sm text-rose-900">${t.name}</p><p class="text-xs text-rose-700">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><span class="text-xs font-extrabold bg-rose-600 text-white px-2 py-0.5 rounded-lg">Moisture ${t.moisture}%</span></div><button onclick="openProofModal('sos','${t.id}')" class="w-full py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs shadow">📸 I WILL HELP — Upload Proof (+100 pts)</button></div>`).join('') : '<p class="text-xs text-emerald-700 font-semibold">🎉 All tracked trees are healthy right now!</p>';
-      document.getElementById('adoptList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500">Guardian: <strong>${t.adoptedBy}</strong></p></div><button onclick="adoptTree('${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl bg-sky-600 text-white font-bold text-xs">🤝 Adopt</button></div>`).join('');
+      document.getElementById('sosList').innerHTML = sosTrees.length ? sosTrees.map(t => `<div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 space-y-2"><div class="flex items-start justify-between"><div><p class="font-bold text-sm text-rose-900">${t.name}</p><p class="text-xs text-rose-700">${t.place} • <strong>${formatDist(getDistanceMeters(state.userLoc.lat, state.userLoc.lng, t.lat, t.lng))}</strong></p></div><span class="text-xs font-extrabold bg-rose-600 text-white px-2 py-0.5 rounded-lg">Moisture ${t.moisture}%</span></div><button onclick="openProofModal('sos','${t.id}')" class="w-full py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs shadow">📸 I WILL HELP — Live Camera Proof (+100 pts)</button></div>`).join('') : '<p class="text-xs text-emerald-700 font-semibold">🎉 All tracked trees are healthy right now!</p>';
+      document.getElementById('adoptList').innerHTML = sortedTrees.map(t => `<div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2"><div class="min-w-0"><p class="font-bold text-xs text-slate-800 truncate">${t.name}</p><p class="text-[11px] text-slate-500">Guardian: <strong>${t.adoptedBy}</strong></p></div><button onclick="adoptTree('${t.id}')" class="shrink-0 px-3 py-1.5 rounded-xl bg-sky-600 text-white font-bold text-xs">📸 Live Adopt</button></div>`).join('');
       document.getElementById('identityGrid').innerHTML = IDENTITIES.map(item => `<button onclick="state.identity='${item.id}'; saveState(); renderAll(); showToast('Identity set: ${item.id}');" class="p-3 rounded-2xl border text-left transition ${item.id === state.identity ? 'bg-emerald-700 text-white border-emerald-700 shadow' : 'bg-slate-50 text-slate-800 border-slate-200'}"><span class="text-xl">${item.icon}</span><p class="font-bold text-xs mt-1">${item.id}</p></button>`).join('');
       const myBoardName = state.user.name ? `${state.user.name} (${maskGmail(state.user.gmail)})` : `You (${state.identity})`;
-      const board = [{ name: myBoardName, pts: state.points, me: true }, { name: 'Saradha Matric HSS Eco Club', pts: 620, me: false }, { name: 'Rohan M. (roha***@gmail.com)', pts: 540, me: false }, { name: 'Kavya S. (kavy***@gmail.com)', pts: 480, me: false }].sort((a, b) => b.pts - a.pts);
-      document.getElementById('leaderboardList').innerHTML = board.map((row, i) => `<div class="p-2.5 rounded-xl flex items-center justify-between gap-2 ${row.me ? 'bg-amber-50 border border-amber-300 font-bold' : 'bg-slate-50'}"><span class="truncate">#${i + 1} ${row.name}</span><span class="text-emerald-700 font-extrabold shrink-0">${row.pts} pts</span></div>`).join('');
-      document.getElementById('proofCountBadge').textContent = `${state.proofs.length} verified`;
-      document.getElementById('proofGallery').innerHTML = state.proofs.length ? state.proofs.map(p => `<div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-50"><img src="${p.img}" alt="${p.title}" class="w-full max-h-52 object-cover" /><div class="p-2.5 flex items-center justify-between text-xs"><div><p class="font-bold text-slate-800">${p.title}</p><p class="text-[10px] text-slate-500">${p.identity} • GPS ${p.coords} • ${p.time}</p></div><span class="font-extrabold text-emerald-700">+${p.pts} pts</span></div></div>`).join('') : '<p class="text-xs text-slate-500">No photo proofs yet.</p>';
+      const board = [{ name: myBoardName, pts: state.points, me: true }, { name: 'Saradha Matric HSS Eco Club', pts: 5420, me: false }, { name: 'Rohan M. (roha***@gmail.com)', pts: 3840, me: false }, { name: 'Kavya S. (kavy***@gmail.com)', pts: 2480, me: false }].sort((a, b) => b.pts - a.pts);
+      document.getElementById('leaderboardList').innerHTML = board.map((row, i) => `<div class="p-2.5 rounded-xl flex items-center justify-between gap-2 ${row.me ? 'bg-amber-50 border border-amber-300 font-bold' : 'bg-slate-50'}"><span class="truncate">#${i + 1} ${row.name}</span><span class="text-emerald-700 font-extrabold shrink-0">${row.pts.toLocaleString()} pts</span></div>`).join('');
+      document.getElementById('proofCountBadge').textContent = `${state.proofs.length} live verified`;
+      document.getElementById('proofGallery').innerHTML = state.proofs.length ? state.proofs.map(p => `<div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-50"><img src="${p.img}" alt="${p.title}" class="w-full max-h-52 object-cover" /><div class="p-2.5 flex items-center justify-between text-xs"><div><p class="font-bold text-slate-800">${p.title}</p><p class="text-[10px] text-slate-500">${p.identity} • GPS ${p.coords} • ${p.time}</p></div><span class="font-extrabold text-emerald-700">+${p.pts} pts</span></div></div>`).join('') : '<p class="text-xs text-slate-500">No live camera proofs yet.</p>';
       renderMapMarkers(); renderNotifications();
     }
 
