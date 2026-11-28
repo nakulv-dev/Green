@@ -381,7 +381,7 @@
     <section class="bg-slate-900 text-white rounded-2xl p-4 shadow-md space-y-3">
       <div class="flex items-center justify-between">
         <div>
-          <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">IoT Node #01 • 2-Way Control</span>
+          <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">IoT Node #01 • 1s Live Stream</span>
           <h2 class="font-bold text-base mt-1">Live Soil Sensor & Water Pump</h2>
         </div>
         <div class="text-right">
@@ -955,6 +955,7 @@
     let openCommentBoxes = {};
     let deferredInstallPrompt = null;
     let toastTimer = null;
+    let isPollingCloud = false;
 
     function downloadPngIcon(size) {
       const canvas = document.createElement('canvas');
@@ -1006,7 +1007,10 @@
     }
 
     function saveState() {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+      try {
+        if (state.seenSyncIds.length > 300) state.seenSyncIds = state.seenSyncIds.slice(-150);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
     }
 
     function escapeHtml(str) {
@@ -1505,7 +1509,6 @@
     function ensureLocalTreesAround(lat, lng, areaLabel) {
       if (state.trees.some(t => getDistanceMeters(lat, lng, t.lat, t.lng) < 200)) return;
       const place = areaLabel || 'Your Neighborhood';
-      // Place 2 trees right inside the 100m geofence (~35m and ~65m away) and 1 nearby (~240m away)
       state.trees = [
         { id: 'loc_' + Date.now() + '_1', name: 'Neem Sapling (On-Site #1)', place: `${place} Gate`, lat: lat + 0.00025, lng: lng + 0.00022, health: 'Needs Water', moisture: 21, sos: true, adoptedBy: 'Unassigned', lastWatered: '3 days ago' },
         { id: 'loc_' + Date.now() + '_2', name: 'Pongamia Sapling (On-Site #2)', place: `${place} Courtyard`, lat: lat - 0.00035, lng: lng + 0.00030, health: 'Healthy', moisture: 66, sos: false, adoptedBy: 'Students', lastWatered: 'Today' },
@@ -2209,100 +2212,118 @@
       try { state.seenSyncIds.push(payload.id); await fetch(`https://ntfy.sh/${SYNC_TOPIC}`, { method: 'POST', body: JSON.stringify(payload) }); } catch (e) {}
     }
 
-    async function pollCloudSync() {
+    function processIncomingCloudMessage(rawLine) {
       try {
-        const res = await fetch(`https://ntfy.sh/${SYNC_TOPIC}/json?poll=1&since=24h`);
-        const text = await res.text(); if (!text.trim()) return;
+        const wrapper = JSON.parse(rawLine);
+        if (!wrapper.message) return false;
+        const data = JSON.parse(wrapper.message);
+        if (!data.id || state.seenSyncIds.includes(data.id)) return false;
+        state.seenSyncIds.push(data.id);
+
+        if (typeof data.moisture === 'number') {
+          state.moisture = data.moisture;
+          const slider = document.getElementById('moistureSlider');
+          const valEl = document.getElementById('moistureValue');
+          const stEl = document.getElementById('moistureState');
+          if (slider) slider.value = data.moisture;
+          if (valEl) {
+            valEl.textContent = `${data.moisture}%`;
+            valEl.className = data.moisture < 25 ? 'text-2xl font-extrabold text-rose-400' : 'text-2xl font-extrabold text-emerald-400';
+          }
+          if (stEl) {
+            stEl.textContent = data.moisture < 25 ? 'LIVE HARDWARE: CRITICAL DRY!' : 'LIVE HARDWARE: 1s Live Sync';
+          }
+          if (state.trees[0]) state.trees[0].moisture = data.moisture;
+          if (data.moisture < 25 && state.autoWaterEnabled) triggerRemoteWaterPump(5);
+        }
+
+        if (data.hub && !state.hubs.some(h => h.id === data.hub.id)) {
+          state.hubs.unshift(data.hub);
+        }
+
+        if (data.tree) {
+          const idx = state.trees.findIndex(t => t.id === data.tree.id);
+          if (idx !== -1) state.trees[idx] = data.tree; else state.trees.unshift(data.tree);
+        }
+        if (data.contribution && !state.deletedPostIds.includes(data.contribution.id) && !state.contributions.some(c => c.id === data.contribution.id)) {
+          state.contributions.unshift({ ...data.contribution, applaudedByMe: false, comments: data.contribution.comments || [] });
+        }
+        if (data.kind === 'fb_edit' && data.targetPostId) {
+          const post = state.contributions.find(c => c.id === data.targetPostId);
+          if (post) {
+            post.badge = data.badge || post.badge;
+            post.body = data.body;
+            post.edited = true;
+          }
+        }
+        if (data.kind === 'fb_delete' && data.targetPostId) {
+          state.deletedPostIds.push(data.targetPostId);
+          state.contributions = state.contributions.filter(c => c.id !== data.targetPostId);
+        }
+        if (data.kind === 'fb_like' && data.targetPostId) {
+          const post = state.contributions.find(c => c.id === data.targetPostId);
+          if (post && typeof data.applauds === 'number') {
+            post.applauds = Math.max(post.applauds || 0, data.applauds);
+          }
+        }
+        if (data.kind === 'fb_comment' && data.targetPostId && data.comment) {
+          const post = state.contributions.find(c => c.id === data.targetPostId);
+          if (post) {
+            post.comments = post.comments || [];
+            if (!post.comments.some(cm => cm.id === data.comment.id)) {
+              post.comments.push(data.comment);
+            }
+          }
+        }
+        if (data.kind === 'fb_comment_delete' && data.targetPostId && data.commentId) {
+          const post = state.contributions.find(c => c.id === data.targetPostId);
+          if (post && post.comments) {
+            post.comments = post.comments.filter(cm => cm.id !== data.commentId);
+          }
+        }
+        if (data.notifTitle) {
+          const targetTab = data.contribution ? 'community' : data.hub ? 'map' : 'sos';
+          state.notifications.unshift({ id: data.id, title: data.notifTitle, body: data.notifBody || '', time: 'Live', targetTab });
+          document.getElementById('notifDot').classList.remove('hidden');
+          sendNativeNotification(data.notifTitle, data.notifBody || '', targetTab);
+          showToast(`🔔 ${data.notifTitle}`);
+        }
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    async function pollCloudSync() {
+      if (isPollingCloud) return;
+      isPollingCloud = true;
+      try {
+        const res = await fetch(`https://ntfy.sh/${SYNC_TOPIC}/json?poll=1&since=2m`, { cache: 'no-store' });
+        const text = await res.text();
+        if (!text.trim()) return;
         let changed = false;
         text.trim().split('\n').forEach(line => {
-          try {
-            const wrapper = JSON.parse(line); if (!wrapper.message) return;
-            const data = JSON.parse(wrapper.message);
-            if (!data.id || state.seenSyncIds.includes(data.id)) return;
-            state.seenSyncIds.push(data.id);
-
-            if (typeof data.moisture === 'number') {
-              state.moisture = data.moisture;
-              const slider = document.getElementById('moistureSlider');
-              const valEl = document.getElementById('moistureValue');
-              const stEl = document.getElementById('moistureState');
-              if (slider) slider.value = data.moisture;
-              if (valEl) {
-                valEl.textContent = `${data.moisture}%`;
-                valEl.className = data.moisture < 25 ? 'text-2xl font-extrabold text-rose-400' : 'text-2xl font-extrabold text-emerald-400';
-              }
-              if (stEl) {
-                stEl.textContent = data.moisture < 25 ? 'LIVE HARDWARE: CRITICAL DRY!' : 'LIVE HARDWARE: Connected';
-              }
-              if (state.trees[0]) state.trees[0].moisture = data.moisture;
-              if (data.moisture < 25 && state.autoWaterEnabled) triggerRemoteWaterPump(5);
-              changed = true;
-            }
-
-            if (data.hub && !state.hubs.some(h => h.id === data.hub.id)) {
-              state.hubs.unshift(data.hub);
-              changed = true;
-            }
-
-            if (data.tree) {
-              const idx = state.trees.findIndex(t => t.id === data.tree.id);
-              if (idx !== -1) state.trees[idx] = data.tree; else state.trees.unshift(data.tree);
-              changed = true;
-            }
-            if (data.contribution && !state.deletedPostIds.includes(data.contribution.id) && !state.contributions.some(c => c.id === data.contribution.id)) {
-              state.contributions.unshift({ ...data.contribution, applaudedByMe: false, comments: data.contribution.comments || [] });
-              changed = true;
-            }
-            if (data.kind === 'fb_edit' && data.targetPostId) {
-              const post = state.contributions.find(c => c.id === data.targetPostId);
-              if (post) {
-                post.badge = data.badge || post.badge;
-                post.body = data.body;
-                post.edited = true;
-                changed = true;
-              }
-            }
-            if (data.kind === 'fb_delete' && data.targetPostId) {
-              state.deletedPostIds.push(data.targetPostId);
-              const beforeLen = state.contributions.length;
-              state.contributions = state.contributions.filter(c => c.id !== data.targetPostId);
-              if (state.contributions.length !== beforeLen) changed = true;
-            }
-            if (data.kind === 'fb_like' && data.targetPostId) {
-              const post = state.contributions.find(c => c.id === data.targetPostId);
-              if (post && typeof data.applauds === 'number') {
-                post.applauds = Math.max(post.applauds || 0, data.applauds);
-                changed = true;
-              }
-            }
-            if (data.kind === 'fb_comment' && data.targetPostId && data.comment) {
-              const post = state.contributions.find(c => c.id === data.targetPostId);
-              if (post) {
-                post.comments = post.comments || [];
-                if (!post.comments.some(cm => cm.id === data.comment.id)) {
-                  post.comments.push(data.comment);
-                  changed = true;
-                }
-              }
-            }
-            if (data.kind === 'fb_comment_delete' && data.targetPostId && data.commentId) {
-              const post = state.contributions.find(c => c.id === data.targetPostId);
-              if (post && post.comments) {
-                post.comments = post.comments.filter(cm => cm.id !== data.commentId);
-                changed = true;
-              }
-            }
-            if (data.notifTitle) {
-              const targetTab = data.contribution ? 'community' : data.hub ? 'map' : 'sos';
-              state.notifications.unshift({ id: data.id, title: data.notifTitle, body: data.notifBody || '', time: 'Live', targetTab });
-              document.getElementById('notifDot').classList.remove('hidden');
-              sendNativeNotification(data.notifTitle, data.notifBody || '', targetTab);
-              showToast(`🔔 ${data.notifTitle}`);
-              changed = true;
-            }
-          } catch (err) {}
+          if (processIncomingCloudMessage(line)) changed = true;
         });
         if (changed) { saveState(); renderAll(); }
+      } catch (e) {} finally {
+        isPollingCloud = false;
+      }
+    }
+
+    function startInstantCloudStream() {
+      try {
+        const es = new EventSource(`https://ntfy.sh/${SYNC_TOPIC}/sse`);
+        es.onmessage = event => {
+          if (processIncomingCloudMessage(event.data)) {
+            saveState();
+            renderAll();
+          }
+        };
+        es.onerror = () => {
+          es.close();
+          setTimeout(startInstantCloudStream, 1500);
+        };
       } catch (e) {}
     }
 
@@ -2585,7 +2606,8 @@
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
     loadState(); checkLoginStatus(); initMap(); renderAll(); initLocation(); pollCloudSync();
-    setInterval(pollCloudSync, 6000);
+    startInstantCloudStream();
+    setInterval(pollCloudSync, 1000);
   </script>
 </body>
 </html>
